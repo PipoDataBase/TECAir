@@ -11,16 +11,16 @@ namespace TECAir.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class EmpleadoesController : ControllerBase
+    public class EmpleadosController : ControllerBase
     {
         private readonly TecairDbContext _context;
 
-        public EmpleadoesController(TecairDbContext context)
+        public EmpleadosController(TecairDbContext context)
         {
             _context = context;
         }
 
-        // GET: api/Empleadoes
+        // GET: api/Empleados
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Empleado>>> GetEmpleados()
         {
@@ -31,7 +31,7 @@ namespace TECAir.Controllers
             return await _context.Empleados.ToListAsync();
         }
 
-        // GET: api/Empleadoes/5
+        // GET: api/Empleados/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Empleado>> GetEmpleado(string id)
         {
@@ -49,7 +49,7 @@ namespace TECAir.Controllers
             return empleado;
         }
 
-        // PUT: api/Empleadoes/5
+        // PUT: api/Empleados/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutEmpleado(string id, Empleado empleado)
@@ -80,7 +80,7 @@ namespace TECAir.Controllers
             return NoContent();
         }
 
-        // POST: api/Empleadoes
+        // POST: api/Empleados
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Empleado>> PostEmpleado(Empleado empleado)
@@ -109,7 +109,7 @@ namespace TECAir.Controllers
             return CreatedAtAction("GetEmpleado", new { id = empleado.Usuario }, empleado);
         }
 
-        // DELETE: api/Empleadoes/5
+        // DELETE: api/Empleados/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteEmpleado(string id)
         {

@@ -13,7 +13,7 @@ using TECAir.Models;
 namespace TECAir.Migrations
 {
     [DbContext(typeof(TecairDbContext))]
-    [Migration("20230925084404_Initial Migration")]
+    [Migration("20230925110336_Initial Migration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
