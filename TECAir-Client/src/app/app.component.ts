@@ -10,14 +10,14 @@ export class AppComponent {
   title = 'TestTecAir';
   isMobile: boolean;
   images = [
-    '../assets/img1.avif',
-    '../assets/img2.avif',
-    '../assets/img3.avif',
+    '../assets/img1.jpg',
+    '../assets/img2.jpg',
+    '../assets/img3.jpg',
   ];
   mobileimages = [
-    '../assets/mobile-img1.avif',
-    '../assets/mobile-img2.avif',
-    '../assets/mobile-img3.avif',
+    '../assets/mobile-img1.jpg',
+    '../assets/mobile-img2.jpg',
+    '../assets/mobile-img3.jpg',
   ]
   
   currentImage = 0;
