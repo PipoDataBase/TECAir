@@ -1,1 +1,1 @@
-# AirTEC
+# TECAir

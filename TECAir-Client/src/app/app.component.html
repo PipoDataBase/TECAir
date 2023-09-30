@@ -1,0 +1,89 @@
+<p>
+  <mat-toolbar color="primary">
+    <mat-toolbar-row>
+      <span class="long-separator"></span>
+      <span>TECAirlines</span>
+      <span class="separator"></span>
+
+      <ng-container *ngIf="!isMobile">
+        <a mat-button (click)="openLoginDialog()">MyTECAir<mat-icon>account_circle</mat-icon></a>
+      </ng-container>
+
+      <span class="spacer"></span>
+
+      <ng-container *ngIf="!isMobile">
+        <a mat-button>Ofertas de vuelos</a>
+      </ng-container>
+      <span class="separator"></span>
+
+      <ng-container *ngIf="!isMobile">
+        <a mat-button>Mis viajes</a>
+      </ng-container>
+      <span class="separator"></span>
+
+      <ng-container *ngIf="!isMobile">
+        <a mat-button>Ayuda</a>
+      </ng-container>
+      <span class="separator"></span>
+
+      <ng-container *ngIf="isMobile">
+        <a mat-icon-button (click)="openLoginDialog()"><mat-icon>account_circle</mat-icon></a>
+      </ng-container>
+
+      <ng-container *ngIf="isMobile">
+        <a mat-icon-button><mat-icon>help</mat-icon></a>
+      </ng-container>
+
+      <button mat-icon-button class="example-icon" (click)="test()">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span class="long-separator"></span>
+    </mat-toolbar-row>
+  </mat-toolbar>
+</p>
+
+<div style="position: relative; display: inline-block;">
+  <div>
+    <button mat-icon-button class="back" (click)="changeImage(-1)">
+      <mat-icon>arrow_back_ios</mat-icon>
+    </button>
+
+    <ng-container *ngIf="!isMobile">
+      <div class="image-container">
+        <img id="image" [src]="images[currentImage]">
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="isMobile">
+      <div class="image-container">
+        <img id="image" [src]="mobileimages[currentImage]">
+      </div>
+    </ng-container>
+
+    <button mat-icon-button class="forward" (click)="changeImage(1)">
+      <mat-icon>arrow_forward_ios</mat-icon>
+    </button>
+  </div>
+  <ng-container *ngIf="!isMobile">
+    <div class="group">
+      <mat-tab-group color="primary" backgroundColor="primary"
+        style="position: relative; margin-left: 5%; margin-right: 5%; background-color: white;">
+        <mat-tab label="Reserva tu vuelo">
+          <div class="example-small-box mat-elevation-z4">
+            Content 1
+          </div>
+        </mat-tab>
+        <mat-tab label="Gestiona tu reserva">
+          <div class="example-small-box mat-elevation-z4">
+            Content 2
+          </div>
+        </mat-tab>
+        <mat-tab label="Check-in online">
+          <div class="example-small-box mat-elevation-z4">
+            Content 3
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </ng-container>
+</div>
