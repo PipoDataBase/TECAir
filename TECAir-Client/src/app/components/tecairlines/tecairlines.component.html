@@ -1,0 +1,44 @@
+<p>
+    <mat-toolbar color="primary">
+      <mat-toolbar-row>
+        <span class="long-separator"></span>
+        <span>TECAirlines</span>
+        <span class="separator"></span>
+  
+        <ng-container *ngIf="!isMobile">
+          <a mat-button (click)="openLoginDialog()">MyTECAir<mat-icon>account_circle</mat-icon></a>
+        </ng-container>
+  
+        <span class="spacer"></span>
+  
+        <ng-container *ngIf="!isMobile">
+          <a mat-button>Ofertas de vuelos</a>
+        </ng-container>
+        <span class="separator"></span>
+  
+        <ng-container *ngIf="!isMobile">
+          <a mat-button>Mis viajes</a>
+        </ng-container>
+        <span class="separator"></span>
+  
+        <ng-container *ngIf="!isMobile">
+          <a mat-button>Ayuda</a>
+        </ng-container>
+        <span class="separator"></span>
+  
+        <ng-container *ngIf="isMobile">
+          <a mat-icon-button (click)="openLoginDialog()"><mat-icon>account_circle</mat-icon></a>
+        </ng-container>
+  
+        <ng-container *ngIf="isMobile">
+          <a mat-icon-button><mat-icon>help</mat-icon></a>
+        </ng-container>
+  
+        <button mat-icon-button class="example-icon" (click)="test()">
+          <mat-icon>menu</mat-icon>
+        </button>
+        <span class="long-separator"></span>
+      </mat-toolbar-row>
+    </mat-toolbar>
+  </p>
+<router-outlet></router-outlet>

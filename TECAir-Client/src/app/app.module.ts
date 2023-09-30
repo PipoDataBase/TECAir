@@ -17,10 +17,16 @@ import { DatePipe } from '@angular/common';
 
 // Components
 import { AppComponent } from './app.component';
+import { TecairlinesComponent } from './components/tecairlines/tecairlines.component';
+import { HomeComponent } from './components/home/home.component';
+import { BookFlightComponent } from './components/book-flight/book-flight.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    TecairlinesComponent,
+    HomeComponent,
+    BookFlightComponent
   ],
   imports: [
     BrowserModule,

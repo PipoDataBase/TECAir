@@ -1,0 +1,33 @@
+p {
+    margin: 0;
+}
+
+.mat-toolbar-row a {
+    height: 90%;
+}
+
+.spacer {
+    flex: 1 1 auto;
+}
+
+.example-icon {
+    display: initial;
+}
+
+@media (min-width: 768px) {
+    .mat-toolbar-row a {
+        height: 100%;
+    }
+
+    .long-separator {
+        margin: 0 20px;
+    }
+
+    .separator {
+        margin: 0 10px;
+    }
+
+    .spacer {
+        flex: 1 1 auto;
+    }
+}
