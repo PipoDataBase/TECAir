@@ -100,3 +100,43 @@ div .group {
     position: relative;
     margin-top: -10%;
 }
+
+div .extension-panel {
+    position: relative;
+    margin-top: -10%;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.mat-mdc-form-field+.mat-mdc-form-field {
+    margin-left: 8px;
+}
+
+mat-expansion-panel {
+    background-color: white;
+}
+
+mat-expansion-panel-header {
+    background-color: #3F51B5 !important;
+}
+
+mat-panel-title {
+    color: white !important;
+}
+
+mat-form-field {
+    margin-right: 12px;
+}
+
+.example-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.custom-button {
+    background-color: #3F51B5 !important;
+    color: white !important;
+    text-transform: uppercase;
+}

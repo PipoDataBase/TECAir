@@ -9,6 +9,10 @@ import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AngularMaterialModule } from './angular-material.module';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatNativeDateModule } from '@angular/material/core';
 
 // FormsModule
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -33,6 +37,10 @@ import { BookFlightComponent } from './components/book-flight/book-flight.compon
     AppRoutingModule,
     BrowserAnimationsModule,
     AngularMaterialModule,
+    MatDatepickerModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatNativeDateModule,
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule
