@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Renderer2 } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-tecairlines',
@@ -9,11 +10,15 @@ import { Renderer2 } from '@angular/core';
 export class TecairlinesComponent {
   isMobile: boolean;
 
-  constructor(private renderer: Renderer2) {
+  constructor(private renderer: Renderer2, private router: Router) {
     this.isMobile = window.innerWidth <= 767;
     window.addEventListener('resize', () => {
       this.isMobile = window.innerWidth <= 767;
     });
+  }
+
+  home(): void {
+    this.router.navigate(["tecair", "home"]);
   }
 
   openLoginDialog(): void {

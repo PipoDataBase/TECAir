@@ -17,6 +17,12 @@ p {
 @media (min-width: 768px) {
     .mat-toolbar-row a {
         height: 100%;
+        font-size: medium;
+    }
+
+    .custom-a {
+        font-size: x-large !important;
+        font-weight: 500;
     }
 
     .long-separator {
