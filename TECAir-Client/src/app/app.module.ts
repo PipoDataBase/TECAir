@@ -29,8 +29,7 @@ import { BookFlightComponent } from './components/book-flight/book-flight.compon
   declarations: [
     AppComponent,
     TecairlinesComponent,
-    HomeComponent,
-    BookFlightComponent
+    HomeComponent
   ],
   imports: [
     BrowserModule,

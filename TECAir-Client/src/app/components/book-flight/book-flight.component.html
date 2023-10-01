@@ -1,1 +1,75 @@
-<p>book-flight works!</p>
+<div class="main-div">
+    <div class="stepper-container">
+        
+        <mat-stepper linear #stepper>
+
+            <mat-step [stepControl]="selectFlightStep" errorMessage="Por favor seleccione un vuelo.">
+              <form [formGroup]="selectFlightStep">
+                <ng-template matStepLabel>Seleccion de vuelo</ng-template>
+
+                <! Contenido que se muestra si no hay vuelos disponibles >
+                <div class="no-flights-container" *ngIf="flights.length === 0">
+                    <mat-icon class="no-flights-icon">sentiment_very_dissatisfied</mat-icon>
+                    <h3>¡Ups! Lo sentimos, no encontramos ningún vuelo para la fecha o ruta que seleccionaste</h3>
+                </div>
+                
+                <div class="flights-list">
+                    <mat-card class="flight-card" *ngFor="let flight of flights">
+                        <mat-card-content>
+                          <button class="custom-material-button" (click)="selectFlight(flight.id)">
+                            <div class="flight-information">
+                                <div class="flight-dep-land-information">
+                                    <h2> {{ flight.departureAirportIATA }} </h2>
+                                    <h3> {{ flight.departureTime }} </h3>
+                                </div>
+                                <div class="flight-duration-information">
+                                    <h3> {{ flight.duration }} </h3>
+                                    <div class="diagram-line-icon-line">
+                                        <div class="horizontal-line"></div>
+                                        <mat-icon>flight_takeoff</mat-icon>
+                                        <div class="horizontal-line"></div>
+                                    </div>
+                                </div>
+                                <div class="flight-dep-land-information">
+                                    <h2> {{ flight.landingAirportIATA }} </h2>
+                                    <h3> {{ flight.landingTime }} </h3>
+                                </div>
+                                <div class="vertical-line"></div>
+                                <div class="flight-price-information">
+                                    <h2> {{ flight.price }} </h2>
+                                </div>
+                            </div>
+                          </button>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+              </form>
+            </mat-step>
+
+            <mat-step [stepControl]="travelInformationStep" errorMessage="There is missing information">
+              <form [formGroup]="travelInformationStep">
+                <ng-template matStepLabel>Informacón personal</ng-template>
+                <mat-form-field>
+                  <mat-label>Address</mat-label>
+                  <input matInput placeholder="Ex. 1 Main St, New York, NY" formControlName="secondCtrl"
+                         required>
+                </mat-form-field>
+                <div>
+                  <p>Go to a different step to see the error state</p>
+                  <button mat-button matStepperPrevious>Back</button>
+                  <button mat-button matStepperNext>Next</button>
+                </div>
+              </form>
+            </mat-step>
+
+            <mat-step errorMessage="There is missing information">
+              <ng-template matStepLabel>Facturación</ng-template>
+              <p>You are now done.</p>
+              <div>
+                <button mat-button matStepperPrevious>Back</button>
+              </div>
+            </mat-step>
+          </mat-stepper>
+
+    </div>
+</div>

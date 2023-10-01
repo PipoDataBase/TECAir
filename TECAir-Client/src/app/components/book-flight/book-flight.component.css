@@ -1,0 +1,171 @@
+mat-stepper {
+    width: 100%;
+    margin: 1%;
+}
+
+mat-icon {
+    width: 55px;
+    color: #BFBFBF;
+}
+
+mat-card {
+    border-radius: 20px;
+    padding: 0%;
+    padding-top: 0%;
+    padding-bottom: 0%;
+    height: fit-content;
+}
+
+mat-card-content {
+    margin: 0%;
+    padding: 0%;
+    padding-top: 0%;
+    padding-bottom: 0%;
+    height: fit-content;
+}
+
+h2 {
+    margin: 0%;
+}
+
+h3 {
+    margin: 0%;
+}
+
+.main-div{
+    display:flex;
+    min-height: 100vh;
+    width: 100%;
+    background-color: #E6E6E6;
+    justify-content: center;
+}
+
+.stepper-container {
+    display: flex;
+    height: fit-content;
+    width: 100%;
+    background-color: #FFFFFF;
+    justify-content: center;
+    margin-top: 2.5%;
+    margin-bottom: 2.5%;
+    margin-left: 5%;
+    margin-right: 5%;
+    border-radius: 20px;
+}
+
+.no-flights-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100hv;
+    min-width: 100vh;
+    align-items: center;
+    justify-content: center;
+}
+
+.no-flights-icon {
+    font-size: 50px;
+    height: fit-content;
+    width: fit-content;
+    margin: 1%;
+}
+
+.flights-list {
+    display: flex;
+    flex-direction: column;
+    height: fit-content;
+    width: 100%;
+    justify-content: center;
+    gap: 1%;
+}
+
+.flight-card {
+    height: fit-content;
+    width: 100%;
+    margin: 1%;
+}
+
+.flight-information {
+    display: flex;
+    flex-direction: row;
+    height: fit-content;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    gap: 5%;
+}
+
+.flight-dep-land-information {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: fit-content;
+    justify-content: center;
+    align-items: center;
+}
+
+.flight-duration-information {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    gap: 25%;
+}
+
+.flight-price-information {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 50%;
+    justify-content: center;
+    align-items: center;
+}
+
+.select-flight-button-container {
+    display: flex;
+    height: fit-content;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.horizontal-line {
+    width: 100%;
+    height: 0.25px;
+    background-color: #BFBFBF;
+}
+
+.vertical-line {
+    width: 50px;
+    height: 100%;
+    background-color: #BFBFBF;
+}
+
+.diagram-line-icon-line {
+    display: flex;
+    flex-direction: row;
+    height: fit-content;
+    width: 100%;
+    align-items: center;
+    gap: 2.5%;
+}
+
+.custom-material-button {
+    display: inline-block;
+    padding: 2.5%;
+    border: none;
+    border-radius: 20px;
+    background-color: #FFFFFF;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%;
+  }
+
+  .custom-material-button:hover {
+    background-color: #FFFFFF;
+  }
+  
+  .custom-material-button:active {
+    background-color: #FFFFFF;
+  }
