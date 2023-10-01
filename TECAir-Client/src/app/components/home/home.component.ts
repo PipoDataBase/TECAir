@@ -1,14 +1,11 @@
 import { Component } from '@angular/core';
 import { Renderer2 } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
-
-export interface Airport {
-  location: string;
-  code: string;
-  name: string;
-}
+import { Airport } from 'src/app/models/airport.module';
+import { Promotion } from 'src/app/models/promotion.module';
 
 export const _filter = (opt: Airport[], value: string): Airport[] => {
   const filterValue = value.toLowerCase();
@@ -68,10 +65,37 @@ export class HomeComponent {
     },
   ];
 
+  promotions: Promotion[] = [
+    {
+      origin: 'San José, Costa Rica',
+      destination: 'Guatemala',
+      price: 68,
+      imagePath: '../../../assets/promo1.jpg'
+    },
+    {
+      origin: 'San José, Costa Rica',
+      destination: 'San Salvador',
+      price: 87,
+      imagePath: '../../../assets/promo2.jpg'
+    },
+    {
+      origin: 'San José, Costa Rica',
+      destination: 'Bogotá',
+      price: 105,
+      imagePath: '../../../assets/promo3.jpg'
+    },
+    {
+      origin: 'San José, Costa Rica',
+      destination: 'Ciudad de México',
+      price: 114,
+      imagePath: '../../../assets/promo4.jpg'
+    }
+  ]
+
   airportOptions1: Observable<Airport[]> | undefined;
   airportOptions2: Observable<Airport[]> | undefined;
 
-  constructor(private renderer: Renderer2, private _formBuilder: FormBuilder) {
+  constructor(private renderer: Renderer2, private _formBuilder: FormBuilder, private router: Router) {
     this.isMobile = window.innerWidth <= 767;
     window.addEventListener('resize', () => {
       this.isMobile = window.innerWidth <= 767;
@@ -132,5 +156,15 @@ export class HomeComponent {
     console.log(this.airportForm.get('destinationAirportGroup')?.value);
     console.log(this.airportForm.get('departureDate')?.value);
     console.log(this.airportForm.get('passengers')?.value);
+    // Falta routing a book-flight
+  }
+
+  onCardClick(promotion: any): void {
+    // Falta routing a promocion especifica / book-flight
+    console.log(promotion);
+  }
+
+  more_promotions() {
+    this.router.navigate(["tecair", "promotions"]);
   }
 }
