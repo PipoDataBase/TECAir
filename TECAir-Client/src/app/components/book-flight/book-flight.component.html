@@ -1,8 +1,6 @@
 <div class="main-div">
     <div class="stepper-container">
-        
-        <mat-stepper linear #stepper>
-
+        <mat-stepper  #stepper>
             <mat-step>
               <form>
                 <ng-template matStepLabel>Seleccion de vuelo</ng-template>
@@ -46,30 +44,148 @@
               </form>
             </mat-step>
 
-            <mat-step [stepControl]="travelInformationStep" errorMessage="There is missing information">
+            <mat-step [stepControl]="travelInformationStep" errorMessage="Hay informacón pendiente!">
               <form [formGroup]="travelInformationStep">
                 <ng-template matStepLabel>Informacón personal</ng-template>
-                <mat-form-field>
-                  <mat-label>Address</mat-label>
-                  <input matInput placeholder="Ex. 1 Main St, New York, NY" formControlName="secondCtrl"
-                         required>
-                </mat-form-field>
-                <div>
-                  <p>Go to a different step to see the error state</p>
-                  <button mat-button matStepperPrevious>Back</button>
-                  <button mat-button matStepperNext>Next</button>
+                <div class="personal-information-main-container">
+                  <div class="personal-information-payment-inputs-container" *ngIf="!isMobile">
+
+                    <div class="personal-information-form-field-container">
+                      <mat-form-field class="personal-information-payment-form-field">
+                        <mat-label>Nombre</mat-label>
+                        <input matInput placeholder="Pedro" formControlName="secondCtrl" required>
+                      </mat-form-field>
+  
+                      <mat-form-field class="personal-information-payment-form-field">
+                        <mat-label>Primer apellido</mat-label>
+                        <input matInput placeholder="Perico" formControlName="secondCtrl" required>
+                      </mat-form-field>
+  
+                      <mat-form-field class="personal-information-payment-form-field">
+                        <mat-label>Segundo apellido</mat-label>
+                        <input matInput placeholder="Perico">
+                      </mat-form-field>
+                    </div>
+
+                    <div class="personal-information-form-field-container">
+                      <mat-form-field class="personal-information-payment-form-field">
+                        <mat-label>Correo</mat-label>
+                        <input matInput type="email" placeholder="pedroperico@airtec.com" [formControl]="emailFormControl" formControlName="secondCtrl" required>
+                      </mat-form-field>
+  
+                      <mat-form-field class="personal-information-payment-form-field">
+                        <mat-label>Telefono</mat-label>
+                        <span matPrefix> (+506) &nbsp;</span>
+                        <input matInput type="tel" maxlength="8" placeholder="77737426" formControlName="secondCtrl" required>
+                      </mat-form-field>
+                    </div>
+                    <div class="personal-information-form-field-container">
+                      <button mat-flat-button color="primary" matStepperPrevious>Regresar</button>
+                      <button mat-flat-button color="primary" matStepperNext>Siguiente</button>
+                    </div>
+                  </div>
+
+                  <div class="personal-information-payment-inputs-container" *ngIf="isMobile">
+
+                    <mat-form-field class="personal-information-payment-form-field">
+                      <mat-label>Nombre</mat-label>
+                      <input matInput placeholder="Pedro" formControlName="secondCtrl" required>
+                    </mat-form-field>
+
+                    <mat-form-field class="personal-information-payment-form-field">
+                      <mat-label>Primer apellido</mat-label>
+                      <input matInput placeholder="Perico" formControlName="secondCtrl" required>
+                    </mat-form-field>
+
+                    <mat-form-field class="personal-information-payment-form-field">
+                      <mat-label>Segundo apellido</mat-label>
+                      <input matInput placeholder="Perico">
+                    </mat-form-field>
+
+                    <mat-form-field class="personal-information-payment-form-field">
+                      <mat-label>Correo</mat-label>
+                      <input matInput type="email" placeholder="pedroperico@airtec.com" [formControl]="emailFormControl" formControlName="secondCtrl" required>
+                    </mat-form-field>
+
+                    <mat-form-field class="personal-information-payment-form-field">
+                      <mat-label>Telefono</mat-label>
+                      <span matPrefix> (+506) &nbsp;</span>
+                      <input matInput type="tel" maxlength="8" placeholder="77737426" formControlName="secondCtrl" required>
+                    </mat-form-field>
+
+                    <div class="personal-information-form-field-container">
+                      <button mat-flat-button color="primary" matStepperPrevious>Regresar</button>
+                      <button mat-flat-button color="primary" matStepperNext>Siguiente</button>
+                    </div>
+                  </div>
                 </div>
               </form>
             </mat-step>
 
-            <mat-step errorMessage="There is missing information">
+            <mat-step [stepControl]="paymentInformationStep" errorMessage="Hay informacón pendiente!">
               <ng-template matStepLabel>Facturación</ng-template>
-              <p>You are now done.</p>
-              <div>
-                <button mat-button matStepperPrevious>Back</button>
-              </div>
-            </mat-step>
-          </mat-stepper>
+              <form [formGroup]="paymentInformationStep">
+                <div class="personal-information-main-container">
+                  <div class="personal-information-payment-inputs-container" *ngIf="!isMobile">
+                  
+                    <div class="personal-information-form-field-container">
+                      <mat-form-field class="personal-information-payment-form-field">
+                        <mat-label>Numero de tarjeta</mat-label>
+                        <input matInput type="tel" maxlength="16" placeholder="1111222233334444" formControlName="thirdCtrl" required>
+                      </mat-form-field>
+                    </div>
+  
+                    <div class="personal-information-form-field-container">
+                      <mat-form-field class="personal-information-payment-form-field">
+                        <mat-label>Fecha de vencimiento</mat-label>
+                        <input matInput placeholder="01/01/2024" [matDatepicker]="picker">
+                        <mat-hint>MM/DD/YYYY</mat-hint>
+                        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                      </mat-form-field>
 
+                      <mat-form-field class="personal-information-payment-form-field">
+                        <mat-label>CVV</mat-label>
+                        <input matInput type="tel" maxlength="3" placeholder="123" formControlName="thirdCtrl" required>
+                      </mat-form-field>
+                    </div>
+
+                    <div class="personal-information-form-field-container">
+                      <button mat-flat-button color="primary" matStepperPrevious>Regresar</button>
+                      <button mat-flat-button color="primary" matStepperNext>Siguiente</button>
+                    </div>
+                    
+                  </div>
+
+                  <div class="personal-information-payment-inputs-container" *ngIf="isMobile">
+                  
+                    <mat-form-field class="personal-information-payment-form-field">
+                      <mat-label>Numero de tarjeta</mat-label>
+                      <input matInput type="tel" maxlength="16" placeholder="1111222233334444" formControlName="thirdCtrl" required>
+                    </mat-form-field>
+
+                    <mat-form-field class="personal-information-payment-form-field">
+                      <mat-label>Fecha de vencimiento</mat-label>
+                      <input matInput placeholder="01/01/2024" [matDatepicker]="picker">
+                      <mat-hint>MM/DD/YYYY</mat-hint>
+                      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                      <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+
+                    <mat-form-field class="personal-information-payment-form-field">
+                      <mat-label>CVV</mat-label>
+                      <input matInput type="tel" maxlength="3" placeholder="123" formControlName="thirdCtrl" required>
+                    </mat-form-field>
+
+                    <div class="personal-information-form-field-container">
+                      <button mat-flat-button color="primary" matStepperPrevious>Regresar</button>
+                      <button mat-flat-button color="primary" matStepperNext>Siguiente</button>
+                    </div>
+                    
+                  </div>
+                </div>
+              </form>
+            </mat-step>
+        </mat-stepper>
     </div>
 </div>
