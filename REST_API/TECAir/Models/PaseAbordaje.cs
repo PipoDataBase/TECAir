@@ -13,7 +13,11 @@ public partial class PaseAbordaje
 
     public string Puerta { get; set; } = null!;
 
+    public int ViajeId { get; set; }
+
     public virtual Cliente CorreoClienteNavigation { get; set; } = null!;
 
-    public virtual ICollection<Maletum> Maleta { get; set; } = new List<Maletum>();
+    public virtual ICollection<Maleta> Maleta { get; set; } = new List<Maleta>();
+
+    public virtual Viaje Viaje { get; set; } = null!;
 }

@@ -29,11 +29,11 @@ public partial class TecairDbContext : DbContext
 
     public virtual DbSet<Estudiante> Estudiantes { get; set; }
 
-    public virtual DbSet<Maletum> Maleta { get; set; }
+    public virtual DbSet<Maleta> Maleta { get; set; }
 
     public virtual DbSet<PaseAbordaje> PaseAbordajes { get; set; }
 
-    public virtual DbSet<PrecioMaletum> PrecioMaleta { get; set; }
+    public virtual DbSet<PrecioMaleta> PrecioMaleta { get; set; }
 
     public virtual DbSet<Promocion> Promocions { get; set; }
 
@@ -44,11 +44,11 @@ public partial class TecairDbContext : DbContext
     public virtual DbSet<Vuelo> Vuelos { get; set; }
 
     public virtual DbSet<VueloAeropuerto> VueloAeropuertos { get; set; }
-/*
+    /*
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseNpgsql("Host=localhost;Database=TECAirDB;Username=postgres;Password=2002");
-*/
+    */
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Aeropuerto>(entity =>
@@ -58,7 +58,7 @@ public partial class TecairDbContext : DbContext
             entity.ToTable("Aeropuerto");
 
             entity.Property(e => e.Id).HasMaxLength(4);
-            entity.Property(e => e.Nombre).HasMaxLength(50);
+            entity.Property(e => e.Nombre).HasMaxLength(100);
             entity.Property(e => e.Ubicacion).HasMaxLength(50);
         });
 
@@ -175,7 +175,7 @@ public partial class TecairDbContext : DbContext
                 .HasConstraintName("Estudiante_fk1");
         });
 
-        modelBuilder.Entity<Maletum>(entity =>
+        modelBuilder.Entity<Maleta>(entity =>
         {
             entity.HasKey(e => e.NMaleta).HasName("Maleta_pk");
 
@@ -204,14 +204,20 @@ public partial class TecairDbContext : DbContext
                 .HasMaxLength(20)
                 .HasColumnName("Correo_Cliente");
             entity.Property(e => e.Puerta).HasMaxLength(10);
+            entity.Property(e => e.ViajeId).HasColumnName("Viaje_Id");
 
             entity.HasOne(d => d.CorreoClienteNavigation).WithMany(p => p.PaseAbordajes)
                 .HasForeignKey(d => d.CorreoCliente)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Pase_Abordaje_fk0");
+
+            entity.HasOne(d => d.Viaje).WithMany(p => p.PaseAbordajes)
+                .HasForeignKey(d => d.ViajeId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("Pase_Abordaje_fk1");
         });
 
-        modelBuilder.Entity<PrecioMaletum>(entity =>
+        modelBuilder.Entity<PrecioMaleta>(entity =>
         {
             entity.HasKey(e => e.CMaletas).HasName("Precio_Maleta_pk");
 
@@ -259,7 +265,7 @@ public partial class TecairDbContext : DbContext
 
             entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.Nombre).HasMaxLength(50);
-            entity.Property(e => e.Ubicación).HasMaxLength(50);
+            entity.Property(e => e.Ubicacion).HasMaxLength(50);
         });
 
         modelBuilder.Entity<Viaje>(entity =>
@@ -327,6 +333,7 @@ public partial class TecairDbContext : DbContext
             entity.Property(e => e.FechaSalida)
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("Fecha_Salida");
+            entity.Property(e => e.Precio).HasColumnType("money");
 
             entity.HasOne(d => d.AvionMatriculaNavigation).WithMany(p => p.Vuelos)
                 .HasForeignKey(d => d.AvionMatricula)

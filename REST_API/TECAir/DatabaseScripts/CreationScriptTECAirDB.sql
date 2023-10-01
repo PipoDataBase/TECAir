@@ -17,6 +17,7 @@ CREATE TABLE "Vuelo" (
 	"Fecha_Salida" TIMESTAMP NOT NULL,
 	"Fecha_Llegada" TIMESTAMP NOT NULL,
 	"Estado" BOOLEAN NOT NULL,
+	"Precio" money NOT NULL,
 	CONSTRAINT "Vuelo_pk" PRIMARY KEY ("N_Vuelo")
 ) WITH (
   OIDS=FALSE
@@ -27,7 +28,7 @@ CREATE TABLE "Vuelo" (
 
 CREATE TABLE "Cliente" (
 	"Correo" varchar(20) NOT NULL,
-	"Teléfono" integer NOT NULL,
+	"Telefono" integer NOT NULL,
 	"Nombre" varchar(20) NOT NULL,
 	"Apellido1" varchar(20) NOT NULL,
 	"Apellido2" varchar(20),
@@ -42,6 +43,7 @@ CREATE TABLE "Pase_Abordaje" (
 	"Correo_Cliente" varchar(20) NOT NULL,
 	"Check_In" BOOLEAN NOT NULL,
 	"Puerta" varchar(10) NOT NULL,
+	"Viaje_Id" integer NOT NULL,
 	CONSTRAINT "Pase_Abordaje_pk" PRIMARY KEY ("Id")
 ) WITH (
   OIDS=FALSE
@@ -64,7 +66,7 @@ CREATE TABLE "Estudiante" (
 CREATE TABLE "Universidad" (
 	"Id" int NOT NULL,
 	"Nombre" varchar(50) NOT NULL,
-	"Ubicación" varchar(50) NOT NULL,
+	"Ubicacion" varchar(50) NOT NULL,
 	CONSTRAINT "Universidad_pk" PRIMARY KEY ("Id")
 ) WITH (
   OIDS=FALSE
@@ -100,7 +102,7 @@ CREATE TABLE "Empleado" (
 
 CREATE TABLE "Aeropuerto" (
 	"Id" varchar(4) NOT NULL,
-	"Nombre" varchar(50) NOT NULL,
+	"Nombre" varchar(100) NOT NULL,
 	"Ubicacion" varchar(50) NOT NULL,
 	CONSTRAINT "Aeropuerto_pk" PRIMARY KEY ("Id")
 ) WITH (
@@ -191,6 +193,7 @@ CREATE TABLE "Cliente_Viaje" (
 
 
 ALTER TABLE "Pase_Abordaje" ADD CONSTRAINT "Pase_Abordaje_fk0" FOREIGN KEY ("Correo_Cliente") REFERENCES "Cliente"("Correo");
+ALTER TABLE "Pase_Abordaje" ADD CONSTRAINT "Pase_Abordaje_fk1" FOREIGN KEY ("Viaje_Id") REFERENCES "Viaje"("id");
 
 
 ALTER TABLE "Promocion" ADD CONSTRAINT "Promocion_fk0" FOREIGN KEY ("Viaje_Id") REFERENCES "Viaje"("id");

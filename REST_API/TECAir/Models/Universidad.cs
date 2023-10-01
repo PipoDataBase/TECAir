@@ -9,7 +9,7 @@ public partial class Universidad
 
     public string Nombre { get; set; } = null!;
 
-    public string Ubicación { get; set; } = null!;
+    public string Ubicacion { get; set; } = null!;
 
     public virtual ICollection<Estudiante> Estudiantes { get; set; } = new List<Estudiante>();
 }

@@ -7,7 +7,7 @@ public partial class Cliente
 {
     public string Correo { get; set; } = null!;
 
-    public int Teléfono { get; set; }
+    public int Telefono { get; set; }
 
     public string Nombre { get; set; } = null!;
 

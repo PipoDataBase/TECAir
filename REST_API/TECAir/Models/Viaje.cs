@@ -15,6 +15,8 @@ public partial class Viaje
 
     public virtual Empleado EmpleadoUsuarioNavigation { get; set; } = null!;
 
+    public virtual ICollection<PaseAbordaje> PaseAbordajes { get; set; } = new List<PaseAbordaje>();
+
     public virtual Promocion? Promocion { get; set; }
 
     public virtual ICollection<Cliente> CorreoClientes { get; set; } = new List<Cliente>();

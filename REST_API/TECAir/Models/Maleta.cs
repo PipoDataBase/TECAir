@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace TECAir.Models;
 
-public partial class Maletum
+public partial class Maleta
 {
     public int NMaleta { get; set; }
 

@@ -17,6 +17,8 @@ public partial class Vuelo
 
     public bool Estado { get; set; }
 
+    public decimal Precio { get; set; }
+
     public virtual Avion AvionMatriculaNavigation { get; set; } = null!;
 
     public virtual Empleado EmpleadoUsuarioNavigation { get; set; } = null!;

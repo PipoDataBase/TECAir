@@ -17,7 +17,7 @@ namespace TECAir.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "character varying(4)", maxLength: 4, nullable: false),
-                    Nombre = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Nombre = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Ubicacion = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
@@ -42,7 +42,7 @@ namespace TECAir.Migrations
                 columns: table => new
                 {
                     Correo = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
-                    Teléfono = table.Column<int>(type: "integer", nullable: false),
+                    Telefono = table.Column<int>(type: "integer", nullable: false),
                     Nombre = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
                     Apellido1 = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
                     Apellido2 = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true)
@@ -85,30 +85,11 @@ namespace TECAir.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false),
                     Nombre = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    Ubicación = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false)
+                    Ubicacion = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("Universidad_pk", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Pase_Abordaje",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false),
-                    Correo_Cliente = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
-                    Check_In = table.Column<bool>(type: "boolean", nullable: false),
-                    Puerta = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("Pase_Abordaje_pk", x => x.Id);
-                    table.ForeignKey(
-                        name: "Pase_Abordaje_fk0",
-                        column: x => x.Correo_Cliente,
-                        principalTable: "Cliente",
-                        principalColumn: "Correo");
                 });
 
             migrationBuilder.CreateTable(
@@ -157,7 +138,8 @@ namespace TECAir.Migrations
                     Avion_Matricula = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false),
                     Fecha_Salida = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     Fecha_Llegada = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    Estado = table.Column<bool>(type: "boolean", nullable: false)
+                    Estado = table.Column<bool>(type: "boolean", nullable: false),
+                    Precio = table.Column<decimal>(type: "money", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -222,25 +204,6 @@ namespace TECAir.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Maleta",
-                columns: table => new
-                {
-                    N_Maleta = table.Column<int>(type: "integer", nullable: false),
-                    Abordaje_Id = table.Column<int>(type: "integer", nullable: false),
-                    Peso = table.Column<decimal>(type: "numeric(3,2)", precision: 3, scale: 2, nullable: false),
-                    Color = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("Maleta_pk", x => x.N_Maleta);
-                    table.ForeignKey(
-                        name: "Maleta_fk0",
-                        column: x => x.Abordaje_Id,
-                        principalTable: "Pase_Abordaje",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Cliente_Viaje",
                 columns: table => new
                 {
@@ -257,6 +220,31 @@ namespace TECAir.Migrations
                         principalColumn: "Correo");
                     table.ForeignKey(
                         name: "Cliente_Viaje_fk1",
+                        column: x => x.Viaje_Id,
+                        principalTable: "Viaje",
+                        principalColumn: "id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Pase_Abordaje",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false),
+                    Correo_Cliente = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    Check_In = table.Column<bool>(type: "boolean", nullable: false),
+                    Puerta = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false),
+                    Viaje_Id = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("Pase_Abordaje_pk", x => x.Id);
+                    table.ForeignKey(
+                        name: "Pase_Abordaje_fk0",
+                        column: x => x.Correo_Cliente,
+                        principalTable: "Cliente",
+                        principalColumn: "Correo");
+                    table.ForeignKey(
+                        name: "Pase_Abordaje_fk1",
                         column: x => x.Viaje_Id,
                         principalTable: "Viaje",
                         principalColumn: "id");
@@ -327,6 +315,25 @@ namespace TECAir.Migrations
                         principalColumn: "N_Vuelo");
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Maleta",
+                columns: table => new
+                {
+                    N_Maleta = table.Column<int>(type: "integer", nullable: false),
+                    Abordaje_Id = table.Column<int>(type: "integer", nullable: false),
+                    Peso = table.Column<decimal>(type: "numeric(3,2)", precision: 3, scale: 2, nullable: false),
+                    Color = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("Maleta_pk", x => x.N_Maleta);
+                    table.ForeignKey(
+                        name: "Maleta_fk0",
+                        column: x => x.Abordaje_Id,
+                        principalTable: "Pase_Abordaje",
+                        principalColumn: "Id");
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Asiento_Avion_Matricula",
                 table: "Asiento",
@@ -361,6 +368,11 @@ namespace TECAir.Migrations
                 name: "IX_Pase_Abordaje_Correo_Cliente",
                 table: "Pase_Abordaje",
                 column: "Correo_Cliente");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Pase_Abordaje_Viaje_Id",
+                table: "Pase_Abordaje",
+                column: "Viaje_Id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Precio_Maleta_Empleado_Usuario",
@@ -430,9 +442,6 @@ namespace TECAir.Migrations
                 name: "Pase_Abordaje");
 
             migrationBuilder.DropTable(
-                name: "Viaje");
-
-            migrationBuilder.DropTable(
                 name: "Aeropuerto");
 
             migrationBuilder.DropTable(
@@ -442,10 +451,13 @@ namespace TECAir.Migrations
                 name: "Cliente");
 
             migrationBuilder.DropTable(
-                name: "Empleado");
+                name: "Viaje");
 
             migrationBuilder.DropTable(
                 name: "Avion");
+
+            migrationBuilder.DropTable(
+                name: "Empleado");
         }
     }
 }

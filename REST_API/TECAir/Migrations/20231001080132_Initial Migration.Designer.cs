@@ -13,7 +13,7 @@ using TECAir.Models;
 namespace TECAir.Migrations
 {
     [DbContext(typeof(TecairDbContext))]
-    [Migration("20230925110336_Initial Migration")]
+    [Migration("20231001080132_Initial Migration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -53,8 +53,8 @@ namespace TECAir.Migrations
 
                     b.Property<string>("Nombre")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("Ubicacion")
                         .IsRequired()
@@ -131,7 +131,7 @@ namespace TECAir.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)");
 
-                    b.Property<int>("Teléfono")
+                    b.Property<int>("Telefono")
                         .HasColumnType("integer");
 
                     b.HasKey("Correo")
@@ -216,7 +216,7 @@ namespace TECAir.Migrations
                     b.ToTable("Estudiante", (string)null);
                 });
 
-            modelBuilder.Entity("TECAir.Models.Maletum", b =>
+            modelBuilder.Entity("TECAir.Models.Maleta", b =>
                 {
                     b.Property<int>("NMaleta")
                         .HasColumnType("integer")
@@ -263,15 +263,21 @@ namespace TECAir.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("character varying(10)");
 
+                    b.Property<int>("ViajeId")
+                        .HasColumnType("integer")
+                        .HasColumnName("Viaje_Id");
+
                     b.HasKey("Id")
                         .HasName("Pase_Abordaje_pk");
 
                     b.HasIndex("CorreoCliente");
 
+                    b.HasIndex("ViajeId");
+
                     b.ToTable("Pase_Abordaje", (string)null);
                 });
 
-            modelBuilder.Entity("TECAir.Models.PrecioMaletum", b =>
+            modelBuilder.Entity("TECAir.Models.PrecioMaleta", b =>
                 {
                     b.Property<int>("CMaletas")
                         .HasColumnType("integer")
@@ -331,7 +337,7 @@ namespace TECAir.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
-                    b.Property<string>("Ubicación")
+                    b.Property<string>("Ubicacion")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
@@ -398,6 +404,9 @@ namespace TECAir.Migrations
                     b.Property<DateTime>("FechaSalida")
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("Fecha_Salida");
+
+                    b.Property<decimal>("Precio")
+                        .HasColumnType("money");
 
                     b.HasKey("NVuelo")
                         .HasName("Vuelo_pk");
@@ -504,7 +513,7 @@ namespace TECAir.Migrations
                     b.Navigation("Universidad");
                 });
 
-            modelBuilder.Entity("TECAir.Models.Maletum", b =>
+            modelBuilder.Entity("TECAir.Models.Maleta", b =>
                 {
                     b.HasOne("TECAir.Models.PaseAbordaje", "Abordaje")
                         .WithMany("Maleta")
@@ -523,10 +532,18 @@ namespace TECAir.Migrations
                         .IsRequired()
                         .HasConstraintName("Pase_Abordaje_fk0");
 
+                    b.HasOne("TECAir.Models.Viaje", "Viaje")
+                        .WithMany("PaseAbordajes")
+                        .HasForeignKey("ViajeId")
+                        .IsRequired()
+                        .HasConstraintName("Pase_Abordaje_fk1");
+
                     b.Navigation("CorreoClienteNavigation");
+
+                    b.Navigation("Viaje");
                 });
 
-            modelBuilder.Entity("TECAir.Models.PrecioMaletum", b =>
+            modelBuilder.Entity("TECAir.Models.PrecioMaleta", b =>
                 {
                     b.HasOne("TECAir.Models.Empleado", "EmpleadoUsuarioNavigation")
                         .WithMany("PrecioMaleta")
@@ -657,6 +674,8 @@ namespace TECAir.Migrations
 
             modelBuilder.Entity("TECAir.Models.Viaje", b =>
                 {
+                    b.Navigation("PaseAbordajes");
+
                     b.Navigation("Promocion");
                 });
 

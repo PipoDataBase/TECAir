@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace TECAir.Models;
 
-public partial class PrecioMaletum
+public partial class PrecioMaleta
 {
     public int CMaletas { get; set; }
 
