@@ -3,8 +3,8 @@
         
         <mat-stepper linear #stepper>
 
-            <mat-step [stepControl]="selectFlightStep" errorMessage="Por favor seleccione un vuelo.">
-              <form [formGroup]="selectFlightStep">
+            <mat-step>
+              <form>
                 <ng-template matStepLabel>Seleccion de vuelo</ng-template>
 
                 <! Contenido que se muestra si no hay vuelos disponibles >
@@ -16,7 +16,7 @@
                 <div class="flights-list">
                     <mat-card class="flight-card" *ngFor="let flight of flights">
                         <mat-card-content>
-                          <button class="custom-material-button" (click)="selectFlight(flight.id)">
+                          <button class="custom-material-button" matStepperNext (click)="selectFlight(flight.id)">
                             <div class="flight-information">
                                 <div class="flight-dep-land-information">
                                     <h2> {{ flight.departureAirportIATA }} </h2>

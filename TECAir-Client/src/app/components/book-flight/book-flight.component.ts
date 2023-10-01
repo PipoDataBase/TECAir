@@ -42,7 +42,7 @@ interface Flight {
   ]
 })
 
-export class BookFlightComponent {
+export class BookFlightComponent{
 
   flights: Flight[] = []
 
