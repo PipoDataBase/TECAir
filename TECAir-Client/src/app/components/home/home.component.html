@@ -34,11 +34,11 @@
                                 formControlName="originAirportGroup" [matAutocomplete]="autoOrigin">
                             <mat-autocomplete #autoOrigin="matAutocomplete">
                                 <mat-option *ngFor="let airport of airportOptions1 | async"
-                                    [value]="airport.location + ' (' + airport.code + ')'">
+                                    [value]="airport.ubicacion + ' (' + airport.id + ')'">
                                     <div>
-                                        <span>{{ airport.location }} ({{ airport.code }})</span>
+                                        <span>{{ airport.ubicacion }} ({{ airport.id }})</span>
                                         <br>
-                                        <span>{{ airport.name }}</span>
+                                        <span>{{ airport.nombre }}</span>
                                     </div>
                                 </mat-option>
                             </mat-autocomplete>
@@ -51,11 +51,11 @@
                                 formControlName="destinationAirportGroup" [matAutocomplete]="autoDestination">
                             <mat-autocomplete #autoDestination="matAutocomplete">
                                 <mat-option *ngFor="let airport of airportOptions2 | async"
-                                    [value]="airport.location + ' (' + airport.code + ')'">
+                                    [value]="airport.ubicacion + ' (' + airport.id + ')'">
                                     <div>
-                                        <span>{{ airport.location }} ({{ airport.code }})</span>
+                                        <span>{{ airport.ubicacion }} ({{ airport.id }})</span>
                                         <br>
-                                        <span>{{ airport.name }}</span>
+                                        <span>{{ airport.nombre }}</span>
                                     </div>
                                 </mat-option>
                             </mat-autocomplete>
@@ -105,11 +105,11 @@
                                 formControlName="originAirportGroup" [matAutocomplete]="autoOrigin">
                             <mat-autocomplete #autoOrigin="matAutocomplete">
                                 <mat-option *ngFor="let airport of airportOptions1 | async"
-                                    [value]="airport.location + ' (' + airport.code + ')'">
+                                    [value]="airport.ubicacion + ' (' + airport.id + ')'">
                                     <div>
-                                        <span>{{ airport.location }} ({{ airport.code }})</span>
+                                        <span>{{ airport.ubicacion }} ({{ airport.id }})</span>
                                         <br>
-                                        <span>{{ airport.name }}</span>
+                                        <span>{{ airport.nombre }}</span>
                                     </div>
                                 </mat-option>
                             </mat-autocomplete>
@@ -122,11 +122,11 @@
                                 formControlName="destinationAirportGroup" [matAutocomplete]="autoDestination">
                             <mat-autocomplete #autoDestination="matAutocomplete">
                                 <mat-option *ngFor="let airport of airportOptions2 | async"
-                                    [value]="airport.location + ' (' + airport.code + ')'">
+                                    [value]="airport.ubicacion + ' (' + airport.id + ')'">
                                     <div>
-                                        <span>{{ airport.location }} ({{ airport.code }})</span>
+                                        <span>{{ airport.ubicacion }} ({{ airport.id }})</span>
                                         <br>
-                                        <span>{{ airport.name }}</span>
+                                        <span>{{ airport.nombre }}</span>
                                     </div>
                                 </mat-option>
                             </mat-autocomplete>
