@@ -1,0 +1,22 @@
+.home-main {
+    width: 100%;
+    position: relative;
+    display: inline-block;
+}
+
+div .tab-group {
+    position: relative;
+    margin-top: 3%;
+}
+
+.small-box {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 16px;
+    padding: 16px;
+    border-radius: 8px;
+    background-color: white;
+    height: 400px;
+}
