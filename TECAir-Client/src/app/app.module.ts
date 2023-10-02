@@ -24,12 +24,14 @@ import { AppComponent } from './app.component';
 import { TecairlinesComponent } from './components/tecairlines/tecairlines.component';
 import { HomeComponent } from './components/home/home.component';
 import { BookFlightComponent } from './components/book-flight/book-flight.component';
+import { ProfileComponent } from './components/profile/profile.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     TecairlinesComponent,
-    HomeComponent
+    HomeComponent,
+    ProfileComponent
   ],
   imports: [
     BrowserModule,
