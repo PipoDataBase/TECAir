@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute, Route, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-flights',
@@ -9,7 +9,7 @@ import { ActivatedRoute, Route, Router } from '@angular/router';
 export class FlightsComponent {
   username: string = '';
 
-  constructor(private route: ActivatedRoute , private router: Router) { }
+  constructor(private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit() {
     this.route.parent?.paramMap.subscribe({

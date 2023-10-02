@@ -3,16 +3,6 @@
     <div class="row">
         <div class="col-4">
             <form #form="ngForm">
-                <div class="mb-3">
-                    <ejs-datetimepicker class="custom-datetimepicker" width="96%" placeholder="Fecha de salida"
-                        name="dateTime"></ejs-datetimepicker>
-                </div>
-
-                <div class="mb-3">
-                    <ejs-datetimepicker class="custom-datetimepicker" width="96%" placeholder="Fecha de llegada"
-                        name="dateTime"></ejs-datetimepicker>
-                </div>
-
                 <div class="mb-1">
                     <mat-select placeholder="Avion" [(ngModel)]="selectedPlate" name="matricula" class="custom-select">
                         <mat-option *ngFor="let avion of aviones" [value]="avion.matricula">
@@ -22,15 +12,27 @@
                 </div>
 
                 <div class="mb-3">
+                    <ejs-datetimepicker class="custom-datetimepicker" width="96%" placeholder="Fecha de salida"
+                        [(ngModel)]="fechaSalida" name="fechaSalida"></ejs-datetimepicker>
+                </div>
+
+                <div class="mb-3">
+                    <ejs-datetimepicker class="custom-datetimepicker" width="96%" placeholder="Fecha de llegada"
+                        [(ngModel)]="fechaLlegada" name="fechaLlegada"></ejs-datetimepicker>
+                </div>
+
+                <div class="mb-3">
                     <mat-form-field class="custom-mat-form-field">
                         <mat-label>Precio</mat-label>
-                        <input matInput placeholder="USD" type="number" id="n_Rows" name="n_Rows" min="1">
+                        <input matInput placeholder="USD" type="number" [(ngModel)]="vuelo.precio" name="precio"
+                            min="1">
                     </mat-form-field>
                 </div>
 
-                <button mat-flat-button color="primary" class="btn-block custom-back">Regresar</button>
+                <button mat-flat-button color="primary" class="btn-block custom-back" (click)="back()">Regresar</button>
                 <span class="mx-1"></span>
-                <button mat-flat-button color="primary" class="btn-block custom-save">Guardar</button>
+                <button mat-flat-button color="primary" class="btn-block custom-save"
+                    (click)="addFlight()">Guardar</button>
             </form>
         </div>
     </div>

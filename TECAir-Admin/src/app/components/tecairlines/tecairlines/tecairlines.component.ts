@@ -1,9 +1,7 @@
 import { Component } from '@angular/core';
-import { Renderer2 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Empleado } from 'src/app/models/empleado.module';
 import { EmpleadosService } from 'src/app/services/empleados.service';
-import { SharedService } from 'src/app/services/shared.service';
 
 @Component({
   selector: 'app-tecairlines',
