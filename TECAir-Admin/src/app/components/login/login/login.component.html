@@ -8,12 +8,12 @@
         </mat-card-header>
         <form class="custom-form">
             <mat-card-content>
-                <mat-form-field class="custom-form-mat-form-field">
+                <mat-form-field class="custom-mat-form-field">
                     <mat-label>Usuario</mat-label>
                     <input matInput placeholder="Usuario" [(ngModel)]="username" name="username" type="text" required>
                     <mat-icon matSuffix>person</mat-icon>
                 </mat-form-field>
-                <mat-form-field class="custom-form-mat-form-field">
+                <mat-form-field class="custom-mat-form-field">
                     <mat-label>Contraseña</mat-label>
                     <input matInput placeholder="Contraseña" [type]="hide ? 'password' : 'text'" [(ngModel)]="password"
                         name="password" type="password" required>

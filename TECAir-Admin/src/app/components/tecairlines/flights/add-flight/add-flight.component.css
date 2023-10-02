@@ -6,3 +6,33 @@ h1 {
     margin-top: 1%;
     text-transform: uppercase;
 }
+
+.custom-mat-form-field {
+    width: 100%;
+}
+
+.custom-mat-form-field input:-webkit-autofill {
+    -webkit-background-clip: text;
+}
+
+.custom-datetimepicker {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 8px;
+}
+
+.custom-select {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 6px;
+    margin-bottom: 16px;
+}
+
+.custom-back {
+    background-color: #e13a2d;
+}
+
+.custom-save {
+    background-color: #3F51B5;
+}
