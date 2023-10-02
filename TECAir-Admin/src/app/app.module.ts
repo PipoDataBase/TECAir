@@ -17,6 +17,8 @@ import { MatNativeDateModule } from '@angular/material/core';
 // FormsModule
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
+// Syncfusion
+import { CalendarModule, DatePickerModule, TimePickerModule, DateRangePickerModule, DateTimePickerModule } from '@syncfusion/ej2-angular-calendars';
 import { DatePipe } from '@angular/common';
 
 // Components
@@ -24,13 +26,17 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './components/login/login/login.component';
 import { TecairlinesComponent } from './components/tecairlines/tecairlines/tecairlines.component';
 import { HomeComponent } from './components/tecairlines/home/home.component';
+import { FlightsComponent } from './components/tecairlines/flights/flights/flights.component';
+import { AddFlightComponent } from './components/tecairlines/flights/add-flight/add-flight.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     TecairlinesComponent,
-    HomeComponent
+    HomeComponent,
+    FlightsComponent,
+    AddFlightComponent
   ],
   imports: [
     BrowserModule,
@@ -43,7 +49,8 @@ import { HomeComponent } from './components/tecairlines/home/home.component';
     MatNativeDateModule,
     HttpClientModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    CalendarModule, DatePickerModule, TimePickerModule, DateRangePickerModule, DateTimePickerModule
   ],
   providers: [
     DatePipe
