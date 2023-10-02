@@ -4,16 +4,17 @@ import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
-import { Airport } from 'src/app/models/airport.module';
+import { Aeropuerto } from 'src/app/models/aeropuerto.module';
 import { Promotion } from 'src/app/models/promotion.module';
+import { AeropuertosService } from 'src/app/services/aeropuertos.service';
 
-export const _filter = (opt: Airport[], value: string): Airport[] => {
+export const _filter = (opt: Aeropuerto[], value: string): Aeropuerto[] => {
   const filterValue = value.toLowerCase();
 
   return opt.filter(item =>
-    item.location.toLowerCase().includes(filterValue) ||
-    item.code.toLowerCase().includes(filterValue) ||
-    item.name.toLowerCase().includes(filterValue)
+    item.ubicacion.toLowerCase().includes(filterValue) ||
+    item.id.toLowerCase().includes(filterValue) ||
+    item.nombre.toLowerCase().includes(filterValue)
   );
 };
 
@@ -25,6 +26,7 @@ export const _filter = (opt: Airport[], value: string): Airport[] => {
 export class HomeComponent {
   isMobile: boolean;
   panelOpenState = false;
+  aeropuertos: Aeropuerto[] = [];
 
   images = [
     '../../../assets/img1.jpg',
@@ -46,24 +48,6 @@ export class HomeComponent {
     departureDate: '',
     passengers: 1
   });
-
-  airports: Airport[] = [
-    {
-      location: 'San José, Costa Rica',
-      code: 'SJO',
-      name: 'Aeropuerto Internacional Juan Santamaría'
-    },
-    {
-      location: 'Ciudad de Panamá, Panamá',
-      code: 'PTY',
-      name: 'Aeropuerto Internacional de Tocumen'
-    },
-    {
-      location: 'San Salvador, El Salvador',
-      code: 'SAL',
-      name: 'Aeropuerto Internacional de El Salvador San Óscar Arnulfo Romero y Galdámez'
-    },
-  ];
 
   promotions: Promotion[] = [
     {
@@ -92,10 +76,10 @@ export class HomeComponent {
     }
   ]
 
-  airportOptions1: Observable<Airport[]> | undefined;
-  airportOptions2: Observable<Airport[]> | undefined;
+  airportOptions1: Observable<Aeropuerto[]> | undefined;
+  airportOptions2: Observable<Aeropuerto[]> | undefined;
 
-  constructor(private renderer: Renderer2, private _formBuilder: FormBuilder, private router: Router) {
+  constructor(private renderer: Renderer2, private _formBuilder: FormBuilder, private router: Router, private aeropuertosService: AeropuertosService) {
     this.isMobile = window.innerWidth <= 767;
     window.addEventListener('resize', () => {
       this.isMobile = window.innerWidth <= 767;
@@ -103,10 +87,20 @@ export class HomeComponent {
   }
 
   ngOnInit() {
+    this.aeropuertosService.getAeropuertos().subscribe({
+      next: (aeropuertos) => {
+        this.aeropuertos = aeropuertos;
+      },
+      error: (response) => {
+        console.log(response);
+      }
+    })
+
     this.airportOptions1 = this.airportForm.get('originAirportGroup')!.valueChanges.pipe(
       startWith(''),
       map(value => this._filterAirports(value || '')),
     );
+
     this.airportOptions2 = this.airportForm.get('destinationAirportGroup')!.valueChanges.pipe(
       startWith(''),
       map(value => this._filterAirports(value || '')),
@@ -144,11 +138,11 @@ export class HomeComponent {
     }
   }
 
-  private _filterAirports(value: string): Airport[] {
+  private _filterAirports(value: string): Aeropuerto[] {
     if (value && typeof value === 'string') {
-      return _filter(this.airports, value);
+      return _filter(this.aeropuertos, value);
     }
-    return this.airports;
+    return this.aeropuertos;
   }
 
   searchFlights(): void {

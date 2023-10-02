@@ -19,9 +19,9 @@ public partial class Vuelo
 
     public decimal Precio { get; set; }
 
-    public virtual Avion AvionMatriculaNavigation { get; set; } = null!;
+    public virtual Avion? AvionMatriculaNavigation { get; set; } = null!;
 
-    public virtual Empleado EmpleadoUsuarioNavigation { get; set; } = null!;
+    public virtual Empleado? EmpleadoUsuarioNavigation { get; set; } = null!;
 
     public virtual ICollection<VueloAeropuerto> VueloAeropuertos { get; set; } = new List<VueloAeropuerto>();
 

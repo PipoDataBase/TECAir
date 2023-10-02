@@ -23,6 +23,7 @@ import { DatePipe } from '@angular/common';
 import { AppComponent } from './app.component';
 import { TecairlinesComponent } from './components/tecairlines/tecairlines.component';
 import { HomeComponent } from './components/home/home.component';
+import { PromotionsComponent } from './components/promotions/promotions.component';
 import { BookFlightComponent } from './components/book-flight/book-flight.component';
 import { ProfileComponent } from './components/profile/profile.component';
 
@@ -32,6 +33,8 @@ import { ProfileComponent } from './components/profile/profile.component';
     TecairlinesComponent,
     HomeComponent,
     ProfileComponent
+    PromotionsComponent
+
   ],
   imports: [
     BrowserModule,

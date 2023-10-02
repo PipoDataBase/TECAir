@@ -9,6 +9,20 @@ mat-icon {
     color: #BFBFBF;
 }
 
+.plane-seats-grid mat-icon {
+    width: fit-content;
+    height: fit-content;
+    color: #404040;
+    font-size: 100%;
+}
+
+.plane-seats-grid-M mat-icon {
+    width: fit-content;
+    height: fit-content;
+    color: #404040;
+    font-size: 100%;
+}
+
 mat-card {
     border-radius: 20px;
     padding: 0%;
@@ -217,4 +231,123 @@ h3 {
     align-items: center;
     justify-content: center;
     gap: 5%;
+    pointer-events: all;
+}
+
+.seats-selection-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: fit-content;
+    align-items: center;
+    justify-content: center;
+    margin-top: 5%;
+    margin-bottom: 5%;
+    pointer-events: all;
+}
+
+.seats-selection {
+    display: flex;
+    width: 100%;
+    height: fit-content;
+    align-items: center;
+    justify-content: center;
+    pointer-events: all;
+    margin-top: 5%;
+}
+
+.aircraft-image{
+    width: 100%;
+}
+
+.plane-seats-grid {
+    width: 25%;
+    min-width: 25%;
+    height: fit-content;
+    display: grid;
+    position: absolute;
+    grid-template-columns: repeat(6, 1fr);
+    grid-gap: 1vw;
+}
+
+.seat-button-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 50%;
+}
+
+.seat-button-container button {
+    width: 3vw;
+    height: 3vw;
+    align-items: center;
+    justify-content: center;
+    padding: 0%;
+}
+
+.seat-button-container button mat-icon {
+    font-size: 1.6vw;
+    margin: 0%;
+}
+
+.seat-button-container button h6 {
+    font-size: 0.6vw;
+    margin-top: -10px;
+    margin-bottom: 0%;
+}
+
+.tickets-selection-container-M {
+    display: flex;
+    width: 100%;
+    height: fit-content;
+    align-items: start;
+    justify-content: center;
+    pointer-events: all;
+}
+
+.plane-seats-grid-M {
+    width: 40%;
+    min-width: 40%;
+    height: fit-content;
+    display: grid;
+    position: absolute;
+    grid-template-columns: repeat(6, 1fr);
+    grid-gap: 0.5vw;
+}
+
+.seat-button-container-M {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10%;
+}
+
+.seat-button-container-M button {
+    width: 6vw;
+    height: 6vw;
+    align-items: center;
+    justify-content: center;
+    padding: 0%;
+}
+
+.seat-button-container-M button mat-icon {
+    font-size: 3vw;
+    margin: 0%;
+}
+
+.seat-button-container-M button h6 {
+    font-size: 1.5vw;
+    margin-top: -10px;
+    margin-bottom: 0%;
+}
+
+.selected-seats-id-label-contanier {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    gap: 1%;
 }

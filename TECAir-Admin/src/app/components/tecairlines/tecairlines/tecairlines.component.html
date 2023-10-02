@@ -1,0 +1,31 @@
+<p>
+    <mat-toolbar color="primary">
+        <mat-toolbar-row>
+            <span class="long-separator"></span>
+            <a mat-button class="custom-a" (click)="home()">TECAirlines</a>
+            <span class="separator"></span>
+
+            <a mat-button>Viajes</a>
+            <span class="separator"></span>
+
+            <a mat-button routerLink="flights">Vuelos</a>
+            <span class="separator"></span>
+
+            <a mat-button>Promociones</a>
+            <span class="separator"></span>
+
+            <a mat-button>Check-in</a>
+            <span class="separator"></span>
+
+            <span class="spacer"></span>
+
+            <a mat-button (click)="openLoginDialog()">{{empleado.nombre + ' ' +
+                empleado.apellido1}}<mat-icon>account_circle</mat-icon></a>
+            <span class="separator"></span>
+
+            <a mat-button (click)="logout()">Cerrar sesion<mat-icon>exit_to_app</mat-icon></a>
+            <span class="long-separator"></span>
+        </mat-toolbar-row>
+    </mat-toolbar>
+</p>
+<router-outlet></router-outlet>
