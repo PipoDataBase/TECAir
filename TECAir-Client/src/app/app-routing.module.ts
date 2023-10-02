@@ -19,10 +19,11 @@ const routes: Routes = [
       { path: 'book-flight', component: BookFlightComponent },
       { path: 'login', component: LoginComponent },
       { path: 'sign-up', component: SignUpComponent },
-      { path: 'promotions', component: PromotionsComponent }
+      { path: 'promotions', component: PromotionsComponent },
+      { path: 'profile', component: ProfileComponent }
     ],
   },
-  { path: 'tecair/profile', component: ProfileComponent }
+  
 ];
 
 @NgModule({

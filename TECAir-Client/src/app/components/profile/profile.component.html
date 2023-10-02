@@ -1,1 +1,99 @@
-<p>profile works!</p>
+<div class="profile-Container">
+
+    <div *ngIf="!isMobile" class="group">
+
+        <p class="center"> Not Mobile!</p>
+    
+    </div>
+    
+    <div *ngIf="isMobile" class="extension-panel">
+    
+        <p class="center"> Mobile!</p>
+    
+    </div>
+
+
+    <mat-card class="subMatCards"> 
+    <mat-card-header >
+
+        <mat-card-title>Profile</mat-card-title>
+        
+        <mat-card-subtitle>User Information:</mat-card-subtitle>
+        
+
+    </mat-card-header>
+        <mat-card-content>
+
+            <br>
+        <p class="paragrafBold">Email</p>
+        <p class="paragrafInfo">{{Profile.Email}}</p>
+        <span class="brmedium"> </span>
+
+        <p class="paragrafBold">Phone Number</p>
+        <p class="paragrafInfo">{{ Profile.Phone }} </p>
+        <span class="brmedium"> </span>
+
+        <p class="paragrafBold">Full Name</p>
+        <p class="paragrafInfo">{{ Profile.Name }} {{Profile.LName1}} {{Profile.LName2}}</p>
+
+                                
+
+        </mat-card-content>
+
+    </mat-card>
+
+    <br>
+
+    <mat-card *ngIf="Student != null" class="subMatCards"> 
+        <mat-card-header>
+    
+            <mat-card-title>Student Information</mat-card-title>
+            
+            <mat-card-subtitle>Student Data:</mat-card-subtitle>
+            
+    
+        </mat-card-header>
+        <br>
+        <mat-card-content >
+    
+            <p class="paragrafBold" >Credentials: </p>
+            <span class="brmedium"> </span>
+            <p class="paragrafInfo">{{Student.Credential}}</p>
+
+            
+            <p class="paragrafBold" >Acumulated Miles: </p>
+            <span class="brmedium"> </span>
+            <p class="paragrafInfo"> {{ Student.Miles }} </p>
+       
+
+            <p class="paragrafBold" >University Name: </p>
+            <span class="brmedium"> </span>
+            <p class="paragrafInfo"> {{ Student.University }} </p>
+    
+        </mat-card-content>
+    
+        </mat-card>
+
+        <br>
+
+    <mat-card  class="subMatCards"> 
+        <mat-card-header>
+
+            <mat-card-title>Booked Flights</mat-card-title>
+        
+            <mat-card-subtitle>Reserved Flights:</mat-card-subtitle>
+        
+
+        </mat-card-header>
+            <mat-card-content>
+
+            <br>                
+
+        </mat-card-content>
+
+    </mat-card>
+
+
+</div>
+
+
