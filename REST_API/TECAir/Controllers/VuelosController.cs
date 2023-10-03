@@ -92,14 +92,14 @@ namespace TECAir.Controllers
                 return Problem("Entity set 'TecairDbContext.Vuelos'  is null.");
             }
 
-            // Validar que el AvionMatriculaNavigation existe
+            // Validar que el Avion existe
             var avionExistente = await _context.Avions.FindAsync(vuelo.AvionMatricula);
             if (avionExistente == null)
             {
                 return BadRequest("El avión especificado no existe.");
             }
 
-            // Validar que el EmpleadoUsuarioNavigation existe
+            // Validar que el Empleado existe
             var empleadoExistente = await _context.Empleados.FindAsync(vuelo.EmpleadoUsuario);
             if (empleadoExistente == null)
             {
@@ -108,7 +108,7 @@ namespace TECAir.Controllers
 
             try
             {
-                // Asignar el avión y empleado existentes a las propiedades de navegación
+                // Asignar el avión y empleado existente a las propiedades de navegación
                 vuelo.AvionMatriculaNavigation = avionExistente;
                 vuelo.EmpleadoUsuarioNavigation = empleadoExistente;
 
@@ -127,7 +127,7 @@ namespace TECAir.Controllers
                 _context.Vuelos.Add(vuelo);
                 await _context.SaveChangesAsync();
 
-                return Ok(JsonSerializer.Serialize(vuelo, jsonSerializerOptions));
+                return Ok(vuelo.NVuelo);
             }
             catch (Exception ex)
             {
