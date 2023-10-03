@@ -32,7 +32,7 @@ import { ProfileComponent } from './components/profile/profile.component';
     AppComponent,
     TecairlinesComponent,
     HomeComponent,
-    ProfileComponent
+    ProfileComponent,
     PromotionsComponent
 
   ],
