@@ -52,7 +52,8 @@ export class AddFlightComponent {
     fechaSalida: '',
     fechaLlegada: '',
     estado: true,
-    precio: 0
+    precio: 0,
+    vueloAeropuertos: []
   }
 
   origen: VueloAeropuerto = {

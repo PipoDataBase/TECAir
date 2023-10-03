@@ -26,11 +26,21 @@ namespace TECAir.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Vuelo>>> GetVuelos()
         {
-          if (_context.Vuelos == null)
-          {
-              return NotFound();
-          }
-            return await _context.Vuelos.ToListAsync();
+            var vuelos = await _context.Vuelos
+                    .Select(v => new
+                    {
+                        v.NVuelo,
+                        v.EmpleadoUsuario,
+                        v.AvionMatricula,
+                        v.FechaSalida,
+                        v.FechaLlegada,
+                        v.Estado,
+                        v.Precio,
+                        v.VueloAeropuertos
+                    })
+                    .ToListAsync();
+
+            return Ok(vuelos);
         }
 
         // GET: api/Vuelos/5
@@ -149,10 +159,20 @@ namespace TECAir.Controllers
                 return NotFound();
             }
 
+            // Obtener los VueloAeropuertos asociados al vuelo
+            var vueloAeropuertos = await _context.VueloAeropuertos
+                .Where(va => va.VueloNumero == vuelo.NVuelo)
+                .ToListAsync();
+
+            // Eliminar los VueloAeropuertos asociados
+            _context.VueloAeropuertos.RemoveRange(vueloAeropuertos);
+
+            // Eliminar el vuelo
             _context.Vuelos.Remove(vuelo);
+
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok(1);
         }
 
         private bool VueloExists(int id)

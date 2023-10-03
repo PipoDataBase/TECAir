@@ -15,4 +15,8 @@ export class AvionesService {
   getAviones(): Observable<Avion[]> {
     return this.http.get<Avion[]>(this.baseApiUrl + '/api/Aviones');
   }
+
+  getAvion(id: string): Observable<Avion> {
+    return this.http.get<Avion>(this.baseApiUrl + '/api/Aviones/' + id);
+  }
 }

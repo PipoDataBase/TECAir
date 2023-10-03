@@ -5,3 +5,15 @@ h1 {
 .custom-button {
     text-transform: uppercase;
 }
+
+.table {
+    text-align: center;
+}
+
+.custom-edit {
+    color: #158282;
+}
+
+.custom-delete {
+    color: #e13a2d;
+}

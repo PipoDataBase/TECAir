@@ -1,3 +1,5 @@
+import { VueloAeropuerto } from "./vuelo-aeropuerto.module";
+
 export interface Vuelo {
     nVuelo: number;
     empleadoUsuario: string;
@@ -6,4 +8,5 @@ export interface Vuelo {
     fechaLlegada: string;
     estado: boolean;
     precio: number;
+    vueloAeropuertos: VueloAeropuerto[];
 }

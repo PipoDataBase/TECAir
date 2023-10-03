@@ -115,6 +115,21 @@ namespace TECAir.Controllers
                 // Agregar el VueloAeropuerto a la base de datos
                 _context.VueloAeropuertos.Add(vueloAeropuerto);
                 await _context.SaveChangesAsync();
+
+                try
+                {
+                    // Agregar vueloAeropuerto en su especifico vuelo
+                    var vuelo = await _context.Vuelos.FindAsync(vueloAeropuerto.VueloNumero);
+                    if (vuelo != null)
+                    {
+                        vuelo.VueloAeropuertos.Add(vueloAeropuerto);
+                    }
+                    await _context.SaveChangesAsync();
+                }
+                catch
+                {
+                    return BadRequest("No se pudo almacenar vueloAeropuerto en Vuelos.");
+                }
             }
             catch (Exception ex)
             {
@@ -124,15 +139,15 @@ namespace TECAir.Controllers
             return Ok(JsonSerializer.Serialize(vueloAeropuerto, jsonSerializerOptions));
         }
 
-        // DELETE: api/VuelosAeropuertos/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteVueloAeropuerto(string id)
+        // DELETE: api/VuelosAeropuertos/SJO/1
+        [HttpDelete("{AeropuertoId}/{VueloNumero}")]
+        public async Task<IActionResult> DeleteVueloAeropuerto(string AeropuertoId, int VueloNumero)
         {
             if (_context.VueloAeropuertos == null)
             {
                 return NotFound();
             }
-            var vueloAeropuerto = await _context.VueloAeropuertos.FindAsync(id);
+            var vueloAeropuerto = await _context.VueloAeropuertos.FindAsync(AeropuertoId, VueloNumero);
             if (vueloAeropuerto == null)
             {
                 return NotFound();
