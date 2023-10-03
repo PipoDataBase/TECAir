@@ -13,6 +13,24 @@
     background-image: url('../../../assets/profileBG.jpg');
 }
 
+.buttonStyle{
+    display: flex;
+    flex-direction: column;
+    -ms-flex-align: stretch;
+    min-width: 100vh;
+    min-height: 100vh;
+    height: 90%;
+    width: 90%;
+    padding: 50px;
+    align-items: center;
+    justify-items: center;
+}
+
+.buttonBorder{
+    background-color: antiquewhite;
+    border: 2px solid #3F51B5 ;
+}
+
 .matcard-Container{
     display: flex;
     flex-direction: column;
@@ -44,16 +62,17 @@
 
 .subMatCards {
    
+    position: relative;
     display: flex;
     flex-direction: column;
 
     min-width: 10vh;
-    min-height: 10vh;
+    min-height: max-content;
 
     justify-content: center;
 
-    height: auto;
     width: 70%;
+    height: max-content;
 
     border: 2px solid #3F51B5 ;
 }

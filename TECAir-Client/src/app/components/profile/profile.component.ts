@@ -3,15 +3,19 @@ import { FormBuilder, Validators, FormsModule, ReactiveFormsModule, FormControl 
 import { Observable } from 'rxjs';
 import { Profile } from 'src/app/models/profile.module';
 import { Student } from 'src/app/models/student.module';
+import {MatButtonToggleChange, MatButtonToggleModule} from '@angular/material/button-toggle'
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.css']
+  styleUrls: ['./profile.component.css'],
+  
 })
 export class ProfileComponent {
 
   isMobile: boolean;
+
+  isEdit: boolean;
 
   perfiles : Profile[] = [
 
@@ -42,6 +46,8 @@ export class ProfileComponent {
     University: 'Tecnologico de Costa Rica'
   }
 
+ 
+
   profileOption: Observable<Profile[]> | undefined;
 
   constructor(private _formBuilder: FormBuilder){
@@ -51,6 +57,8 @@ export class ProfileComponent {
       this.isMobile = window.innerWidth <= 767;
     });
     
+    this.isEdit = false;
+
   }
 
 
