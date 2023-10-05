@@ -4,6 +4,7 @@ import { Vuelo } from 'src/app/models/vuelo.module';
 import { VuelosService } from 'src/app/services/vuelos.service';
 import { DatePipe } from '@angular/common';
 import { AvionesService } from 'src/app/services/aviones.service';
+import { VueloAeropuerto } from 'src/app/models/vuelo-aeropuerto.module';
 
 @Component({
   selector: 'app-flights',
@@ -20,6 +21,7 @@ export class FlightsComponent {
     this.vuelosService.getVuelos().subscribe({
       next: (vuelos) => {
         this.vuelos = vuelos;
+        console.log(this.vuelos);
       },
       error: (response) => {
         console.log(response);
@@ -40,6 +42,16 @@ export class FlightsComponent {
     this.updateVuelos();
   }
 
+  locationType(va: VueloAeropuerto[], tipo: string): string {
+    if (va[0].tipo == tipo){
+      return va[0].aeropuertoId;
+    }
+    else if (va[1].tipo == tipo) {
+      return va[1].aeropuertoId;
+    }
+    return "";
+  }
+
   formatDate(date: string): string {
     const result = this.datePipe.transform(date, 'M/d/yy, h:mm a');
     if (result) {
@@ -57,6 +69,10 @@ export class FlightsComponent {
 
   addFlight(): void {
     this.router.navigate(["tecair-admin", this.username, "add-flight"]);
+  }
+
+  editFlight(id: number): void {
+    this.router.navigate(["tecair-admin", this.username, "edit-flight", id]);
   }
 
   deleteFlight(id: number): void {

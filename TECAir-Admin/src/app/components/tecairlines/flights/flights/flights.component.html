@@ -19,14 +19,14 @@
             <tr *ngFor="let vuelo of vuelos">
                 <td>{{ vuelo.nVuelo }}</td>
                 <td>{{ vuelo.avionMatricula }}</td>
-                <td>{{ vuelo.vueloAeropuertos[1].aeropuertoId }}</td>
-                <td>{{ vuelo.vueloAeropuertos[0].aeropuertoId }}</td>
+                <td>{{ locationType(vuelo.vueloAeropuertos, "Origen") }}</td>
+                <td>{{ locationType(vuelo.vueloAeropuertos, "Destino") }}</td>
                 <td>{{ formatDate(vuelo.fechaSalida) }}</td>
                 <td>{{ formatDate(vuelo.fechaLlegada) }}</td>
                 <td>{{ getState(vuelo.estado) }}</td>
                 <td>{{ vuelo.precio }}</td>
                 <td>
-                    <a mat-button class="custom-edit"><mat-icon>edit</mat-icon></a>
+                    <a mat-button class="custom-edit" (click)="editFlight(vuelo.nVuelo)"><mat-icon>edit</mat-icon></a>
                     <a mat-button class="custom-delete" (click)="deleteFlight(vuelo.nVuelo)"><mat-icon>delete</mat-icon></a>
                 </td>
             </tr>

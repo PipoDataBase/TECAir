@@ -47,49 +47,105 @@ namespace TECAir.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Vuelo>> GetVuelo(int id)
         {
-          if (_context.Vuelos == null)
-          {
-              return NotFound();
-          }
-            var vuelo = await _context.Vuelos.FindAsync(id);
+            var vuelo = await _context.Vuelos
+                    .Where(v => v.NVuelo == id)
+                    .Select(v => new
+                    {
+                        v.NVuelo,
+                        v.EmpleadoUsuario,
+                        v.AvionMatricula,
+                        v.FechaSalida,
+                        v.FechaLlegada,
+                        v.Estado,
+                        v.Precio,
+                        v.VueloAeropuertos
+                    })
+                    .FirstOrDefaultAsync();
 
             if (vuelo == null)
             {
                 return NotFound();
             }
 
-            return vuelo;
+            return Ok(vuelo);
         }
 
         // PUT: api/Vuelos/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutVuelo(int id, Vuelo vuelo)
+        public async Task<IActionResult> PutVuelo(int id, Vuelo vueloActualizado)
         {
-            if (id != vuelo.NVuelo)
+            //if (id != vuelo.NVuelo)
+            //{
+            //    return BadRequest();
+            //}
+
+            //_context.Entry(vuelo).State = EntityState.Modified;
+
+            //try
+            //{
+            //    await _context.SaveChangesAsync();
+            //}
+            //catch (DbUpdateConcurrencyException)
+            //{
+            //    if (!VueloExists(id))
+            //    {
+            //        return NotFound();
+            //    }
+            //    else
+            //    {
+            //        throw;
+            //    }
+            //}
+
+            //return NoContent();
+
+            // Validar el NVuelo
+            if (id != vueloActualizado.NVuelo)
             {
                 return BadRequest();
             }
 
-            _context.Entry(vuelo).State = EntityState.Modified;
+            // Validar que el Avion existe
+            var avionExistente = await _context.Avions.FindAsync(vueloActualizado.AvionMatricula);
+            if (avionExistente == null)
+            {
+                return BadRequest("El avión especificado no existe.");
+            }
+
+            // Validar que el Empleado existe
+            var empleadoExistente = await _context.Empleados.FindAsync(vueloActualizado.EmpleadoUsuario);
+            if (empleadoExistente == null)
+            {
+                return BadRequest("El empleado especificado no existe.");
+            }
+
+            var vuelo = await _context.Vuelos.FindAsync(id);
+            if (vuelo == null)
+            {
+                return NotFound();
+            }
 
             try
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!VueloExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+                // Asignar el avión y empleado existente a las propiedades de navegación
+                vuelo.AvionMatriculaNavigation = avionExistente;
+                vuelo.EmpleadoUsuarioNavigation = empleadoExistente;
 
-            return NoContent();
+                vuelo.EmpleadoUsuario = vueloActualizado.EmpleadoUsuario;
+                vuelo.AvionMatricula = vueloActualizado.AvionMatricula;
+                vuelo.FechaSalida = vueloActualizado.FechaSalida;
+                vuelo.FechaLlegada = vueloActualizado.FechaLlegada;
+                vuelo.Estado = vueloActualizado.Estado;
+                vuelo.Precio = vueloActualizado.Precio;
+                await _context.SaveChangesAsync();
+
+                return Ok(vuelo.NVuelo);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error interno del servidor: {ex.Message}");
+            }
         }
 
         // POST: api/Vuelos

@@ -16,8 +16,16 @@ export class VuelosService {
     return this.http.get<Vuelo[]>(this.baseApiUrl + '/api/Vuelos');
   }
 
+  getVuelo(id: string): Observable<Vuelo> {
+    return this.http.get<Vuelo>(this.baseApiUrl + '/api/Vuelos/' + id);
+  }
+
   postVuelo(vuelo: Vuelo): Observable<number> {
     return this.http.post<number>(this.baseApiUrl + '/api/Vuelos', vuelo);
+  }
+
+  putVuelo(id: number, vuelo: Vuelo): Observable<number> {
+    return this.http.put<number>(this.baseApiUrl + '/api/Vuelos/' + id, vuelo);
   }
 
   deleteVuelo(id: number): Observable<number> {

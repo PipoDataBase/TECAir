@@ -15,4 +15,8 @@ export class VuelosAeropuertosService {
   postVueloAeropuerto(vueloAeropuerto: VueloAeropuerto): Observable<VueloAeropuerto> {
     return this.http.post<VueloAeropuerto>(this.baseApiUrl + '/api/VuelosAeropuertos', vueloAeropuerto);
   }
+
+  putVueloAeropuerto(id: string, vueloAeropuerto: VueloAeropuerto): Observable<VueloAeropuerto> {
+    return this.http.put<VueloAeropuerto>(this.baseApiUrl + '/api/VuelosAeropuertos/' + id, vueloAeropuerto);
+  }
 }

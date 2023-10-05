@@ -59,13 +59,10 @@
                         name="fechaLlegada"></ejs-datetimepicker>
                 </div>
 
-                <div class="mb-3">
-                    <mat-form-field class="custom-mat-form-field">
-                        <mat-label>Precio</mat-label>
-                        <input matInput placeholder="USD" type="number" [(ngModel)]="vuelo.precio" name="precio"
-                            min="1">
-                    </mat-form-field>
-                </div>
+                <mat-form-field class="custom-mat-form-field">
+                    <mat-label>Precio</mat-label>
+                    <input matInput placeholder="USD" type="number" [(ngModel)]="vuelo.precio" name="precio" min="1">
+                </mat-form-field>
 
                 <button mat-flat-button color="primary" class="btn-block custom-back" (click)="back()">Regresar</button>
                 <span class="mx-1"></span>

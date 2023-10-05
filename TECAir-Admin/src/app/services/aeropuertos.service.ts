@@ -15,4 +15,8 @@ export class AeropuertosService {
   getAeropuertos(): Observable<Aeropuerto[]> {
     return this.http.get<Aeropuerto[]>(this.baseApiUrl + '/api/Aeropuertos');
   }
+
+  getAeropuerto(id: string): Observable<Aeropuerto> {
+    return this.http.get<Aeropuerto>(this.baseApiUrl + '/api/Aeropuertos/' + id);
+  }
 }
