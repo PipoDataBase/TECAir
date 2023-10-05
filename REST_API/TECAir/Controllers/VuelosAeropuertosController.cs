@@ -37,18 +37,18 @@ namespace TECAir.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<VueloAeropuerto>> GetVueloAeropuerto(string id)
         {
-          if (_context.VueloAeropuertos == null)
-          {
-              return NotFound();
-          }
-            var vueloAeropuerto = await _context.VueloAeropuertos.FindAsync(id);
+            if (_context.VueloAeropuertos == null)
+            {
+                return NotFound();
+            }
 
+            var vueloAeropuerto = await _context.VueloAeropuertos.FindAsync(id);
             if (vueloAeropuerto == null)
             {
                 return NotFound();
             }
 
-            return vueloAeropuerto;
+            return Ok(vueloAeropuerto);
         }
 
         // PUT: api/VuelosAeropuertos/5
@@ -56,34 +56,15 @@ namespace TECAir.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutVueloAeropuerto(string id, VueloAeropuerto vueloAeropuertoActualizado)
         {
-            //if (id != vueloAeropuerto.AeropuertoId)
-            //{
-            //    return BadRequest();
-            //}
-
-            //_context.Entry(vueloAeropuerto).State = EntityState.Modified;
-
-            //try
-            //{
-            //    await _context.SaveChangesAsync();
-            //}
-            //catch (DbUpdateConcurrencyException)
-            //{
-            //    if (!VueloAeropuertoExists(id))
-            //    {
-            //        return NotFound();
-            //    }
-            //    else
-            //    {
-            //        throw;
-            //    }
-            //}
-
-            //return NoContent();
-
             if (_context.VueloAeropuertos == null)
             {
                 return Problem("Entity set 'TecairDbContext.VueloAeropuertos'  is null.");
+            }
+
+            // Validar el AeropuertoId
+            if (id != vueloAeropuertoActualizado.AeropuertoId)
+            {
+                return BadRequest();
             }
 
             // Validar que el Aeropuerto existe

@@ -75,30 +75,10 @@ namespace TECAir.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutVuelo(int id, Vuelo vueloActualizado)
         {
-            //if (id != vuelo.NVuelo)
-            //{
-            //    return BadRequest();
-            //}
-
-            //_context.Entry(vuelo).State = EntityState.Modified;
-
-            //try
-            //{
-            //    await _context.SaveChangesAsync();
-            //}
-            //catch (DbUpdateConcurrencyException)
-            //{
-            //    if (!VueloExists(id))
-            //    {
-            //        return NotFound();
-            //    }
-            //    else
-            //    {
-            //        throw;
-            //    }
-            //}
-
-            //return NoContent();
+            if (_context.Vuelos == null)
+            {
+                return Problem("Entity set 'TecairDbContext.Vuelos'  is null.");
+            }
 
             // Validar el NVuelo
             if (id != vueloActualizado.NVuelo)
