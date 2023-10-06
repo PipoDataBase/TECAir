@@ -85,28 +85,44 @@ namespace TECAir.Controllers
         [HttpPost]
         public async Task<ActionResult<Viaje>> PostViaje(Viaje viaje)
         {
-          if (_context.Viajes == null)
-          {
-              return Problem("Entity set 'TecairDbContext.Viajes'  is null.");
-          }
-            _context.Viajes.Add(viaje);
-            try
+            if (_context.Viajes == null)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (ViajeExists(viaje.Id))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
+                return Problem("Entity set 'TecairDbContext.Viajes'  is null.");
             }
 
-            return CreatedAtAction("GetViaje", new { id = viaje.Id }, viaje);
+            // Validar que el Empleado existe
+            var empleadoExistente = await _context.Empleados.FindAsync(viaje.EmpleadoUsuario);
+            if (empleadoExistente == null)
+            {
+                return BadRequest("El empleado especificado no existe.");
+            }
+
+            try
+            {
+                // Asignar el empleado existente a las propiedades de navegación
+                viaje.EmpleadoUsuarioNavigation = empleadoExistente;
+
+                // Asignar id consecutivo de viaje
+                try
+                {
+                    int lastId = await _context.Viajes.MaxAsync(v => v.Id);
+                    viaje.Id = lastId + 1;
+                }
+                catch
+                {
+                    viaje.Id = 1;
+                }
+
+                // Agregar el viaje a la base de datos
+                _context.Viajes.Add(viaje);
+                await _context.SaveChangesAsync();
+
+                return Ok(viaje.Id);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error interno del servidor: {ex.Message}");
+            }
         }
 
         // DELETE: api/Viajes/5

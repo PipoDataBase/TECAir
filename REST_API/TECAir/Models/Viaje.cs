@@ -13,7 +13,7 @@ public partial class Viaje
 
     public DateTime FechaLlegada { get; set; }
 
-    public virtual Empleado EmpleadoUsuarioNavigation { get; set; } = null!;
+    public virtual Empleado? EmpleadoUsuarioNavigation { get; set; } = null!;
 
     public virtual ICollection<PaseAbordaje> PaseAbordajes { get; set; } = new List<PaseAbordaje>();
 

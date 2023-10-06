@@ -174,7 +174,6 @@ export class AddFlightComponent {
         }
       })
       Swal.fire({
-        position: 'center',
         icon: 'success',
         title: 'Vuelo agregado!',
         showConfirmButton: false,
