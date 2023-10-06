@@ -10,6 +10,9 @@ import { MatCardModule } from '@angular/material/card'
 import { MatIconModule } from '@angular/material/icon';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatGridListModule } from '@angular/material/grid-list';
+import Swal from 'sweetalert2';
+
+import { Router } from '@angular/router';
 
 interface Flight {
   flightIid: string, price: string,
@@ -167,7 +170,7 @@ export class BookFlightComponent{
   ]
 
   // Component constructor
-  constructor(private _formBuilder: FormBuilder) {
+  constructor(private _formBuilder: FormBuilder, private router: Router) {
     this.selectedFlightId = '';
     this.ticketsCuantity = 5;
     this.passengerName = '';
@@ -256,5 +259,17 @@ export class BookFlightComponent{
     console.log("Cantidad de asientos seleccionados: " + this.selectedseatsId.length);
     console.log("Asientos seleccionados: " + this.selectedseatsId);
     console.log("Asientos restantes: " + this.leftTickets);
+  }
+
+  reserveFlight(){
+    Swal.fire({
+      position: 'center',
+      icon: 'success',
+      title: 'Vuelo reservado!',
+      showConfirmButton: false,
+      timer: 2000,
+    }).then(() => {
+      this.router.navigate(["tecair"]);
+    });
   }
 }

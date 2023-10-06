@@ -27,6 +27,7 @@
                                         <mat-icon>flight_takeoff</mat-icon>
                                         <div class="horizontal-line"></div>
                                     </div>
+                                    <h6> {{ flight.flightIid }} </h6>
                                 </div>
                                 <div class="flight-dep-land-information">
                                     <h2> {{ flight.landingAirportIATA }} </h2>
@@ -44,9 +45,9 @@
               </form>
             </mat-step>
 
-            <mat-step [stepControl]="travelInformationStepD" errorMessage="Hay informacón pendiente!">
+            <mat-step [stepControl]="travelInformationStepD" errorMessage="*">
               <form [formGroup]="travelInformationStepD">
-                <ng-template matStepLabel>Informacón personal</ng-template>
+                <ng-template matStepLabel>Información personal</ng-template>
                 <div class="personal-information-main-container">
                   <div class="personal-information-payment-inputs-container">
 
@@ -116,7 +117,7 @@
               
             </mat-step>
 
-            <mat-step [stepControl]="paymentInformationStepD" errorMessage="Hay informacón pendiente!">
+            <mat-step [stepControl]="paymentInformationStepD" errorMessage="*">
               <ng-template matStepLabel>Facturación</ng-template>
               <form [formGroup]="paymentInformationStepD">
                 <div class="personal-information-main-container">
@@ -146,9 +147,8 @@
 
                     <div class="personal-information-form-field-container">
                       <button mat-flat-button color="primary" matStepperPrevious>Regresar</button>
-                      <button mat-flat-button color="primary">Siguiente</button>
+                      <button mat-flat-button color="primary" (click)="reserveFlight()">Reservar</button>
                     </div>
-                    
                   </div>
                 </div>
               </form>
@@ -161,7 +161,9 @@
         <mat-stepper linear #stepper *ngIf="getisMobile()">
           <mat-step>
             <form>
-              <ng-template matStepLabel>Seleccion de vuelo</ng-template>
+              <ng-template matStepLabel>
+                <mat-icon>flight_takeoff</mat-icon>
+              </ng-template>
 
               <! Contenido que se muestra si no hay vuelos disponibles >
               <div class="no-flights-container" *ngIf="flights.length === 0">
@@ -185,6 +187,7 @@
                                       <mat-icon>flight_takeoff</mat-icon>
                                       <div class="horizontal-line"></div>
                                   </div>
+                                  <h6> {{ flight.flightIid }} </h6>
                               </div>
                               <div class="flight-dep-land-information">
                                   <h2> {{ flight.landingAirportIATA }} </h2>
@@ -202,9 +205,11 @@
             </form>
           </mat-step>
 
-          <mat-step [stepControl]="travelInformationStepM" errorMessage="Hay informacón pendiente!">
+          <mat-step [stepControl]="travelInformationStepM" errorMessage="*">
             <form [formGroup]="travelInformationStepM">
-              <ng-template matStepLabel>Informacón personal</ng-template>
+              <ng-template matStepLabel>
+                <mat-icon>person</mat-icon>
+              </ng-template>
               <div class="personal-information-main-container">
                 <div class="personal-information-payment-inputs-container">
 
@@ -237,16 +242,15 @@
               </div>
             </form>
 
-            <div class="personal-information-form-field-container">
-              <button mat-flat-button color="primary" matStepperPrevious>Regresar</button>
-              <button mat-flat-button color="primary" matStepperNext (click)="updatePersonalInformationM()">Siguiente</button>
+            <div class="selected-seats-id-label-contanier">
+              <h4>Asientos seleccionados:</h4>
+              <h4 *ngFor="let selectedseatId of getselectedseatsId()"> {{ selectedseatId }} </h4>
             </div>
 
             <div class="selected-seats-id-label-contanier">
-              <h2>Asientos seleccionados:</h2>
-              <h2 *ngFor="let selectedseatId of getselectedseatsId()"> {{ selectedseatId }} </h2>
+              <h4 class="left-seast-lablel-M">Asientos restantes: {{getleftTickets()}} </h4>
             </div>
-            <h2 class="left-seast-lablel-M">Asientos restantes: {{getleftTickets()}} </h2>
+
             <div class="seats-selection-container-M">
               <img class="aircraft-image-M" src="../../../assets/aircraftShadow.png">
               <div class="plane-seats-grid-M">
@@ -259,10 +263,18 @@
               </div>
             </div>
 
+            <div class="personal-information-form-field-container">
+              <button mat-flat-button color="primary" matStepperPrevious>Regresar</button>
+              <button mat-flat-button color="primary" matStepperNext (click)="updatePersonalInformationD()" *ngIf="getleftTickets() != 0" disabled>Siguiente</button>
+                <button mat-flat-button color="primary" matStepperNext (click)="updatePersonalInformationD()" *ngIf="getleftTickets() == 0">Siguiente</button>
+            </div>
+
           </mat-step>
 
-          <mat-step [stepControl]="paymentInformationStepM" errorMessage="Hay informacón pendiente!">
-            <ng-template matStepLabel>Facturación</ng-template>
+          <mat-step [stepControl]="paymentInformationStepM" errorMessage="*">
+            <ng-template matStepLabel>
+              <mat-icon>payment</mat-icon>
+            </ng-template>
             <form [formGroup]="paymentInformationStepM">
               <div class="personal-information-main-container">
                 <div class="personal-information-payment-inputs-container">
@@ -287,9 +299,9 @@
 
                   <div class="personal-information-form-field-container">
                     <button mat-flat-button color="primary" matStepperPrevious>Regresar</button>
-                    <button mat-flat-button color="primary">Siguiente</button>
+                    <button mat-flat-button color="primary" (click)="reserveFlight()">Reservar</button>
                   </div>
-                  
+          
                 </div>
               </div>
             </form>

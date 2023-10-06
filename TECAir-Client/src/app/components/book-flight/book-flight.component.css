@@ -301,7 +301,7 @@ h3 {
     display: flex;
     width: 100%;
     height: fit-content;
-    align-items: start;
+    align-items: flex-start;
     justify-content: center;
     pointer-events: all;
     margin-top: 5%;
@@ -310,12 +310,14 @@ h3 {
 
 .plane-seats-grid-M {
     width: 40%;
+    height: 100%;
     min-width: 40%;
-    height: fit-content;
     display: grid;
     position: absolute;
     grid-template-columns: repeat(6, 1fr);
     grid-gap: 0.5vw;
+    align-items: center;
+    justify-content: center;
 }
 
 .seat-button-container-M {
@@ -357,4 +359,5 @@ h3 {
 .left-seast-lablel-M {
     width: 100%;
     justify-content: center;
+    text-align: center;
 }
