@@ -154,7 +154,7 @@ namespace TECAir.Controllers
             var vueloExistente = await _context.Vuelos.FindAsync(vueloAeropuerto.VueloNumero);
             if (vueloExistente == null)
             {
-                return BadRequest("El empleado especificado no existe.");
+                return BadRequest("El vuelo especificado no existe.");
             }
 
             try

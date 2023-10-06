@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -85,28 +87,56 @@ namespace TECAir.Controllers
         [HttpPost]
         public async Task<ActionResult<ViajeVuelo>> PostViajeVuelo(ViajeVuelo viajeVuelo)
         {
-          if (_context.ViajeVuelos == null)
-          {
-              return Problem("Entity set 'TecairDbContext.ViajeVuelos'  is null.");
-          }
-            _context.ViajeVuelos.Add(viajeVuelo);
-            try
+            if (_context.ViajeVuelos == null)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (ViajeVueloExists(viajeVuelo.ViajeId))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
+                return Problem("Entity set 'TecairDbContext.ViajeVuelos'  is null.");
             }
 
-            return CreatedAtAction("GetViajeVuelo", new { id = viajeVuelo.ViajeId }, viajeVuelo);
+            // Validar que el Viaje existe
+            var viajeExistente = await _context.Viajes.FindAsync(viajeVuelo.ViajeId);
+            if (viajeExistente == null)
+            {
+                return BadRequest("El avión especificado no existe.");
+            }
+
+            // Validar que el Vuelo existe
+            var vueloExistente = await _context.Vuelos.FindAsync(viajeVuelo.NVuelo);
+            if (vueloExistente == null)
+            {
+                return BadRequest("El vuelp especificado no existe.");
+            }
+
+            try
+            {
+                // Asignar el viaje y vuelo existente a las propiedades de navegación
+                viajeVuelo.Viaje = viajeExistente;
+                viajeVuelo.NVueloNavigation = vueloExistente;
+
+                // Agregar el ViajeVuelo a la base de datos
+                _context.ViajeVuelos.Add(viajeVuelo);
+                await _context.SaveChangesAsync();
+
+                try
+                {
+                    // Agregar viajeVuelo en su especifico viaje
+                    var viaje = await _context.Viajes.FindAsync(viajeVuelo.ViajeId);
+                    if (viaje != null)
+                    {
+                        viaje.ViajeVuelos.Add(viajeVuelo);
+                    }
+                    await _context.SaveChangesAsync();
+                }
+                catch
+                {
+                    return BadRequest("No se pudo almacenar vueloAeropuerto en Vuelos.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error interno del servidor: {ex.Message}");
+            }
+
+            return Ok(JsonSerializer.Serialize(viajeVuelo, jsonSerializerOptions));
         }
 
         // DELETE: api/ViajesVuelos/5
@@ -133,5 +163,7 @@ namespace TECAir.Controllers
         {
             return (_context.ViajeVuelos?.Any(e => e.ViajeId == id)).GetValueOrDefault();
         }
+
+        private static readonly JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions { ReferenceHandler = ReferenceHandler.Preserve };
     }
 }

@@ -11,7 +11,7 @@ public partial class ViajeVuelo
 
     public int? Escala { get; set; }
 
-    public virtual Vuelo NVueloNavigation { get; set; } = null!;
+    public virtual Vuelo? NVueloNavigation { get; set; } = null!;
 
-    public virtual Viaje Viaje { get; set; } = null!;
+    public virtual Viaje? Viaje { get; set; } = null!;
 }
