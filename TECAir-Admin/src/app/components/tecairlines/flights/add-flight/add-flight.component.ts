@@ -145,7 +145,6 @@ export class AddFlightComponent {
             this.origen.aeropuertoId = origen;
             this.vuelosAeropuertosService.postVueloAeropuerto(this.origen).subscribe({
               next: (response) => {
-                console.log(response);
               },
               error: (response) => {
                 console.log(response);
@@ -156,7 +155,6 @@ export class AddFlightComponent {
             this.destino.aeropuertoId = destino;
             this.vuelosAeropuertosService.postVueloAeropuerto(this.destino).subscribe({
               next: (response) => {
-                console.log(response);
               },
               error: (response) => {
                 console.log(response);

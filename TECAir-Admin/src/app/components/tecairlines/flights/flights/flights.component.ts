@@ -21,7 +21,6 @@ export class FlightsComponent {
     this.vuelosService.getVuelos().subscribe({
       next: (vuelos) => {
         this.vuelos = vuelos;
-        console.log(this.vuelos);
       },
       error: (response) => {
         console.log(response);

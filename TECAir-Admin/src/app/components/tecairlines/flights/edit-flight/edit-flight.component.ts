@@ -181,17 +181,6 @@ export class EditFlightComponent {
       this.vueloDetails.estado = false;
     }
 
-    console.log(this.vueloDetails.empleadoUsuario);
-    console.log(this.vueloDetails.avionMatricula);
-
-    console.log(origen);
-    console.log(destino);
-
-    console.log(this.vueloDetails.fechaSalida);
-    console.log(this.vueloDetails.fechaLlegada);
-
-    console.log(this.vueloDetails.precio);
-
     if (this.vueloDetails.empleadoUsuario && this.vueloDetails.avionMatricula && origen != '' && destino != '' && this.vueloDetails.fechaSalida && this.vueloDetails.fechaLlegada && this.vueloDetails.precio >= 1) {
       this.vuelosService.putVuelo(this.vueloDetails.nVuelo , this.vueloDetails).subscribe({
         next: (nVuelo) => {
@@ -200,7 +189,6 @@ export class EditFlightComponent {
             this.origen.aeropuertoId = origen;
             this.vuelosAeropuertosService.putVueloAeropuerto(this.origen.aeropuertoId, this.origen).subscribe({
               next: (response) => {
-                console.log(response);
               },
               error: (response) => {
                 console.log(response);
@@ -211,7 +199,6 @@ export class EditFlightComponent {
             this.destino.aeropuertoId = destino;
             this.vuelosAeropuertosService.putVueloAeropuerto(this.destino.aeropuertoId, this.destino).subscribe({
               next: (response) => {
-                console.log(response);
               },
               error: (response) => {
                 console.log(response);
