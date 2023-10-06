@@ -297,13 +297,15 @@ h3 {
     margin-bottom: 0%;
 }
 
-.tickets-selection-container-M {
+.seats-selection-container-M {
     display: flex;
     width: 100%;
     height: fit-content;
     align-items: start;
     justify-content: center;
     pointer-events: all;
+    margin-top: 5%;
+    margin-bottom: 5%;
 }
 
 .plane-seats-grid-M {
@@ -350,4 +352,9 @@ h3 {
     align-items: center;
     justify-content: center;
     gap: 1%;
+}
+
+.left-seast-lablel-M {
+    width: 100%;
+    justify-content: center;
 }

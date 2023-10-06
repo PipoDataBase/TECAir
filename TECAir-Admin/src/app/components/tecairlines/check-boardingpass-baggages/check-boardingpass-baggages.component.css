@@ -1,0 +1,120 @@
+.check-in-baggages-main-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.check-in-main-container {
+    display: flex;
+    flex-direction: column;
+    width: 98%;
+    height: fit-content;
+    margin: 1%;
+    padding: 2%;
+    margin-bottom: 0.5%;
+    border-radius: 25px;
+    background-color: #FFFFFF;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.title{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: fit-content;
+    align-items: center;
+    justify-content: center;
+    gap: 1%;
+    font-size: x-large;
+}
+
+.boarding-pass-searching-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: fit-content;
+    align-items: center;
+    justify-content: center;
+}
+
+.boarding-pass-number-input {
+    width: 80%;
+    margin-top: 1.25%;
+    margin-right: 0.5%;
+}
+
+.search-boarding-pass-button {
+    margin-left: 0.5%;
+}
+
+.boarding-pass-information-table-container {
+    width: 89%;
+}
+
+.mat-column-boardingPassNumber {
+    width: 30%;
+}
+
+.mat-column-clientEmail {
+    width: 30%;
+}
+
+.mat-column-boardingGate {
+    width: fit-content;
+}
+
+.mat-column-checkedIn {
+    width: fit-content;
+}
+
+.mat-column-checkInButton {
+    width: 15%;
+}
+
+td, th {
+    text-align: center;
+}
+
+.check-in-boarding-pass-button {
+    width: fit-content;
+    height: fit-content;
+    background-color: #36B552;
+}
+
+.baggages-main-container {
+    display: flex;
+    flex-direction: column;
+    width: 98%;
+    height: fit-content;
+    margin: 1%;
+    padding: 2%;
+    margin-top: 0.5%;
+    border-radius: 25px;
+    background-color: FFFFFF;
+    align-items: center;
+    justify-content: center;
+}
+
+.baggages-register-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: fit-content;
+    align-items: center;
+    justify-content: center;
+}
+
+.expected-price-information {
+    font-size: large;
+    margin-bottom: 1.25%;
+}
+
+.baggage-amount-input {
+    width: 25%;
+    margin-top: 1.25%;
+    margin-right: 0.5%;
+}

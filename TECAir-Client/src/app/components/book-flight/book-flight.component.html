@@ -93,7 +93,13 @@
                   <img class="aircraft-image" src="../../../assets/aircraftShadow.png">
                   <div class="plane-seats-grid">
                     <div class="seat-button-container" *ngFor="let seat of seats; let i = index">
-                      <button mat-icon-button (click)="selectSeat(seat.seatId)">
+
+                      <button mat-icon-button (click)="selectSeat(seat.seatId)" *ngIf="seat.state == 'Available'">
+                        <mat-icon>event_seat</mat-icon>
+                        <h6> {{seat.seatId}} </h6>
+                      </button>
+
+                      <button mat-icon-button (click)="selectSeat(seat.seatId)" *ngIf="seat.state != 'Available'" disabled>
                         <mat-icon>event_seat</mat-icon>
                         <h6> {{seat.seatId}} </h6>
                       </button>
@@ -227,16 +233,21 @@
                     <span matPrefix> (+506) &nbsp;</span>
                     <input matInput type="tel" maxlength="8" placeholder="77737426" formControlName="passengerTelephoneInputM" required>
                   </mat-form-field>
-
-                  <div class="personal-information-form-field-container">
-                    <button mat-flat-button color="primary" matStepperPrevious>Regresar</button>
-                    <button mat-flat-button color="primary" matStepperNext (click)="updatePersonalInformationM()">Siguiente</button>
-                  </div>
                 </div>
               </div>
             </form>
 
-            <div class="tickets-selection-container-M">
+            <div class="personal-information-form-field-container">
+              <button mat-flat-button color="primary" matStepperPrevious>Regresar</button>
+              <button mat-flat-button color="primary" matStepperNext (click)="updatePersonalInformationM()">Siguiente</button>
+            </div>
+
+            <div class="selected-seats-id-label-contanier">
+              <h2>Asientos seleccionados:</h2>
+              <h2 *ngFor="let selectedseatId of getselectedseatsId()"> {{ selectedseatId }} </h2>
+            </div>
+            <h2 class="left-seast-lablel-M">Asientos restantes: {{getleftTickets()}} </h2>
+            <div class="seats-selection-container-M">
               <img class="aircraft-image-M" src="../../../assets/aircraftShadow.png">
               <div class="plane-seats-grid-M">
                 <div class="seat-button-container-M" *ngFor="let seat of seats; let i = index">
