@@ -177,6 +177,7 @@ CREATE TABLE "Vuelo_Aeropuerto" (
 CREATE TABLE "Viaje_Vuelo" (
 	"Viaje_Id" integer NOT NULL,
 	"N_Vuelo" integer NOT NULL,
+	"Escala" integer,
 	CONSTRAINT "Viaje_Vuelo_pk" PRIMARY KEY ("Viaje_Id","N_Vuelo")
 ) WITH (
   OIDS=FALSE
@@ -227,3 +228,9 @@ ALTER TABLE "Viaje_Vuelo" ADD CONSTRAINT "Viaje_Vuelo_fk1" FOREIGN KEY ("N_Vuelo
 
 ALTER TABLE "Vuelo_Aeropuerto" ADD CONSTRAINT "Vuelo_Aeropuerto_fk0" FOREIGN KEY ("Aeropuerto_Id") REFERENCES "Aeropuerto"("Id");
 ALTER TABLE "Vuelo_Aeropuerto" ADD CONSTRAINT "Vuelo_Aeropuerto_fk1" FOREIGN KEY ("Vuelo_Numero") REFERENCES "Vuelo"("N_Vuelo");
+
+ALTER TABLE "Vuelo" ALTER COLUMN "Fecha_Salida" TYPE timestamp with time zone;
+ALTER TABLE "Vuelo" ALTER COLUMN "Fecha_Llegada" TYPE timestamp with time zone;
+
+ALTER TABLE "Viaje" ALTER COLUMN "Fecha_Salida" TYPE timestamp with time zone;
+ALTER TABLE "Viaje" ALTER COLUMN "Fecha_Llegada" TYPE timestamp with time zone;

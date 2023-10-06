@@ -19,6 +19,8 @@ public partial class Viaje
 
     public virtual Promocion? Promocion { get; set; }
 
+    public virtual ICollection<ViajeVuelo> ViajeVuelos { get; set; } = new List<ViajeVuelo>();
+
     public virtual ICollection<Cliente> CorreoClientes { get; set; } = new List<Cliente>();
 
     public virtual ICollection<Vuelo> NVuelos { get; set; } = new List<Vuelo>();
