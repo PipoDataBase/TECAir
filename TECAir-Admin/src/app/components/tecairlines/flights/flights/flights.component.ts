@@ -3,8 +3,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Vuelo } from 'src/app/models/vuelo.module';
 import { VuelosService } from 'src/app/services/vuelos.service';
 import { DatePipe } from '@angular/common';
-import { AvionesService } from 'src/app/services/aviones.service';
-import { VueloAeropuerto } from 'src/app/models/vuelo-aeropuerto.module';
+import { MatTableDataSource } from '@angular/material/table';
+import { SharedService } from 'src/app/services/shared.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-flights',
@@ -14,13 +15,17 @@ import { VueloAeropuerto } from 'src/app/models/vuelo-aeropuerto.module';
 export class FlightsComponent {
   username: string = '';
   vuelos: Vuelo[] = [];
+  dataSource = new MatTableDataSource(this.vuelos);
+  columnHeaders: string[] = ['nVuelo', 'avion', 'origen', 'destino', 'fechaSalida', 'fechaLlegada', 'estado', 'precio', 'accion'];
 
-  constructor(private route: ActivatedRoute, private router: Router, private datePipe: DatePipe, private vuelosService: VuelosService, private avionesService: AvionesService) { }
+  constructor(private route: ActivatedRoute, private router: Router, private datePipe: DatePipe, private vuelosService: VuelosService, public sharedService: SharedService) { }
 
-  updateVuelos(): void {
+  // update flights after edit or delete them
+  updateFlights(): void {
     this.vuelosService.getVuelos().subscribe({
       next: (vuelos) => {
         this.vuelos = vuelos;
+        this.dataSource = new MatTableDataSource(this.vuelos);
       },
       error: (response) => {
         console.log(response);
@@ -38,49 +43,44 @@ export class FlightsComponent {
       }
     })
 
-    this.updateVuelos();
+    this.updateFlights();
   }
 
-  locationType(va: VueloAeropuerto[], tipo: string): string {
-    if (va[0].tipo == tipo){
-      return va[0].aeropuertoId;
-    }
-    else if (va[1].tipo == tipo) {
-      return va[1].aeropuertoId;
-    }
-    return "";
-  }
-
-  formatDate(date: string): string {
-    const result = this.datePipe.transform(date, 'M/d/yy, h:mm a');
-    if (result) {
-      return result
-    }
-    return date;
-  }
-
-  getState(state: boolean): string {
-    if (state) {
-      return "Abierto";
-    }
-    return "Cerrado";
-  }
-
+  // go to add-flight view
   addFlight(): void {
     this.router.navigate(["tecair-admin", this.username, "add-flight"]);
   }
 
+  // go to edit-flight view
   editFlight(id: number): void {
     this.router.navigate(["tecair-admin", this.username, "edit-flight", id]);
   }
 
+  // delete selected flight
   deleteFlight(id: number): void {
-    this.vuelosService.deleteVuelo(id).subscribe({
-      next: (response) => {
-        this.updateVuelos();
-      },
-      error: (error) => {
-        console.log(error);
+    Swal.fire({
+      title: '¿Está seguro?',
+      text: "¡No podrá revertir esto!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3F51B5',
+      cancelButtonColor: '#e13a2d',
+      confirmButtonText: '¡Sí, bórralo!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.vuelosService.deleteVuelo(id).subscribe({
+          next: (response) => {
+            this.updateFlights();
+          },
+          error: (error) => {
+            console.log(error);
+          }
+        })
+        Swal.fire(
+          '¡Eliminado!',
+          'El vuelo ha sido eliminado.',
+          'success'
+        )
       }
     })
   }

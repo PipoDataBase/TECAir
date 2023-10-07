@@ -45,17 +45,25 @@ mat-form-field {
 }
 
 .viaje-container {
-    max-height: 160px;
+    max-height: 260px;
     overflow-y: auto;
 }
 
 .vuelo-container {
-    max-height: 260px;
+    max-height: 360px;
     overflow-y: auto;
 }
 
 table {
     width: 100%;
+}
+
+table th {
+    text-align: center;
+}
+
+table td {
+    text-align: center;
 }
 
 .flex-container {
