@@ -1,8 +1,12 @@
 import { Component } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ViajeVuelo } from 'src/app/models/viaje-vuelo.module';
+import { Viaje } from 'src/app/models/viaje.module';
 import { VueloAeropuerto } from 'src/app/models/vuelo-aeropuerto.module';
 import { Vuelo } from 'src/app/models/vuelo.module';
+import { ViajesVuelosService } from 'src/app/services/viajes-vuelos.service';
+import { ViajesService } from 'src/app/services/viajes.service';
 import { VuelosService } from 'src/app/services/vuelos.service';
 import Swal from 'sweetalert2';
 
@@ -21,7 +25,14 @@ export class AddTripComponent {
   viajeDataSource = new MatTableDataSource(this.viajeVuelos);
   selectedRow: any = null;
 
-  constructor(private route: ActivatedRoute, private router: Router, private vuelosService: VuelosService) { }
+  viaje: Viaje = {
+    id: 0,
+    empleadoUsuario: '',
+    fechaSalida: '',
+    fechaLlegada: '',
+  }
+
+  constructor(private route: ActivatedRoute, private router: Router, private vuelosService: VuelosService, private viajesService: ViajesService, private viajesVuelosService: ViajesVuelosService) { }
 
   ngOnInit(): void {
     this.route.parent?.paramMap.subscribe({
@@ -98,13 +109,6 @@ export class AddTripComponent {
     }
   }
 
-  restart(): void {
-    this.selectedRow = null;
-    this.viajeVuelos = [];
-    this.viajeDataSource = new MatTableDataSource(this.viajeVuelos);
-    this.dataSource = new MatTableDataSource(this.vuelos);
-  }
-
   deleteFlight(id: number): void {
     const vuelo = this.viajeVuelos.find(vuelo => vuelo.nVuelo === id);
     if (vuelo) {
@@ -128,8 +132,55 @@ export class AddTripComponent {
     }
   }
 
-  addTrip() {
+  restart(): void {
+    this.selectedRow = null;
+    this.viajeVuelos = [];
+    this.viajeDataSource = new MatTableDataSource(this.viajeVuelos);
+    this.dataSource = new MatTableDataSource(this.vuelos);
+  }
 
+  addTrip() {
+    console.log(this.viajeVuelos);
+    if (this.viajeVuelos.length > 0) {
+      const last = this.viajeVuelos.length - 1;
+      this.viaje.empleadoUsuario = this.username;
+      this.viaje.fechaSalida = this.viajeVuelos[0].fechaSalida;
+      this.viaje.fechaLlegada = this.viajeVuelos[last].fechaLlegada;
+      this.viaje.fechaSalida = this.viaje.fechaSalida.replace('Z', '+00:00');
+      this.viaje.fechaLlegada = this.viaje.fechaLlegada.replace('Z', '+00:00');
+
+      this.viajesService.postVuelo(this.viaje).subscribe({
+        next: (id) => {
+          for (const vuelo of this.viajeVuelos) {
+            const index = this.viajeVuelos.indexOf(vuelo) + 1;
+            var viajeVuelo: ViajeVuelo = {
+              viajeId: id,
+              nVuelo: vuelo.nVuelo,
+              escala: index
+            }
+
+            this.viajesVuelosService.postViajeVuelo(viajeVuelo).subscribe({
+              next: (response) => {
+
+              },
+              error: (response) => {
+                console.log(response);
+              }
+            })
+          }
+        },
+        error: (response) => {
+          console.log(response);
+        }
+      })
+    }
+    else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'No ha seleccionado ningún vuelo'
+      })
+    }
   }
 
   back(): void {
