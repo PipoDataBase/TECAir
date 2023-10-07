@@ -3,7 +3,6 @@ h1 {
 }
 
 .custom-button {
-    margin-top: 1%;
     text-transform: uppercase;
 }
 
@@ -25,12 +24,46 @@ h1 {
 
 .custom-back {
     background-color: #e13a2d;
+    margin-right: 1%;
 }
 
 .custom-save {
     background-color: #3F51B5;
 }
 
+.custom-delete {
+    color: #e13a2d;
+}
+
+.custom-edit {
+    background-color: #158282;
+    margin-left: 1%;
+}
+
 mat-form-field {
     width: 100%;
+}
+
+.viaje-container {
+    max-height: 160px;
+    overflow-y: auto;
+}
+
+.vuelo-container {
+    max-height: 260px;
+    overflow-y: auto;
+}
+
+table {
+    width: 100%;
+}
+
+.flex-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.spacer {
+    flex-grow: 1;
 }
