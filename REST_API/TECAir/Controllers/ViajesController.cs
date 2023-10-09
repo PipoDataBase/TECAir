@@ -29,8 +29,11 @@ namespace TECAir.Controllers
                     {
                         v.Id,
                         v.EmpleadoUsuario,
+                        v.Origen,
+                        v.Destino,
                         v.FechaSalida,
                         v.FechaLlegada,
+                        v.Precio,
                         v.ViajeVuelos
                     })
                     .ToListAsync();

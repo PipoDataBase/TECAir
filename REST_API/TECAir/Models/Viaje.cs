@@ -9,9 +9,15 @@ public partial class Viaje
 
     public string EmpleadoUsuario { get; set; } = null!;
 
+    public string Origen { get; set; } = null!;
+
+    public string Destino { get; set; } = null!;
+
     public DateTime FechaSalida { get; set; }
 
     public DateTime FechaLlegada { get; set; }
+
+    public decimal Precio { get; set; }
 
     public virtual Empleado? EmpleadoUsuarioNavigation { get; set; } = null!;
 

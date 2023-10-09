@@ -1,13 +1,15 @@
 CREATE TABLE "Viaje" (
 	"id" integer NOT NULL,
 	"Empleado_Usuario" varchar(12) NOT NULL,
+	"Origen" varchar(4) NOT NULL,
+	"Destino" varchar(4) NOT NULL,
 	"Fecha_Salida" TIMESTAMP NOT NULL,
 	"Fecha_Llegada" TIMESTAMP NOT NULL,
+	"Precio" money NOT NULL,
 	CONSTRAINT "Viaje_pk" PRIMARY KEY ("id")
 ) WITH (
   OIDS=FALSE
 );
-
 
 
 CREATE TABLE "Vuelo" (

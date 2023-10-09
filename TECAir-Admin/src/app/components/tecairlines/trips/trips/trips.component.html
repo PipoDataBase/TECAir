@@ -14,14 +14,21 @@
             <!-- origin column -->
             <ng-container matColumnDef="origen">
                 <th mat-header-cell *matHeaderCellDef> Origen </th>
-                <td mat-cell *matCellDef="let element; let i = index"> {{origins[i]}}
+                <td mat-cell *matCellDef="let element"> {{element.origen}}
                 </td>
             </ng-container>
 
             <!-- destination column -->
             <ng-container matColumnDef="destino">
                 <th mat-header-cell *matHeaderCellDef> Destino </th>
-                <td mat-cell *matCellDef="let element; let i = index"> {{destinations[i]}}
+                <td mat-cell *matCellDef="let element"> {{element.destino}}
+                </td>
+            </ng-container>
+
+            <!-- scales column -->
+            <ng-container matColumnDef="escalas">
+                <th mat-header-cell *matHeaderCellDef> Escalas </th>
+                <td mat-cell *matCellDef="let element"> {{element.viajeVuelos.length}}
                 </td>
             </ng-container>
 
@@ -40,7 +47,7 @@
             <!-- price column -->
             <ng-container matColumnDef="precio">
                 <th mat-header-cell *matHeaderCellDef> Precio (USD) </th>
-                <td mat-cell *matCellDef="let element; let i = index"> {{prices[i]}}</td>
+                <td mat-cell *matCellDef="let element"> {{element.precio}}</td>
             </ng-container>
 
             <!-- action column -->

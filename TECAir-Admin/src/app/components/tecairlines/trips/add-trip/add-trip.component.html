@@ -6,9 +6,9 @@
                 <h2 style="margin: 0;">Viaje</h2>
                 <section class="viaje-container mat-elevation-z8" tabindex="0">
                     <table mat-table [dataSource]="viajeDataSource">
-                        <!-- nFlight Column -->
-                        <ng-container matColumnDef="nVuelo">
-                            <th mat-header-cell *matHeaderCellDef> NVuelo </th>
+                        <!-- flightId Column -->
+                        <ng-container matColumnDef="vueloId">
+                            <th mat-header-cell *matHeaderCellDef> VueloId </th>
                             <td mat-cell *matCellDef="let element"> {{element.nVuelo}} </td>
                         </ng-container>
 
@@ -43,7 +43,13 @@
                             </td>
                         </ng-container>
 
-                        <!-- checkbox column -->
+                        <!-- price column -->
+                        <ng-container matColumnDef="precio">
+                            <th mat-header-cell *matHeaderCellDef> Precio (USD) </th>
+                            <td mat-cell *matCellDef="let element"> {{element.precio}} </td>
+                        </ng-container>
+
+                        <!-- delete column -->
                         <ng-container matColumnDef="eliminar">
                             <th mat-header-cell *matHeaderCellDef>Eliminar</th>
                             <td mat-cell *matCellDef="let element">
@@ -67,9 +73,9 @@
                 </mat-form-field>
                 <section class="vuelo-container mat-elevation-z8" tabindex="0">
                     <table mat-table [dataSource]="dataSource">
-                        <!-- nFlight column -->
-                        <ng-container matColumnDef="nVuelo">
-                            <th mat-header-cell *matHeaderCellDef> NVuelo </th>
+                        <!-- flightId column -->
+                        <ng-container matColumnDef="vueloId">
+                            <th mat-header-cell *matHeaderCellDef> VueloId </th>
                             <td mat-cell *matCellDef="let element"> {{element.nVuelo}} </td>
                         </ng-container>
 
@@ -102,6 +108,12 @@
                             <th mat-header-cell *matHeaderCellDef> FechaLlegada </th>
                             <td mat-cell *matCellDef="let element"> {{sharedService.formatDate(element.fechaLlegada)}}
                             </td>
+                        </ng-container>
+
+                        <!-- price column -->
+                        <ng-container matColumnDef="precio">
+                            <th mat-header-cell *matHeaderCellDef> Precio (USD) </th>
+                            <td mat-cell *matCellDef="let element"> {{element.precio}} </td>
                         </ng-container>
 
                         <!-- checkbox column -->

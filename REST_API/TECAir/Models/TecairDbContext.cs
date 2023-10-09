@@ -279,6 +279,7 @@ public partial class TecairDbContext : DbContext
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("id");
+            entity.Property(e => e.Destino).HasMaxLength(4);
             entity.Property(e => e.EmpleadoUsuario)
                 .HasMaxLength(12)
                 .HasColumnName("Empleado_Usuario");
@@ -288,6 +289,8 @@ public partial class TecairDbContext : DbContext
             entity.Property(e => e.FechaSalida)
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("Fecha_Salida");
+            entity.Property(e => e.Origen).HasMaxLength(4);
+            entity.Property(e => e.Precio).HasColumnType("money");
 
             entity.HasOne(d => d.EmpleadoUsuarioNavigation).WithMany(p => p.Viajes)
                 .HasForeignKey(d => d.EmpleadoUsuario)

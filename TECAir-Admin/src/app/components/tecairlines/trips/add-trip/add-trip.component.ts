@@ -19,8 +19,8 @@ export class AddTripComponent {
   username: string = '';
   vuelos: Vuelo[] = [];
   viajeVuelos: Vuelo[] = [];
-  columnHeaders: string[] = ['nVuelo', 'origen', 'destino', 'fechaSalida', 'fechaLlegada', 'seleccionar'];
-  viajeColumnHeaders: string[] = ['nVuelo', 'origen', 'destino', 'fechaSalida', 'fechaLlegada', 'eliminar'];
+  columnHeaders: string[] = ['vueloId', 'origen', 'destino', 'fechaSalida', 'fechaLlegada', 'precio', 'seleccionar'];
+  viajeColumnHeaders: string[] = ['vueloId', 'origen', 'destino', 'fechaSalida', 'fechaLlegada', 'precio', 'eliminar'];
   dataSource = new MatTableDataSource(this.vuelos);
   viajeDataSource = new MatTableDataSource(this.viajeVuelos);
   selectedRow: any = null;
@@ -29,8 +29,11 @@ export class AddTripComponent {
   viaje: Viaje = {
     id: 0,
     empleadoUsuario: '',
+    origen: '',
+    destino: '',
     fechaSalida: '',
     fechaLlegada: '',
+    precio: 0,
     viajeVuelos: []
   }
 
@@ -42,7 +45,6 @@ export class AddTripComponent {
         const id = params.get('id');
         if (id) {
           this.username = id;
-          console.log(this.username);
         }
       }
     })
@@ -212,6 +214,17 @@ export class AddTripComponent {
           return;
         }
       }
+
+      // add origin and destination
+      this.viaje.origen = this.sharedService.locationType(this.viajeVuelos[0].vueloAeropuertos, "Origen");
+      this.viaje.destino = this.sharedService.locationType(this.viajeVuelos[lastIndex].vueloAeropuertos, "Destino");
+
+      // add total price
+      var price = 0;
+      for (const vv of this.viajeVuelos) {
+        price += vv.precio;
+      }
+      this.viaje.precio = price;
 
       // add trip to database
       this.viajesService.postViaje(this.viaje).subscribe({
