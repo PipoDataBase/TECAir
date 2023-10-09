@@ -24,11 +24,18 @@ namespace TECAir.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Viaje>>> GetViajes()
         {
-          if (_context.Viajes == null)
-          {
-              return NotFound();
-          }
-            return await _context.Viajes.ToListAsync();
+            var viajes = await _context.Viajes
+                    .Select(v => new
+                    {
+                        v.Id,
+                        v.EmpleadoUsuario,
+                        v.FechaSalida,
+                        v.FechaLlegada,
+                        v.ViajeVuelos
+                    })
+                    .ToListAsync();
+
+            return Ok(viajes);
         }
 
         // GET: api/Viajes/5

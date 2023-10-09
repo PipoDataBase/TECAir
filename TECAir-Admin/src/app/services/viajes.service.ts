@@ -12,7 +12,15 @@ export class ViajesService {
 
   constructor(private http: HttpClient) { }
 
-  postVuelo(viaje: Viaje): Observable<number> {
+  getViajes(): Observable<Viaje[]> {
+    return this.http.get<Viaje[]>(this.baseApiUrl + '/api/Viajes');
+  }
+
+  getViaje(id: string): Observable<Viaje> {
+    return this.http.get<Viaje>(this.baseApiUrl + '/api/Viajes/' + id);
+  }
+
+  postViaje(viaje: Viaje): Observable<number> {
     return this.http.post<number>(this.baseApiUrl + '/api/Viajes', viaje);
   }
 }

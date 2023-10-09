@@ -17,3 +17,16 @@ h1 {
 .custom-delete {
     color: #e13a2d;
 }
+
+.viaje-container {
+    max-height: 460px;
+    overflow-y: auto;
+}
+
+table th {
+    text-align: center;
+}
+
+table td {
+    text-align: center;
+}

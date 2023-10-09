@@ -16,7 +16,7 @@ export class FlightsComponent {
   username: string = '';
   vuelos: Vuelo[] = [];
   dataSource = new MatTableDataSource(this.vuelos);
-  columnHeaders: string[] = ['nVuelo', 'avion', 'origen', 'destino', 'fechaSalida', 'fechaLlegada', 'estado', 'precio', 'accion'];
+  columnHeaders: string[] = ['vueloId', 'avion', 'origen', 'destino', 'fechaSalida', 'fechaLlegada', 'estado', 'precio', 'accion'];
 
   constructor(private route: ActivatedRoute, private router: Router, private datePipe: DatePipe, private vuelosService: VuelosService, public sharedService: SharedService) { }
 

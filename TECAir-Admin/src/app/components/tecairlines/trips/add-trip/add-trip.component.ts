@@ -31,6 +31,7 @@ export class AddTripComponent {
     empleadoUsuario: '',
     fechaSalida: '',
     fechaLlegada: '',
+    viajeVuelos: []
   }
 
   constructor(private route: ActivatedRoute, private router: Router, private vuelosService: VuelosService, private viajesService: ViajesService, private viajesVuelosService: ViajesVuelosService, public sharedService: SharedService) { }
@@ -213,7 +214,7 @@ export class AddTripComponent {
       }
 
       // add trip to database
-      this.viajesService.postVuelo(this.viaje).subscribe({
+      this.viajesService.postViaje(this.viaje).subscribe({
         next: (id) => {
           for (const flight of this.viajeVuelos) {
             const index = this.viajeVuelos.indexOf(flight) + 1;
