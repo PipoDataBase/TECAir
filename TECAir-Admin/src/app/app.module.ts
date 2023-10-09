@@ -31,6 +31,7 @@ import { AddFlightComponent } from './components/tecairlines/flights/add-flight/
 import { EditFlightComponent } from './components/tecairlines/flights/edit-flight/edit-flight.component';
 import { TripsComponent } from './components/tecairlines/trips/trips/trips.component';
 import { AddTripComponent } from './components/tecairlines/trips/add-trip/add-trip.component';
+import { EditTripComponent } from './components/tecairlines/trips/edit-trip/edit-trip.component';
 import { CheckBoardingpassBaggagesComponent } from './components/tecairlines/check-boardingpass-baggages/check-boardingpass-baggages.component';
 
 @NgModule({
@@ -44,6 +45,7 @@ import { CheckBoardingpassBaggagesComponent } from './components/tecairlines/che
     EditFlightComponent,
     TripsComponent,
     AddTripComponent,
+    EditTripComponent,
     CheckBoardingpassBaggagesComponent
   ],
   imports: [

@@ -9,6 +9,7 @@ import { EditFlightComponent } from './components/tecairlines/flights/edit-fligh
 import { TripsComponent } from './components/tecairlines/trips/trips/trips.component';
 import { AddTripComponent } from './components/tecairlines/trips/add-trip/add-trip.component';
 import { CheckBoardingpassBaggagesComponent } from './components/tecairlines/check-boardingpass-baggages/check-boardingpass-baggages.component';
+import { EditTripComponent } from './components/tecairlines/trips/edit-trip/edit-trip.component';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo:'tecair-admin/login' },
@@ -21,6 +22,7 @@ const routes: Routes = [
       { path: 'home', component: HomeComponent },
       { path: 'trips', component: TripsComponent },
       { path: 'add-trip', component: AddTripComponent },
+      { path: 'edit-trip/:id', component: EditTripComponent },
       { path: 'flights', component: FlightsComponent },
       { path: 'add-flight', component: AddFlightComponent },
       { path: 'edit-flight/:id', component: EditFlightComponent },

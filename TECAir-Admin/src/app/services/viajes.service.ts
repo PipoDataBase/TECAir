@@ -23,4 +23,8 @@ export class ViajesService {
   postViaje(viaje: Viaje): Observable<number> {
     return this.http.post<number>(this.baseApiUrl + '/api/Viajes', viaje);
   }
+
+  deleteViaje(id: number): Observable<number> {
+    return this.http.delete<number>(this.baseApiUrl + '/api/Viajes/' + id);
+  }
 }

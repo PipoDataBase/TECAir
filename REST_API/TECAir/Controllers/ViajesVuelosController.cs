@@ -139,15 +139,15 @@ namespace TECAir.Controllers
             return Ok(JsonSerializer.Serialize(viajeVuelo, jsonSerializerOptions));
         }
 
-        // DELETE: api/ViajesVuelos/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteViajeVuelo(int id)
+        // DELETE: api/ViajesVuelos/5/1
+        [HttpDelete("{ViajeId}/{NVuelo}")]
+        public async Task<IActionResult> DeleteViajeVuelo(int ViajeId, int NVuelo)
         {
             if (_context.ViajeVuelos == null)
             {
                 return NotFound();
             }
-            var viajeVuelo = await _context.ViajeVuelos.FindAsync(id);
+            var viajeVuelo = await _context.ViajeVuelos.FindAsync(ViajeId, NVuelo);
             if (viajeVuelo == null)
             {
                 return NotFound();

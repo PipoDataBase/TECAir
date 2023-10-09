@@ -6,6 +6,7 @@ import { Viaje } from 'src/app/models/viaje.module';
 import { SharedService } from 'src/app/services/shared.service';
 import { ViajesService } from 'src/app/services/viajes.service';
 import { VuelosService } from 'src/app/services/vuelos.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-trips',
@@ -97,15 +98,42 @@ export class TripsComponent {
     });
   }
 
+   // go to add-trip view
   addTrip(): void {
     this.router.navigate(["tecair-admin", this.username, "add-trip"]);
   }
 
+  // go to edit-trip view
   editTrip(id: number): void {
-
+    this.router.navigate(["tecair-admin", this.username, "edit-trip", id]);
   }
 
+  // delete selected trip
   deleteTrip(id: number): void {
-
+    Swal.fire({
+      title: '¿Está seguro?',
+      text: "¡No podrá revertir esto!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3F51B5',
+      cancelButtonColor: '#e13a2d',
+      confirmButtonText: '¡Sí, bórralo!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.viajesService.deleteViaje(id).subscribe({
+          next: (response) => {
+            this.updateTrips();
+          },
+          error: (error) => {
+            console.log(error);
+          }
+        })
+        Swal.fire(
+          '¡Eliminado!',
+          'El viaje ha sido eliminado.',
+          'success'
+        )
+      }
+    })
   }
 }

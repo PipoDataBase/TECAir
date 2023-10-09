@@ -146,10 +146,20 @@ namespace TECAir.Controllers
                 return NotFound();
             }
 
+            // Obtener los ViajeVuelos asociados al viaje
+            var viajeVuelos = await _context.ViajeVuelos
+                .Where(vv => vv.ViajeId == viaje.Id)
+                .ToListAsync();
+
+            // Eliminar los ViajeVuelos asociados
+            _context.ViajeVuelos.RemoveRange(viajeVuelos);
+
+            // Eliminar el vuelo
             _context.Viajes.Remove(viaje);
+
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok(1);
         }
 
         private bool ViajeExists(int id)
