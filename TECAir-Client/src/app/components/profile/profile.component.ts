@@ -47,8 +47,6 @@ export class ProfileComponent {
     University: 'Tecnologico de Costa Rica'
   }
 
-  profileOption: Observable<Profile[]> | undefined;
-
   Student = {
     carnet: '',
     correo: '',

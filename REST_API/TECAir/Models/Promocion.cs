@@ -16,5 +16,5 @@ public partial class Promocion
 
     public string? ImagenPath { get; set; }
 
-    public virtual Viaje Viaje { get; set; } = null!;
+    public virtual Viaje? Viaje { get; set; } = null!;
 }

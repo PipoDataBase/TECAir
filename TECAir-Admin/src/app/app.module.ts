@@ -46,7 +46,7 @@ import { CheckBoardingpassBaggagesComponent } from './components/tecairlines/che
     FlightsComponent,
     AddFlightComponent,
     PromotionsComponent,
-    AddPromotionsComponent
+    AddPromotionsComponent,
     EditFlightComponent,
     TripsComponent,
     AddTripComponent,
