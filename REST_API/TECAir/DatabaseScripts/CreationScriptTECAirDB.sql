@@ -123,12 +123,12 @@ CREATE TABLE "Avion" (
 
 
 CREATE TABLE "Promocion" (
-	"Viaje_Id" integer NOT NULL,
-	"Precio" money NOT NULL,
-	"Fecha_Inicio" DATE NOT NULL,
-	"Fecha_Vencimiento" DATE NOT NULL,
-	"Imagen_Path" path,
-	CONSTRAINT "Promocion_pk" PRIMARY KEY ("Viaje_Id")
+    "Viaje_Id" integer NOT NULL,
+    "Precio" money NOT NULL,
+    "Fecha_Inicio" DATE NOT NULL,
+    "Fecha_Vencimiento" DATE NOT NULL,
+    "Imagen_Path" varchar,
+    CONSTRAINT "Promocion_pk" PRIMARY KEY ("Viaje_Id")
 ) WITH (
   OIDS=FALSE
 );

@@ -1,41 +1,33 @@
 <div class="container my-5">
-    <h1 class="mb-3">Agregar Promocion</h1>
+    <h1 class="mb-3">Agregar Promoción</h1>
     <div class="row">
-        <div class="col-4">
-            <form #form="ngForm">
-                <div class="mb-1">
-                    <mat-select placeholder="Viaje"  name="matricula" class="custom-select">
-                        <mat-option >
-                        
-                        </mat-option>
-                    </mat-select>
-                </div>
+        <div class="mat-elevation-z8" style="width: 450px; padding: 1%;">
+            <!-- start date -->
+            <div class="mb-3">
+                <mat-form-field color="accent">
+                    <mat-label>Fecha de inicio</mat-label>
+                    <input matInput [matDatepicker]="picker1" [(ngModel)]="startDate" name="fechaInicio">
+                    <mat-hint>MM/DD/YYYY</mat-hint>
+                    <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
+                    <mat-datepicker #picker1 color="primary"></mat-datepicker>
+                </mat-form-field>
+            </div>
 
-                <div class="mb-3">
-                    <mat-form-field class="custom-mat-form-field">
-                        <mat-label>Precio</mat-label>
-                        <input matInput placeholder="USD" type="number"  name="precio"
-                            min="1">
-                    </mat-form-field>
-                </div>
+            <!-- expiration date -->
+            <div class="mb-3">
+                <mat-form-field color="accent">
+                    <mat-label>Fecha de vencimiento</mat-label>
+                    <input matInput [matDatepicker]="picker2" [(ngModel)]="expirationDate" name="fechaVencimiento">
+                    <mat-hint>MM/DD/YYYY</mat-hint>
+                    <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
+                    <mat-datepicker #picker2 color="primary"></mat-datepicker>
+                </mat-form-field>
+            </div>
 
-                <div class="mb-3">
-                    <ejs-datetimepicker placeholder="Fecha de inicio" 
-                        name="fechaInicio"></ejs-datetimepicker>
-                </div>
-
-                <div class="mb-3">
-                    <ejs-datetimepicker placeholder="Fecha de finalizacion" 
-                        name="fechaFinal"></ejs-datetimepicker>
-                </div>
-
-                <p> agregar path imagen</p>
-
-                <button mat-flat-button color="primary" class="btn-block custom-back" (click)="back()">Regresar</button>
-                <span class="mx-1"></span>
-                <button mat-flat-button color="primary" class="btn-block custom-save"
-                    (click)="addPromotion()">Guardar</button>
-            </form>
+            <button mat-flat-button color="primary" class="btn-block custom-back" (click)="back()">Regresar</button>
+            <span class="mx-1"></span>
+            <button mat-flat-button color="primary" class="btn-block custom-save"
+                (click)="addPromotion()">Guardar</button>
         </div>
     </div>
 </div>

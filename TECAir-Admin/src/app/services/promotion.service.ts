@@ -17,11 +17,7 @@ export class PromotionService {
     return this.http.get<Promocion[]>(this.baseApiUrl + '/api/Promociones');
   }
 
-  postPromocion(vuelo: Promocion): Observable<number> {
-    return this.http.post<number>(this.baseApiUrl + '/api/Promociones', vuelo);
-  }
-
-  deletePromotion(id: number): Observable<number> {
-    return this.http.delete<number>(this.baseApiUrl + '/api/Promociones/' + id);
+  postPromocion(promocion: Promocion): Observable<number> {
+    return this.http.post<number>(this.baseApiUrl + '/api/Promociones', promocion);
   }
 }

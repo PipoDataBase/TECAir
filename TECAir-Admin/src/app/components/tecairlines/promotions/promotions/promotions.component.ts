@@ -3,6 +3,7 @@ import { PromotionService } from 'src/app/services/promotion.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { Promocion } from 'src/app/models/promotion.module';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-promotions',
@@ -10,58 +11,48 @@ import { Promocion } from 'src/app/models/promotion.module';
   styleUrls: ['./promotions.component.css']
 })
 export class PromotionsComponent {
+  username: string = '';
+  promociones: Promocion[] = [];
+  dataSource = new MatTableDataSource(this.promociones);
+  columnHeaders: string[] = ['viajeId', 'imagenPath', 'origen', 'destino', 'fechaInicio', 'fechaVencimiento', 'precio', 'accion'];
 
-  username : string ='';
+  constructor(private route: ActivatedRoute, private router: Router, private datePipe: DatePipe, private promocionService: PromotionService) { }
 
-  promociones: Promocion[]=[];
-
-constructor(private route: ActivatedRoute, private router: Router, private datePipe: DatePipe, private promocionService: PromotionService){}
-  
-updatePromotions(): void {
-  this.promocionService.getPromociones().subscribe({
-    next: (promociones) => {
-      this.promociones = promociones;
-    },
-    error: (response) => {
-      console.log(response);
-    }
-  })
-}
-
-
-ngOnInit(): void {
-  this.route.parent?.paramMap.subscribe({
-    next: (params) => {
-      const id = params.get('id');
-      if (id) {
-        this.username = id;
+  updatePromotions(): void {
+    this.promocionService.getPromociones().subscribe({
+      next: (promociones) => {
+        this.promociones = promociones;
+        this.dataSource = new MatTableDataSource(this.promociones);
+        console.log(this.promociones);
+      },
+      error: (response) => {
+        console.log(response);
       }
-    }
-  })
-
-  this.updatePromotions();
-}
-formatDate(date: string): string {
-  const result = this.datePipe.transform(date, 'M/d/yy, h:mm a');
-  if (result) {
-    return result
+    })
   }
-  return date;
-}
 
-addPromotion(): void {
-  this.router.navigate(["tecair-admin", this.username, "add-promotion"]);
-}
+  ngOnInit(): void {
+    this.route.parent?.paramMap.subscribe({
+      next: (params) => {
+        const id = params.get('id');
+        if (id) {
+          this.username = id;
+        }
+      }
+    })
 
-deleteFlight(id: number): void {
-  this.promocionService.deletePromotion(id).subscribe({
-    next: (response) => {
-      this.updatePromotions();
-    },
-    error: (error) => {
-      console.log(error);
-    }
-  })
-}
+    this.updatePromotions();
+  }
 
+  addPromotion(): void {
+    this.router.navigate(["tecair-admin", this.username, "add-promotion"]);
+  }
+
+  editPromotion(id: number): void {
+
+  }
+
+  deletePromotion(id: number): void {
+
+  }
 }

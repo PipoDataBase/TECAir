@@ -1,0 +1,32 @@
+h1 {
+    font-size: 40px;
+}
+
+.custom-button {
+    text-transform: uppercase;
+}
+
+.table {
+    text-align: center;
+}
+
+.custom-edit {
+    color: #158282;
+}
+
+.custom-delete {
+    color: #e13a2d;
+}
+
+.promotion-container {
+    max-height: 460px;
+    overflow-y: auto;
+}
+
+table th {
+    text-align: center;
+}
+
+table td {
+    text-align: center;
+}

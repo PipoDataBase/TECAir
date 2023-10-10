@@ -12,42 +12,40 @@ import Swal from 'sweetalert2';
   styleUrls: ['./add-promotions.component.css']
 })
 export class AddPromotionsComponent {
-
   username = '';
-
-  Promotion = {
+  promocion = {
     viajeId: 0,
     precio: 0,
     fechaInicio: '',
     fechaVencimiento: '',
-    imagenPath: ''
+    imagenPath: '',
+    viaje: {}
+  }
+  startDate: string = '';
+  expirationDate: string = '';
 
+  constructor(private route: ActivatedRoute, private _formBuilder: FormBuilder, private router: Router, private promotionService: PromotionService) { }
+
+  ngOnInit(): void {
+    this.route.parent?.paramMap.subscribe({
+      next: (params) => {
+        const id = params.get('id');
+        if (id) {
+          this.username = id;
+        }
+      }
+    })
   }
 
-  constructor(private route: ActivatedRoute, private _formBuilder: FormBuilder, private router: Router, private promotionService: PromotionService){}
+  addPromotion(): void {
+    console.log('creando promocion...');
+    this.promocion.fechaInicio = this.startDate;
+    this.promocion.fechaVencimiento = this.expirationDate;
+    console.log(this.promocion.fechaInicio);
+    console.log(this.promocion.fechaVencimiento);
+  }
 
   back(): void {
-    this.router.navigate(["tecair-admin", this.username, "promotion"]);
+    this.router.navigate(["tecair-admin", this.username, "promotions"]);
   }
-
-
-
-  addPromotion (){
-    console.log('creando promocion...');
-  }
- /* if (this.vuelo.empleadoUsuario && this.vuelo.avionMatricula && origen != '' && destino != '' && this.vuelo.fechaSalida && this.vuelo.fechaLlegada && this.vuelo.precio >= 1) {
-    this.vuelosService.postVuelo(this.vuelo).subscribe({
-      next: (nVuelo) => {
-        if (origen && destino && nVuelo >= 1) {
-          this.origen.vueloNumero = nVuelo;
-          this.origen.aeropuertoId = origen;
-          this.vuelosAeropuertosService.postVueloAeropuerto(this.origen).subscribe({
-            next: (response) => {
-              console.log(response);
-            },
-            error: (response) => {
-              console.log(response);
-            }
-          })*/
-
 }
