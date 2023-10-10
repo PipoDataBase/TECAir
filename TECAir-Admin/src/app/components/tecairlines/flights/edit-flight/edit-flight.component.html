@@ -1,1 +1,88 @@
-<p>edit-flight works!</p>
+<div class="container my-5">
+    <h1 class="mb-3">Editar Vuelo</h1>
+    <div class="row">
+        <div class="mat-elevation-z8" style="width: 450px; padding: 1%;">
+            <!-- plane -->
+            <div class="mb-1">
+                <mat-select placeholder="Avion" [(ngModel)]="selectedPlate" name="matricula" class="custom-select">
+                    <mat-option *ngFor="let avion of aviones" [value]="avion.matricula">
+                        {{ avion.nombre }} / {{ avion.matricula }}
+                    </mat-option>
+                </mat-select>
+            </div>
+
+            <!-- origin and destination airport -->
+            <div>
+                <form [formGroup]="airportForm">
+                    <mat-form-field>
+                        <mat-label>Desde</mat-label>
+                        <input placeholder="Selecciona un origen" type="text" matInput
+                            formControlName="originAirportGroup" [matAutocomplete]="autoOrigin">
+                        <mat-autocomplete #autoOrigin="matAutocomplete">
+                            <mat-option *ngFor="let airport of airportOptions1 | async"
+                                [value]="airport.ubicacion + ' (' + airport.id + ')'">
+                                <div>
+                                    <span>{{ airport.ubicacion }} ({{ airport.id }})</span>
+                                    <br>
+                                    <span>{{ airport.nombre }}</span>
+                                </div>
+                            </mat-option>
+                        </mat-autocomplete>
+                        <mat-icon matSuffix>flight_takeoff</mat-icon>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-label>Hacia</mat-label>
+                        <input placeholder="Selecciona un destino" type="text" matInput
+                            formControlName="destinationAirportGroup" [matAutocomplete]="autoDestination">
+                        <mat-autocomplete #autoDestination="matAutocomplete">
+                            <mat-option *ngFor="let airport of airportOptions2 | async"
+                                [value]="airport.ubicacion + ' (' + airport.id + ')'">
+                                <div>
+                                    <span>{{ airport.ubicacion }} ({{ airport.id }})</span>
+                                    <br>
+                                    <span>{{ airport.nombre }}</span>
+                                </div>
+                            </mat-option>
+                        </mat-autocomplete>
+                        <mat-icon matSuffix>flight_land</mat-icon>
+                    </mat-form-field>
+                </form>
+            </div>
+
+            <!-- departure date -->
+            <div class="mb-3">
+                <ejs-datetimepicker placeholder="Fecha de salida" [(ngModel)]="departureDate"
+                    name="fechaSalida"></ejs-datetimepicker>
+            </div>
+
+            <!-- arrival date -->
+            <div class="mb-3">
+                <ejs-datetimepicker placeholder="Fecha de llegada" [(ngModel)]="arrivalDate"
+                    name="fechaLlegada"></ejs-datetimepicker>
+            </div>
+
+            <!-- flight state -->
+            <div>
+                <mat-select placeholder="Estado" [(ngModel)]="state" name="projectionType" class="custom-select">
+                    <mat-option value="Abierto">Abierto</mat-option>
+                    <mat-option value="Cerrado">Cerrado</mat-option>
+                </mat-select>
+            </div>
+
+            <!-- flight price -->
+            <div>
+                <mat-form-field class="custom-mat-form-field">
+                    <mat-label>Precio $</mat-label>
+                    <input matInput placeholder="USD" type="number" [(ngModel)]="vueloDetails.precio" name="precio"
+                        min="1">
+                </mat-form-field>
+            </div>
+
+            <button mat-flat-button color="primary" class="btn-block custom-back" (click)="back()">Regresar</button>
+            <span class="mx-1"></span>
+            <button mat-flat-button color="primary" class="btn-block custom-save"
+                (click)="updateFlight()">Guardar</button>
+        </div>
+    </div>
+</div>

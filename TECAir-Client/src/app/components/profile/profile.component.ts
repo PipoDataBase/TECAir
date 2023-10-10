@@ -3,40 +3,25 @@ import { FormBuilder, Validators, FormsModule, ReactiveFormsModule, FormControl 
 import { Observable } from 'rxjs';
 import { Profile } from 'src/app/models/profile.module';
 import { Student } from 'src/app/models/student.module';
-<<<<<<< Updated upstream
-=======
 import { ProfileService} from 'src/app/services/profile.service';
 import { StudentService } from 'src/app/services/student.service';
->>>>>>> Stashed changes
+import {MatButtonToggleChange, MatButtonToggleModule} from '@angular/material/button-toggle'
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.css']
+  styleUrls: ['./profile.component.css'],
+  
 })
 export class ProfileComponent {
 
   isMobile: boolean;
 
-<<<<<<< Updated upstream
-  perfiles : Profile[] = [
-
-    {
-      Email: 'piporin@gmail.com',
-      Phone: '83572342',
-      Name: 'Pipo',
-      LName1: 'Rin',
-      LName2: 'Ron'
-    }
-    
-
-  ]
-=======
   isEdit: boolean;
 
   perfiles : Profile[] = [];
   students: Student[] = [];
->>>>>>> Stashed changes
+
 
   Profile = {
     correo: '',
@@ -62,9 +47,8 @@ export class ProfileComponent {
     University: 'Tecnologico de Costa Rica'
   }
 
-<<<<<<< Updated upstream
   profileOption: Observable<Profile[]> | undefined;
-=======
+
   Student = {
     carnet: '',
     correo: '',
@@ -75,7 +59,7 @@ export class ProfileComponent {
 
   profileOption: Observable<Profile> | undefined;
   studentOption: Observable<Student> | undefined;
->>>>>>> Stashed changes
+
 
   constructor(private _formBuilder: FormBuilder, private profileServce: ProfileService, private studentService: StudentService){
 
@@ -84,13 +68,10 @@ export class ProfileComponent {
       this.isMobile = window.innerWidth <= 767;
     });
     
-<<<<<<< Updated upstream
-=======
+
     this.isEdit = false;
 
-    
- 
->>>>>>> Stashed changes
+
   }
   ngOnInit(){
     
@@ -102,12 +83,10 @@ export class ProfileComponent {
       error: (response) => {
         console.log(response);
       }
-
       
     })
 
     
-   
 
    }
     Load(){

@@ -26,60 +26,106 @@ namespace TECAir.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Vuelo>>> GetVuelos()
         {
-          if (_context.Vuelos == null)
-          {
-              return NotFound();
-          }
-            return await _context.Vuelos.ToListAsync();
+            var vuelos = await _context.Vuelos
+                    .Select(v => new
+                    {
+                        v.NVuelo,
+                        v.EmpleadoUsuario,
+                        v.AvionMatricula,
+                        v.FechaSalida,
+                        v.FechaLlegada,
+                        v.Estado,
+                        v.Precio,
+                        v.VueloAeropuertos
+                    })
+                    .ToListAsync();
+
+            return Ok(vuelos);
         }
 
         // GET: api/Vuelos/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Vuelo>> GetVuelo(int id)
         {
-          if (_context.Vuelos == null)
-          {
-              return NotFound();
-          }
-            var vuelo = await _context.Vuelos.FindAsync(id);
+            var vuelo = await _context.Vuelos
+                    .Where(v => v.NVuelo == id)
+                    .Select(v => new
+                    {
+                        v.NVuelo,
+                        v.EmpleadoUsuario,
+                        v.AvionMatricula,
+                        v.FechaSalida,
+                        v.FechaLlegada,
+                        v.Estado,
+                        v.Precio,
+                        v.VueloAeropuertos
+                    })
+                    .FirstOrDefaultAsync();
 
             if (vuelo == null)
             {
                 return NotFound();
             }
 
-            return vuelo;
+            return Ok(vuelo);
         }
 
         // PUT: api/Vuelos/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutVuelo(int id, Vuelo vuelo)
+        public async Task<IActionResult> PutVuelo(int id, Vuelo vueloActualizado)
         {
-            if (id != vuelo.NVuelo)
+            if (_context.Vuelos == null)
+            {
+                return Problem("Entity set 'TecairDbContext.Vuelos'  is null.");
+            }
+
+            // Validar el NVuelo
+            if (id != vueloActualizado.NVuelo)
             {
                 return BadRequest();
             }
 
-            _context.Entry(vuelo).State = EntityState.Modified;
+            // Validar que el Avion existe
+            var avionExistente = await _context.Avions.FindAsync(vueloActualizado.AvionMatricula);
+            if (avionExistente == null)
+            {
+                return BadRequest("El avión especificado no existe.");
+            }
+
+            // Validar que el Empleado existe
+            var empleadoExistente = await _context.Empleados.FindAsync(vueloActualizado.EmpleadoUsuario);
+            if (empleadoExistente == null)
+            {
+                return BadRequest("El empleado especificado no existe.");
+            }
+
+            var vuelo = await _context.Vuelos.FindAsync(id);
+            if (vuelo == null)
+            {
+                return NotFound();
+            }
 
             try
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!VueloExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+                // Asignar el avión y empleado existente a las propiedades de navegación
+                vuelo.AvionMatriculaNavigation = avionExistente;
+                vuelo.EmpleadoUsuarioNavigation = empleadoExistente;
 
-            return NoContent();
+                vuelo.EmpleadoUsuario = vueloActualizado.EmpleadoUsuario;
+                vuelo.AvionMatricula = vueloActualizado.AvionMatricula;
+                vuelo.FechaSalida = vueloActualizado.FechaSalida;
+                vuelo.FechaLlegada = vueloActualizado.FechaLlegada;
+                vuelo.Estado = vueloActualizado.Estado;
+                vuelo.Precio = vueloActualizado.Precio;
+                await _context.SaveChangesAsync();
+
+                return Ok(vuelo.NVuelo);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error interno del servidor: {ex.Message}");
+            }
         }
 
         // POST: api/Vuelos
@@ -92,14 +138,14 @@ namespace TECAir.Controllers
                 return Problem("Entity set 'TecairDbContext.Vuelos'  is null.");
             }
 
-            // Validar que el AvionMatriculaNavigation existe
+            // Validar que el Avion existe
             var avionExistente = await _context.Avions.FindAsync(vuelo.AvionMatricula);
             if (avionExistente == null)
             {
                 return BadRequest("El avión especificado no existe.");
             }
 
-            // Validar que el EmpleadoUsuarioNavigation existe
+            // Validar que el Empleado existe
             var empleadoExistente = await _context.Empleados.FindAsync(vuelo.EmpleadoUsuario);
             if (empleadoExistente == null)
             {
@@ -108,7 +154,7 @@ namespace TECAir.Controllers
 
             try
             {
-                // Asignar el avión y empleado existentes a las propiedades de navegación
+                // Asignar el avión y empleado existente a las propiedades de navegación
                 vuelo.AvionMatriculaNavigation = avionExistente;
                 vuelo.EmpleadoUsuarioNavigation = empleadoExistente;
 
@@ -127,7 +173,7 @@ namespace TECAir.Controllers
                 _context.Vuelos.Add(vuelo);
                 await _context.SaveChangesAsync();
 
-                return Ok(JsonSerializer.Serialize(vuelo, jsonSerializerOptions));
+                return Ok(vuelo.NVuelo);
             }
             catch (Exception ex)
             {
@@ -149,10 +195,20 @@ namespace TECAir.Controllers
                 return NotFound();
             }
 
+            // Obtener los VueloAeropuertos asociados al vuelo
+            var vueloAeropuertos = await _context.VueloAeropuertos
+                .Where(va => va.VueloNumero == vuelo.NVuelo)
+                .ToListAsync();
+
+            // Eliminar los VueloAeropuertos asociados
+            _context.VueloAeropuertos.RemoveRange(vueloAeropuertos);
+
+            // Eliminar el vuelo
             _context.Vuelos.Remove(vuelo);
+
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok(1);
         }
 
         private bool VueloExists(int id)

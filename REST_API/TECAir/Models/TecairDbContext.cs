@@ -41,6 +41,8 @@ public partial class TecairDbContext : DbContext
 
     public virtual DbSet<Viaje> Viajes { get; set; }
 
+    public virtual DbSet<ViajeVuelo> ViajeVuelos { get; set; }
+
     public virtual DbSet<Vuelo> Vuelos { get; set; }
 
     public virtual DbSet<VueloAeropuerto> VueloAeropuertos { get; set; }
@@ -277,6 +279,7 @@ public partial class TecairDbContext : DbContext
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("id");
+            entity.Property(e => e.Destino).HasMaxLength(4);
             entity.Property(e => e.EmpleadoUsuario)
                 .HasMaxLength(12)
                 .HasColumnName("Empleado_Usuario");
@@ -286,30 +289,33 @@ public partial class TecairDbContext : DbContext
             entity.Property(e => e.FechaSalida)
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("Fecha_Salida");
+            entity.Property(e => e.Origen).HasMaxLength(4);
+            entity.Property(e => e.Precio).HasColumnType("money");
 
             entity.HasOne(d => d.EmpleadoUsuarioNavigation).WithMany(p => p.Viajes)
                 .HasForeignKey(d => d.EmpleadoUsuario)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Viaje_fk0");
+        });
 
-            entity.HasMany(d => d.NVuelos).WithMany(p => p.Viajes)
-                .UsingEntity<Dictionary<string, object>>(
-                    "ViajeVuelo",
-                    r => r.HasOne<Vuelo>().WithMany()
-                        .HasForeignKey("NVuelo")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("Viaje_Vuelo_fk1"),
-                    l => l.HasOne<Viaje>().WithMany()
-                        .HasForeignKey("ViajeId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("Viaje_Vuelo_fk0"),
-                    j =>
-                    {
-                        j.HasKey("ViajeId", "NVuelo").HasName("Viaje_Vuelo_pk");
-                        j.ToTable("Viaje_Vuelo");
-                        j.IndexerProperty<int>("ViajeId").HasColumnName("Viaje_Id");
-                        j.IndexerProperty<int>("NVuelo").HasColumnName("N_Vuelo");
-                    });
+        modelBuilder.Entity<ViajeVuelo>(entity =>
+        {
+            entity.HasKey(e => new { e.ViajeId, e.NVuelo }).HasName("Viaje_Vuelo_pk");
+
+            entity.ToTable("Viaje_Vuelo");
+
+            entity.Property(e => e.ViajeId).HasColumnName("Viaje_Id");
+            entity.Property(e => e.NVuelo).HasColumnName("N_Vuelo");
+
+            entity.HasOne(d => d.NVueloNavigation).WithMany(p => p.ViajeVuelos)
+                .HasForeignKey(d => d.NVuelo)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("Viaje_Vuelo_fk1");
+
+            entity.HasOne(d => d.Viaje).WithMany(p => p.ViajeVuelos)
+                .HasForeignKey(d => d.ViajeId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("Viaje_Vuelo_fk0");
         });
 
         modelBuilder.Entity<Vuelo>(entity =>

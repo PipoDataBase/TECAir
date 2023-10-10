@@ -10,6 +10,9 @@ import { MatCardModule } from '@angular/material/card'
 import { MatIconModule } from '@angular/material/icon';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatGridListModule } from '@angular/material/grid-list';
+import Swal from 'sweetalert2';
+
+import { Router } from '@angular/router';
 
 interface Flight {
   flightIid: string, price: string,
@@ -21,7 +24,8 @@ interface Flight {
 }
 
 interface Seat {
-  seatId: string
+  seatId: string,
+  state: string
 }
 
 @Component({
@@ -136,38 +140,37 @@ export class BookFlightComponent{
     duration: '5h'}
   ]
   seats: Seat[] = [
-    {seatId: 'A1'},{seatId: 'A2'},{seatId: 'A3'},{seatId: 'A4'},{seatId: 'A5'},{seatId: 'A6'},
-    {seatId: 'B1'},{seatId: 'B2'},{seatId: 'B3'},{seatId: 'B4'},{seatId: 'B5'},{seatId: 'B6'},
-    {seatId: 'C1'},{seatId: 'C2'},{seatId: 'C3'},{seatId: 'C4'},{seatId: 'C5'},{seatId: 'C6'},
-    {seatId: 'D1'},{seatId: 'D2'},{seatId: 'D3'},{seatId: 'D4'},{seatId: 'D5'},{seatId: 'D6'},
-    {seatId: 'E1'},{seatId: 'E2'},{seatId: 'E3'},{seatId: 'E4'},{seatId: 'E5'},{seatId: 'E6'},
-    {seatId: 'F1'},{seatId: 'F2'},{seatId: 'F3'},{seatId: 'F4'},{seatId: 'F5'},{seatId: 'F6'},
-    {seatId: 'G1'},{seatId: 'G2'},{seatId: 'G3'},{seatId: 'G4'},{seatId: 'G5'},{seatId: 'G6'},
-    {seatId: 'H1'},{seatId: 'H2'},{seatId: 'H3'},{seatId: 'H4'},{seatId: 'H5'},{seatId: 'H6'},
-    {seatId: 'I1'},{seatId: 'I2'},{seatId: 'I3'},{seatId: 'I4'},{seatId: 'I5'},{seatId: 'I6'},
-    {seatId: 'J1'},{seatId: 'J2'},{seatId: 'J3'},{seatId: 'J4'},{seatId: 'J5'},{seatId: 'J6'},
-    {seatId: 'K1'},{seatId: 'K2'},{seatId: 'K3'},{seatId: 'K4'},{seatId: 'K5'},{seatId: 'K6'},
-    {seatId: 'L1'},{seatId: 'L2'},{seatId: 'L3'},{seatId: 'L4'},{seatId: 'L5'},{seatId: 'L6'},
-    {seatId: 'M1'},{seatId: 'M2'},{seatId: 'M3'},{seatId: 'M4'},{seatId: 'M5'},{seatId: 'M6'},
-    {seatId: 'N1'},{seatId: 'N2'},{seatId: 'N3'},{seatId: 'N4'},{seatId: 'N5'},{seatId: 'N6'},
-    {seatId: 'O1'},{seatId: 'O2'},{seatId: 'O3'},{seatId: 'O4'},{seatId: 'O5'},{seatId: 'O6'},
-    {seatId: 'P1'},{seatId: 'P2'},{seatId: 'P3'},{seatId: 'P4'},{seatId: 'P5'},{seatId: 'P6'},
-    {seatId: 'Q1'},{seatId: 'Q2'},{seatId: 'Q3'},{seatId: 'Q4'},{seatId: 'Q5'},{seatId: 'Q6'},
-    {seatId: 'R1'},{seatId: 'R2'},{seatId: 'R3'},{seatId: 'R4'},{seatId: 'R5'},{seatId: 'R6'},
-    {seatId: 'S1'},{seatId: 'S2'},{seatId: 'S3'},{seatId: 'S4'},{seatId: 'S5'},{seatId: 'S6'},
-    {seatId: 'T1'},{seatId: 'T2'},{seatId: 'T3'},{seatId: 'T4'},{seatId: 'T5'},{seatId: 'T6'},
-    {seatId: 'U1'},{seatId: 'U2'},{seatId: 'U3'},{seatId: 'U4'},{seatId: 'U5'},{seatId: 'U6'},
-    {seatId: 'V1'},{seatId: 'V2'},{seatId: 'V3'},{seatId: 'V4'},{seatId: 'V5'},{seatId: 'V6'},
-    {seatId: 'W1'},{seatId: 'W2'},{seatId: 'W3'},{seatId: 'W4'},{seatId: 'W5'},{seatId: 'W6'},
-    {seatId: 'X1'},{seatId: 'X2'},{seatId: 'X3'},{seatId: 'X4'},{seatId: 'X5'},{seatId: 'X6'},
-    {seatId: 'Y1'},{seatId: 'Y2'},{seatId: 'Y3'},{seatId: 'Y4'},{seatId: 'Y5'},{seatId: 'Y6'},
-    {seatId: 'Z1'},{seatId: 'Z2'},{seatId: 'Z3'},{seatId: 'Z4'},{seatId: 'Z5'},{seatId: 'Z6'}
-
+    {seatId: 'A1', state: "w"},{seatId: 'A2', state: "Available"},{seatId: 'A3', state: "Available"},{seatId: 'A4', state: "Available"},{seatId: 'A5', state: "Available"},{seatId: 'A6', state: "Available"},
+    {seatId: 'B1', state: "Available"},{seatId: 'B2', state: "Available"},{seatId: 'B3', state: "Available"},{seatId: 'B4', state: "Available"},{seatId: 'B5', state: "Available"},{seatId: 'B6', state: "Available"},
+    {seatId: 'C1', state: "Available"},{seatId: 'C2', state: "Available"},{seatId: 'C3', state: "Available"},{seatId: 'C4', state: "Available"},{seatId: 'C5', state: "Available"},{seatId: 'C6', state: "Available"},
+    {seatId: 'D1', state: "Available"},{seatId: 'D2', state: "Available"},{seatId: 'D3', state: "Available"},{seatId: 'D4', state: "Available"},{seatId: 'D5', state: "Available"},{seatId: 'D6', state: "Available"},
+    {seatId: 'E1', state: "Available"},{seatId: 'E2', state: "Available"},{seatId: 'E3', state: "Available"},{seatId: 'E4', state: "Available"},{seatId: 'E5', state: "Available"},{seatId: 'E6', state: "Available"},
+    {seatId: 'F1', state: "Available"},{seatId: 'F2', state: "Available"},{seatId: 'F3', state: "Available"},{seatId: 'F4', state: "Available"},{seatId: 'F5', state: "Available"},{seatId: 'F6', state: "Available"},
+    {seatId: 'G1', state: "Available"},{seatId: 'G2', state: "Available"},{seatId: 'G3', state: "Available"},{seatId: 'G4', state: "Available"},{seatId: 'G5', state: "Available"},{seatId: 'G6', state: "Available"},
+    {seatId: 'H1', state: "Available"},{seatId: 'H2', state: "Available"},{seatId: 'H3', state: "Available"},{seatId: 'H4', state: "Available"},{seatId: 'H5', state: "Available"},{seatId: 'H6', state: "Available"},
+    {seatId: 'I1', state: "Available"},{seatId: 'I2', state: "Available"},{seatId: 'I3', state: "Available"},{seatId: 'I4', state: "Available"},{seatId: 'I5', state: "Available"},{seatId: 'I6', state: "Available"},
+    {seatId: 'J1', state: "Available"},{seatId: 'J2', state: "Available"},{seatId: 'J3', state: "Available"},{seatId: 'J4', state: "Available"},{seatId: 'J5', state: "Available"},{seatId: 'J6', state: "Available"},
+    {seatId: 'K1', state: "Available"},{seatId: 'K2', state: "Available"},{seatId: 'K3', state: "Available"},{seatId: 'K4', state: "Available"},{seatId: 'K5', state: "Available"},{seatId: 'K6', state: "Available"},
+    {seatId: 'L1', state: "Available"},{seatId: 'L2', state: "Available"},{seatId: 'L3', state: "Available"},{seatId: 'L4', state: "Available"},{seatId: 'L5', state: "Available"},{seatId: 'L6', state: "Available"},
+    {seatId: 'M1', state: "Available"},{seatId: 'M2', state: "Available"},{seatId: 'M3', state: "Available"},{seatId: 'M4', state: "Available"},{seatId: 'M5', state: "Available"},{seatId: 'M6', state: "Available"},
+    {seatId: 'N1', state: "Available"},{seatId: 'N2', state: "Available"},{seatId: 'N3', state: "Available"},{seatId: 'N4', state: "Available"},{seatId: 'N5', state: "Available"},{seatId: 'N6', state: "Available"},
+    {seatId: 'O1', state: "Available"},{seatId: 'O2', state: "Available"},{seatId: 'O3', state: "Available"},{seatId: 'O4', state: "Available"},{seatId: 'O5', state: "Available"},{seatId: 'O6', state: "Available"},
+    {seatId: 'P1', state: "Available"},{seatId: 'P2', state: "Available"},{seatId: 'P3', state: "Available"},{seatId: 'P4', state: "Available"},{seatId: 'P5', state: "Available"},{seatId: 'P6', state: "Available"},
+    {seatId: 'Q1', state: "Available"},{seatId: 'Q2', state: "Available"},{seatId: 'Q3', state: "Available"},{seatId: 'Q4', state: "Available"},{seatId: 'Q5', state: "Available"},{seatId: 'Q6', state: "Available"},
+    {seatId: 'R1', state: "Available"},{seatId: 'R2', state: "Available"},{seatId: 'R3', state: "Available"},{seatId: 'R4', state: "Available"},{seatId: 'R5', state: "Available"},{seatId: 'R6', state: "Available"},
+    {seatId: 'S1', state: "Available"},{seatId: 'S2', state: "Available"},{seatId: 'S3', state: "Available"},{seatId: 'S4', state: "Available"},{seatId: 'S5', state: "Available"},{seatId: 'S6', state: "Available"},
+    {seatId: 'T1', state: "Available"},{seatId: 'T2', state: "Available"},{seatId: 'T3', state: "Available"},{seatId: 'T4', state: "Available"},{seatId: 'T5', state: "Available"},{seatId: 'T6', state: "Available"},
+    {seatId: 'U1', state: "Available"},{seatId: 'U2', state: "Available"},{seatId: 'U3', state: "Available"},{seatId: 'U4', state: "Available"},{seatId: 'U5', state: "Available"},{seatId: 'U6', state: "Available"},
+    {seatId: 'V1', state: "Available"},{seatId: 'V2', state: "Available"},{seatId: 'V3', state: "Available"},{seatId: 'V4', state: "Available"},{seatId: 'V5', state: "Available"},{seatId: 'V6', state: "Available"},
+    {seatId: 'W1', state: "Available"},{seatId: 'W2', state: "Available"},{seatId: 'W3', state: "Available"},{seatId: 'W4', state: "Available"},{seatId: 'W5', state: "Available"},{seatId: 'W6', state: "Available"},
+    {seatId: 'X1', state: "Available"},{seatId: 'X2', state: "Available"},{seatId: 'X3', state: "Available"},{seatId: 'X4', state: "Available"},{seatId: 'X5', state: "Available"},{seatId: 'X6', state: "Available"},
+    {seatId: 'Y1', state: "Available"},{seatId: 'Y2', state: "Available"},{seatId: 'Y3', state: "Available"},{seatId: 'Y4', state: "Available"},{seatId: 'Y5', state: "Available"},{seatId: 'Y6', state: "Available"},
+    {seatId: 'Z1', state: "Available"},{seatId: 'Z2', state: "Available"},{seatId: 'Z3', state: "Available"},{seatId: 'Z4', state: "Available"},{seatId: 'Z5', state: "Available"},{seatId: 'Z6', state: "Available"}
 
   ]
 
   // Component constructor
-  constructor(private _formBuilder: FormBuilder) {
+  constructor(private _formBuilder: FormBuilder, private router: Router) {
     this.selectedFlightId = '';
     this.ticketsCuantity = 5;
     this.passengerName = '';
@@ -256,5 +259,17 @@ export class BookFlightComponent{
     console.log("Cantidad de asientos seleccionados: " + this.selectedseatsId.length);
     console.log("Asientos seleccionados: " + this.selectedseatsId);
     console.log("Asientos restantes: " + this.leftTickets);
+  }
+
+  reserveFlight(){
+    Swal.fire({
+      position: 'center',
+      icon: 'success',
+      title: 'Vuelo reservado!',
+      showConfirmButton: false,
+      timer: 2000,
+    }).then(() => {
+      this.router.navigate(["tecair"]);
+    });
   }
 }

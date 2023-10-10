@@ -1,0 +1,82 @@
+<div class="check-in-baggages-main-container">
+    <div class="check-in-main-container">
+        <div class="title">
+            <mat-label>Información del pase de abordar</mat-label>
+            <mat-icon>confirmation_number</mat-icon>
+        </div>
+
+        <div class="boarding-pass-searching-container">
+            <mat-form-field class="boarding-pass-number-input">
+                <mat-label>Numero de pase de abordaje</mat-label>
+                <input type="tel" matInput placeholder="ABCD1234EFGH5678">
+            </mat-form-field>
+    
+            <button mat-fab extended class="search-boarding-pass-button" color="primary" (click)="searchBoardingPass()">
+                <mat-icon>search</mat-icon>
+                Buscar
+            </button>
+        </div>
+
+        <div class="boarding-pass-information-table-container">
+            <table mat-table [dataSource]="getfoundBoardingPassData()" class="boardingPassInformationTable">
+            
+                <ng-container matColumnDef="boardingPassNumber">
+                  <th mat-header-cell *matHeaderCellDef> Numero de pase </th>
+                  <td mat-cell *matCellDef="let element"> {{ getBoardingPassId() }} </td>
+                </ng-container>
+              
+                <ng-container matColumnDef="clientEmail">
+                  <th mat-header-cell *matHeaderCellDef> Cliente </th>
+                  <td mat-cell *matCellDef="let element"> {{ getClientEmail() }} </td>
+                </ng-container>
+              
+                <ng-container matColumnDef="boardingGate">
+                  <th mat-header-cell *matHeaderCellDef> Puerta de abordaje </th>
+                  <td mat-cell *matCellDef="let element"> {{ getBoardingGate() }} </td>
+                </ng-container>
+              
+                <ng-container matColumnDef="checkedIn">
+                  <th mat-header-cell *matHeaderCellDef> Check-In realizado</th>
+                  <td mat-cell *matCellDef="let element"> {{ getCheckedInHTML() }} </td>
+                </ng-container>
+    
+                <ng-container matColumnDef="checkInButton">
+                    <th mat-header-cell *matHeaderCellDef> Realizar Check-In</th>
+                    <td mat-cell *matCellDef="let element">
+                        <button mat-fab extended class="check-in-boarding-pass-button" color="primary" (click)="chechInBoardingPass()"  [disabled]="getCheckedIn()">
+                            <mat-icon>check</mat-icon>
+                            {{ getCheckInButtonLabel() }}
+                        </button>
+                    </td>
+                  </ng-container>
+              
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="baggages-main-container" *ngIf="getCheckedIn()">
+        <div class="title">
+            <mat-label>Registro de equipaje</mat-label>
+            <mat-icon>card_travel</mat-icon>
+        </div>
+
+        <div class="baggages-register-container">
+            <mat-form-field class="baggage-amount-input">
+                <mat-label>Cantidad de maletas</mat-label>
+                <input type="number" matInput placeholder="1" value="0" max="10" min="0" (input)="calculateExpectedPrice($event)">
+            </mat-form-field>
+
+            <mat-label class="expected-price-information">
+                Precio estimado: ${{ getExpectedPriceByBaggages() }}
+            </mat-label>
+    
+            <button mat-fab extended class="search-boarding-pass-button" color="primary" (click)="registerBaggageAmount()">
+                <mat-icon>add</mat-icon>
+                <mat-icon>work</mat-icon>
+                Registrar
+            </button>
+        </div>
+    </div>
+</div>

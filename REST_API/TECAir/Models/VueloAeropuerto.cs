@@ -11,7 +11,7 @@ public partial class VueloAeropuerto
 
     public string Tipo { get; set; } = null!;
 
-    public virtual Aeropuerto Aeropuerto { get; set; } = null!;
+    public virtual Aeropuerto? Aeropuerto { get; set; } = null!;
 
-    public virtual Vuelo VueloNumeroNavigation { get; set; } = null!;
+    public virtual Vuelo? VueloNumeroNavigation { get; set; } = null!;
 }

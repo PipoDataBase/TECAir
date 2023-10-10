@@ -12,7 +12,23 @@ export class VuelosService {
 
   constructor(private http: HttpClient) { }
 
-  postVuelo(vuelo: Vuelo): Observable<Vuelo> {
-    return this.http.post<Vuelo>(this.baseApiUrl + '/api/Vuelos', vuelo);
+  getVuelos(): Observable<Vuelo[]> {
+    return this.http.get<Vuelo[]>(this.baseApiUrl + '/api/Vuelos');
+  }
+
+  getVuelo(id: string): Observable<Vuelo> {
+    return this.http.get<Vuelo>(this.baseApiUrl + '/api/Vuelos/' + id);
+  }
+
+  postVuelo(vuelo: Vuelo): Observable<number> {
+    return this.http.post<number>(this.baseApiUrl + '/api/Vuelos', vuelo);
+  }
+
+  putVuelo(id: number, vuelo: Vuelo): Observable<number> {
+    return this.http.put<number>(this.baseApiUrl + '/api/Vuelos/' + id, vuelo);
+  }
+
+  deleteVuelo(id: number): Observable<number> {
+    return this.http.delete<number>(this.baseApiUrl + '/api/Vuelos/' + id);
   }
 }

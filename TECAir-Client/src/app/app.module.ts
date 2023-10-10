@@ -13,6 +13,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatNativeDateModule } from '@angular/material/core';
+import { MatIconModule } from '@angular/material/icon';
+import { MatDialogModule } from '@angular/material/dialog';
 
 // FormsModule
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -27,14 +29,14 @@ import { PromotionsComponent } from './components/promotions/promotions.componen
 import { BookFlightComponent } from './components/book-flight/book-flight.component';
 import { ProfileComponent } from './components/profile/profile.component';
 
+
 @NgModule({
   declarations: [
     AppComponent,
     TecairlinesComponent,
     HomeComponent,
-    ProfileComponent
+    ProfileComponent,
     PromotionsComponent
-
   ],
   imports: [
     BrowserModule,
@@ -47,7 +49,9 @@ import { ProfileComponent } from './components/profile/profile.component';
     MatNativeDateModule,
     HttpClientModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatIconModule,
+    MatDialogModule
   ],
   providers: [
     DatePipe

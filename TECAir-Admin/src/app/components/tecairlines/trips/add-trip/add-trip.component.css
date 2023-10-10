@@ -1,0 +1,77 @@
+h1 {
+    font-size: 40px;
+}
+
+.custom-button {
+    text-transform: uppercase;
+}
+
+.custom-mat-form-field {
+    width: 100%;
+}
+
+.custom-mat-form-field input:-webkit-autofill {
+    -webkit-background-clip: text;
+}
+
+.custom-select {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 6px;
+    margin-bottom: 16px;
+}
+
+.custom-back {
+    background-color: #e13a2d;
+    margin-right: 1%;
+}
+
+.custom-save {
+    background-color: #3F51B5;
+}
+
+.custom-delete {
+    color: #e13a2d;
+}
+
+.custom-edit {
+    background-color: #158282;
+    margin-left: 1%;
+}
+
+mat-form-field {
+    width: 100%;
+}
+
+.viaje-container {
+    max-height: 260px;
+    overflow-y: auto;
+}
+
+.vuelo-container {
+    max-height: 360px;
+    overflow-y: auto;
+}
+
+table {
+    width: 100%;
+}
+
+table th {
+    text-align: center;
+}
+
+table td {
+    text-align: center;
+}
+
+.flex-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.spacer {
+    flex-grow: 1;
+}

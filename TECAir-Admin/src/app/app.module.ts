@@ -30,6 +30,12 @@ import { FlightsComponent } from './components/tecairlines/flights/flights/fligh
 import { AddFlightComponent } from './components/tecairlines/flights/add-flight/add-flight.component';
 import { PromotionsComponent } from './components/tecairlines/promotions/promotions/promotions.component';
 import { AddPromotionsComponent } from './components/tecairlines/promotions/add-promotions/add-promotions.component';
+import { EditFlightComponent } from './components/tecairlines/flights/edit-flight/edit-flight.component';
+import { TripsComponent } from './components/tecairlines/trips/trips/trips.component';
+import { AddTripComponent } from './components/tecairlines/trips/add-trip/add-trip.component';
+import { EditTripComponent } from './components/tecairlines/trips/edit-trip/edit-trip.component';
+import { CheckBoardingpassBaggagesComponent } from './components/tecairlines/check-boardingpass-baggages/check-boardingpass-baggages.component';
+
 
 @NgModule({
   declarations: [
@@ -41,6 +47,12 @@ import { AddPromotionsComponent } from './components/tecairlines/promotions/add-
     AddFlightComponent,
     PromotionsComponent,
     AddPromotionsComponent
+    EditFlightComponent,
+    TripsComponent,
+    AddTripComponent,
+    EditTripComponent,
+    CheckBoardingpassBaggagesComponent
+
   ],
   imports: [
     BrowserModule,

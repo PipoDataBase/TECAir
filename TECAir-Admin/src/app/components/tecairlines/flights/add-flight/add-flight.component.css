@@ -15,12 +15,6 @@ h1 {
     -webkit-background-clip: text;
 }
 
-.custom-datetimepicker {
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    padding: 8px;
-}
-
 .custom-select {
     width: 100%;
     border: 1px solid #ccc;
@@ -35,4 +29,8 @@ h1 {
 
 .custom-save {
     background-color: #3F51B5;
+}
+
+mat-form-field {
+    width: 100%;
 }

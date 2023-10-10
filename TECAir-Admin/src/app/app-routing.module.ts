@@ -7,6 +7,12 @@ import { FlightsComponent } from './components/tecairlines/flights/flights/fligh
 import { AddFlightComponent } from './components/tecairlines/flights/add-flight/add-flight.component';
 import { PromotionsComponent } from './components/tecairlines/promotions/promotions/promotions.component';
 import { AddPromotionsComponent } from './components/tecairlines/promotions/add-promotions/add-promotions.component';
+import { EditFlightComponent } from './components/tecairlines/flights/edit-flight/edit-flight.component';
+import { TripsComponent } from './components/tecairlines/trips/trips/trips.component';
+import { AddTripComponent } from './components/tecairlines/trips/add-trip/add-trip.component';
+import { CheckBoardingpassBaggagesComponent } from './components/tecairlines/check-boardingpass-baggages/check-boardingpass-baggages.component';
+import { EditTripComponent } from './components/tecairlines/trips/edit-trip/edit-trip.component';
+
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo:'tecair-admin/login' },
@@ -17,10 +23,15 @@ const routes: Routes = [
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'home' },
       { path: 'home', component: HomeComponent },
+      { path: 'trips', component: TripsComponent },
+      { path: 'add-trip', component: AddTripComponent },
+      { path: 'edit-trip/:id', component: EditTripComponent },
       { path: 'flights', component: FlightsComponent },
       { path: 'add-flight', component: AddFlightComponent },
       { path: 'promotion', component: PromotionsComponent},
       {path: 'add-promotion', component: AddPromotionsComponent}
+      { path: 'edit-flight/:id', component: EditFlightComponent },
+      { path: 'chack-boardingpass-baggages', component: CheckBoardingpassBaggagesComponent }
     ],
   },
 ];
