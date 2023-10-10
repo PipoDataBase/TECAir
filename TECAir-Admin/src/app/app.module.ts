@@ -28,6 +28,8 @@ import { TecairlinesComponent } from './components/tecairlines/tecairlines/tecai
 import { HomeComponent } from './components/tecairlines/home/home.component';
 import { FlightsComponent } from './components/tecairlines/flights/flights/flights.component';
 import { AddFlightComponent } from './components/tecairlines/flights/add-flight/add-flight.component';
+import { PromotionsComponent } from './components/tecairlines/promotions/promotions/promotions.component';
+import { AddPromotionsComponent } from './components/tecairlines/promotions/add-promotions/add-promotions.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +38,9 @@ import { AddFlightComponent } from './components/tecairlines/flights/add-flight/
     TecairlinesComponent,
     HomeComponent,
     FlightsComponent,
-    AddFlightComponent
+    AddFlightComponent,
+    PromotionsComponent,
+    AddPromotionsComponent
   ],
   imports: [
     BrowserModule,

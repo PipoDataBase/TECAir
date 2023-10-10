@@ -2,6 +2,7 @@
 
     <div *ngIf="!isMobile" class="group">
 
+<<<<<<< Updated upstream
         <p class="center"> Not Mobile!</p>
     
     </div>
@@ -9,6 +10,20 @@
     <div *ngIf="isMobile" class="extension-panel">
     
         <p class="center"> Mobile!</p>
+=======
+
+    <div class="profile-Button">
+
+        <mat-button-toggle-group 
+        class="buttonBorder" 
+        name="fontStyle" 
+        aria-label="Font Style"
+        >
+            <mat-button-toggle (change)="isEdit = false">Ver Informacion</mat-button-toggle>
+            <mat-button-toggle (change)="isEdit = true">Editar Informacion</mat-button-toggle>
+            
+          </mat-button-toggle-group>
+>>>>>>> Stashed changes
     
     </div>
 
@@ -25,6 +40,7 @@
         <mat-card-content>
 
             <br>
+<<<<<<< Updated upstream
         <p class="paragrafBold">Email</p>
         <p class="paragrafInfo">{{Profile.Email}}</p>
         <span class="brmedium"> </span>
@@ -35,6 +51,18 @@
 
         <p class="paragrafBold">Full Name</p>
         <p class="paragrafInfo">{{ Profile.Name }} {{Profile.LName1}} {{Profile.LName2}}</p>
+=======
+        <p class="paragrafBold">Correo Electronico</p>
+        <p class="paragrafInfo">{{Profile.correo}}</p>
+        <span class="brmedium"> </span>
+
+        <p class="paragrafBold">Numero de Telefono</p>
+        <p class="paragrafInfo">{{ Profile.telefono }} </p>
+        <span class="brmedium"> </span>
+
+        <p class="paragrafBold">Nombre Completo</p>
+        <p class="paragrafInfo">{{ Profile.nombre }} {{Profile.apellido1}} {{Profile.apellido2}}</p>
+>>>>>>> Stashed changes
 
                                 
 
@@ -44,7 +72,7 @@
 
     <br>
 
-    <mat-card *ngIf="Student != null" class="subMatCards"> 
+    <mat-card *ngIf="Student.carnet != ''" class="subMatCards"> 
         <mat-card-header>
     
             <mat-card-title>Student Information</mat-card-title>
@@ -56,19 +84,23 @@
         <br>
         <mat-card-content >
     
+<<<<<<< Updated upstream
             <p class="paragrafBold" >Credentials: </p>
+=======
+            <p class="paragrafBold" >Credenciales de Estudiante: </p>
+>>>>>>> Stashed changes
             <span class="brmedium"> </span>
-            <p class="paragrafInfo">{{Student.Credential}}</p>
+            <p class="paragrafInfo">{{Student.carnet}}</p>
 
             
             <p class="paragrafBold" >Acumulated Miles: </p>
             <span class="brmedium"> </span>
-            <p class="paragrafInfo"> {{ Student.Miles }} </p>
+            <p class="paragrafInfo"> {{ Student.millas }} </p>
        
 
             <p class="paragrafBold" >University Name: </p>
             <span class="brmedium"> </span>
-            <p class="paragrafInfo"> {{ Student.University }} </p>
+            <p class="paragrafInfo"> {{ Student.universidadId }} </p>
     
         </mat-card-content>
     
@@ -93,6 +125,132 @@
 
     </mat-card>
 
+<<<<<<< Updated upstream
+=======
+</div>
+
+
+
+<div class="buttonStyle" *ngIf="isEdit" >
+   
+
+    <mat-card class="subMatCards" > 
+    <mat-card-header >
+
+        <mat-card-title>Perfil</mat-card-title>
+        
+        <mat-card-subtitle>Informacion del Usuario:</mat-card-subtitle>
+        
+
+    </mat-card-header>
+        <mat-card-content>
+
+            <p class="paragrafBold">Correo Electronico</p>
+            <p class="paragrafInfo">{{Profile.correo}}</p>
+            <span class="brmedium"> </span>
+
+        <p class="paragrafBold">Numero de Telefono</p>
+        <mat-form-field appearance="outline">
+            <mat-label>Numero de Telefono</mat-label>
+            <input matInput placeholder="Placeholder">
+            <mat-icon matSuffix>call</mat-icon>
+    
+        </mat-form-field>
+        <span class="brmedium"> </span>
+
+        <p class="paragrafBold">Full Name</p>
+        <div class="matCardContent">
+
+
+        <mat-form-field appearance="outline">
+            <mat-label>Nombre</mat-label>
+            <input matInput placeholder="Placeholder">
+
+    
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Apellido</mat-label>
+            <input matInput placeholder="Placeholder">
+
+    
+        </mat-form-field>
+
+
+        <mat-form-field appearance="outline">
+            <mat-label>Apellido</mat-label>
+            <input matInput placeholder="Placeholder">
+
+            <mat-icon matSuffix>person</mat-icon>
+    
+        </mat-form-field>
+
+    </div>
+       
+
+        </mat-card-content>
+
+    </mat-card>
+
+    <br>
+
+    <mat-card *ngIf="Student.carnet != ''" class="subMatCards"> 
+        <mat-card-header>
+    
+            <mat-card-title>Estudiante</mat-card-title>
+            
+            <mat-card-subtitle>Datos de Estudiante:</mat-card-subtitle>
+            
+    
+        </mat-card-header>
+        <br>
+        <mat-card-content >
+            
+            <p class="paragrafBold" >Credenciales de Estudiante: </p>
+            <span class="brmedium"> </span>
+            <p class="paragrafInfo">{{Student.carnet}}</p>
+    
+            <p class="paragrafBold" >Millas Acumuladas: </p>
+            <span class="brmedium"> </span>
+            <p class="paragrafInfo"> {{ Student.millas }} </p>
+    
+            <p class="paragrafBold">Universidad</p>
+           
+            <mat-form-field appearance="outline">
+                <mat-label>Universidad</mat-label>
+                <input matInput placeholder="Placeholder">
+
+        
+            </mat-form-field>
+    
+        </mat-card-content>
+    
+        </mat-card>
+
+        <br>
+
+    <mat-card  class="subMatCards"> 
+        <mat-card-header>
+
+            <mat-card-title>Vuelos</mat-card-title>
+        
+            <mat-card-subtitle>Vuelos Reservados:</mat-card-subtitle>
+        
+
+        </mat-card-header>
+            <mat-card-content>
+
+            <br>                
+
+        </mat-card-content>
+
+    </mat-card>
+
+</div>
+
+
+
+>>>>>>> Stashed changes
 
 </div>
 

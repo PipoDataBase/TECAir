@@ -32,14 +32,17 @@ namespace TECAir.Controllers
         }
 
         // GET: api/Estudiantes/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Estudiante>> GetEstudiante(int id)
+        [HttpGet("{mail}")]
+        public async Task<ActionResult<Estudiante>> GetEstudiante(String mail)
         {
           if (_context.Estudiantes == null)
           {
               return NotFound();
           }
-            var estudiante = await _context.Estudiantes.FindAsync(id);
+
+            var estudiantestemp = await _context.Estudiantes.ToListAsync();
+            var estudiante = estudiantestemp.Find(Estudiante => Estudiante.Correo == mail);
+            //var estudiante = await _context.Estudiantes.FindAsync(mail);
 
             if (estudiante == null)
             {

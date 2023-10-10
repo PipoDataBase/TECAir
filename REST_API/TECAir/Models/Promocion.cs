@@ -14,7 +14,7 @@ public partial class Promocion
 
     public DateOnly FechaVencimiento { get; set; }
 
-    public NpgsqlPath? ImagenPath { get; set; }
+    public string? ImagenPath { get; set; }
 
     public virtual Viaje Viaje { get; set; } = null!;
 }
