@@ -51,4 +51,5 @@ export class TecairlinesComponent {
   test(): void {
     console.log("Probar boton");
   }
+
 }

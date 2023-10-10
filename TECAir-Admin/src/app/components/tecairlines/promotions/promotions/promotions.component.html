@@ -1,0 +1,29 @@
+<div class="container my-5">
+    <h1 class="mb-3">Promociones</h1>
+    <button mat-flat-button class="custom-button" color="primary" (click)="addPromotion()">Agregar Promocion</button>
+    <table class="table my-3" *ngIf="promociones&&promociones.length > 0">
+        <thead>
+            <tr>
+                <th>ViajeId</th>
+                <th>Precio (USD)</th>
+                <th>FechaInicio</th>
+                <th>FechaVencimiento</th>
+                <th>ImagenPath</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let promocion of promociones">
+                <td>{{ promocion.viajeId }}</td>
+                <td>{{ promocion.precio }}</td>
+                <td>{{ formatDate(promocion.fechaInicio) }}</td>
+                <td>{{ formatDate(promocion.fechaVencimiento) }}</td>
+                <td>{{ promocion.imagenPath }}</td>
+                <td>
+                    <a mat-button class="custom-edit"><mat-icon>edit</mat-icon></a>
+                    <a mat-button class="custom-delete" (click)="deleteFlight(promocion.viajeId)"><mat-icon>delete</mat-icon></a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <p *ngIf="!promociones|| promociones.length <= 0">No se encontraron promociones disponibles</p>
+</div>

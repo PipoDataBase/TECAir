@@ -1,6 +1,7 @@
 export interface Student{
-    Credential: string;
-    Miles: string;
-    University: string;
+    carnet: string;
+    correo: string;
+    universidadId: string;
+    millas: string;
     
 }
