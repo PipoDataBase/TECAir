@@ -150,7 +150,7 @@ export class HomeComponent {
     console.log(this.airportForm.get('destinationAirportGroup')?.value);
     console.log(this.airportForm.get('departureDate')?.value);
     console.log(this.airportForm.get('passengers')?.value);
-    // Falta routing a book-flight
+    this.router.navigate(["tecair", "book-flight"]);
   }
 
   onCardClick(promotion: any): void {
