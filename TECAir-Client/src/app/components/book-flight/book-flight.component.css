@@ -152,6 +152,22 @@ h3 {
     background-color: #BFBFBF;
 }
 
+.horizontal-line-travel-stepovers {
+    width: 95%;
+    height: 0.25px;
+    background-color: #BFBFBF;
+    margin-bottom: 2%;
+    margin-top: 2%;
+}
+
+.horizontal-line-travels {
+    width: 95%;
+    height: 0.25px;
+    background-color: #BFBFBF;
+    margin-bottom: 2%;
+    margin-top: 2%;
+}
+
 .vertical-line {
     width: 50px;
     height: 100%;
@@ -360,4 +376,47 @@ h3 {
     width: 100%;
     justify-content: center;
     text-align: center;
+}
+
+.stepovers-container {
+    display: flex;
+    flex-direction: column;
+    height: fit-content;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+.stepovers-container button mat-icon {
+    width: fit-content
+}
+
+.stepovers-list {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    height: fit-content;
+    align-items: center;
+    justify-content: center;
+}
+
+.stepover {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: fit-content;
+    align-items: center;
+    justify-content: center;
+}
+
+mat-expansion-panel-header {
+    height: max-content;
+}
+
+.selected-seat{
+    color: #3F51B4 !important;
+}
+
+.busy-seat{
+    color: #808080 !important;
 }

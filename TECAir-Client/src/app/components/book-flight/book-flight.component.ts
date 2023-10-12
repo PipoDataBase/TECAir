@@ -11,11 +11,23 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatGridListModule } from '@angular/material/grid-list';
 import Swal from 'sweetalert2';
+import {MatExpansionModule} from '@angular/material/expansion';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 import { Router } from '@angular/router';
 
+interface Travel{
+  travelId: string, price: string,
+  departureAirportIATA: string,
+  departureTime: string,
+  landingAirportIATA: string,
+  landingTime: string,
+  duration: string,
+  showStepOvers: boolean
+}
+
 interface Flight {
-  flightIid: string, price: string,
+  parentTravelId: string, flightId: string, price: string,
   departureAirportIATA: string,
   departureTime: string,
   landingAirportIATA: string,
@@ -50,13 +62,15 @@ interface Seat {
     MatCardModule,
     MatIconModule,
     MatDatepickerModule,
-    MatGridListModule
+    MatGridListModule,
+    MatExpansionModule,
+    MatTooltipModule
   ]
 })
 
 export class BookFlightComponent{
   private isMobile: boolean;
-  private selectedFlightId: string;
+  private selectedTravelId: string;
   private ticketsCuantity: number;
   private passengerName: string;
   private passengerLastName1: String;
@@ -66,6 +80,9 @@ export class BookFlightComponent{
   private leftTickets: number;
   private selectedseatsId: string[];
 
+  private showStepovers: boolean;
+  
+
   // Getters and setters
   public getisMobile(): boolean {
     return this.isMobile;
@@ -73,11 +90,11 @@ export class BookFlightComponent{
   public setisMobile(value: boolean) {
     this.isMobile = value;
   }
-  public getselectedFlightId(): string {
-    return this.selectedFlightId;
+  public getselectedTravelId(): string {
+    return this.selectedTravelId;
   }
-  public setselectedFlightId(value: string) {
-    this.selectedFlightId = value;
+  public setselectedTravelId(value: string) {
+    this.selectedTravelId = value;
   }
   public getticketsCuantity(): number {
     return this.ticketsCuantity;
@@ -128,19 +145,44 @@ export class BookFlightComponent{
     this.selectedseatsId = value;
   }
 
+  public getShowStepovers(): boolean {
+    return this.showStepovers;
+  }
+  public setShowStepovers(value: boolean) {
+    this.showStepovers = value;
+  }
+
   // Default data for testing
-  flights: Flight[] = [
-    {flightIid: '1', price: 'USD 200',
+  travels: Travel[] = [
+    {travelId: '1', price: 'USD 400',
     departureAirportIATA: 'SJO', departureTime: '1:00PM', 
-    landingAirportIATA: 'PTY', landingTime: '4:00PM', 
-    duration: '3h'},
-    {flightIid: '2', price: 'USD 500',
+    landingAirportIATA: 'EZE', landingTime: '6:00PM', 
+    duration: '5h', showStepOvers: false},
+    {travelId: '2', price: 'USD 500',
     departureAirportIATA: 'SJO', departureTime: '1:00PM', 
     landingAirportIATA: 'MIA', landingTime: '6:00PM', 
-    duration: '5h'}
+    duration: '5h', showStepOvers: false}
+  ]
+  flights: Flight[] = [
+    {parentTravelId: '1', flightId: '1', price: 'USD 100',
+    departureAirportIATA: 'SJO', departureTime: '1:00PM', 
+    landingAirportIATA: 'PTY', landingTime: '2:00PM', 
+    duration: '1h'},
+    {parentTravelId: '1', flightId: '2', price: 'USD 300',
+    departureAirportIATA: 'PTY', departureTime: '2:00PM', 
+    landingAirportIATA: 'EZE', landingTime: '6:00PM', 
+    duration: '4h'},
+    {parentTravelId: '2', flightId: '3', price: 'USD 250',
+    departureAirportIATA: 'SJO', departureTime: '1:00PM', 
+    landingAirportIATA: 'SAL', landingTime: '3:00PM', 
+    duration: '2h'},
+    {parentTravelId: '2', flightId: '4', price: 'USD 250',
+    departureAirportIATA: 'SAL', departureTime: '3:00PM', 
+    landingAirportIATA: 'MIA', landingTime: '6:00PM', 
+    duration: '2h'}
   ]
   seats: Seat[] = [
-    {seatId: 'A1', state: "w"},{seatId: 'A2', state: "Available"},{seatId: 'A3', state: "Available"},{seatId: 'A4', state: "Available"},{seatId: 'A5', state: "Available"},{seatId: 'A6', state: "Available"},
+    {seatId: 'A1', state: "Busy"},{seatId: 'A2', state: "Available"},{seatId: 'A3', state: "Available"},{seatId: 'A4', state: "Available"},{seatId: 'A5', state: "Available"},{seatId: 'A6', state: "Available"},
     {seatId: 'B1', state: "Available"},{seatId: 'B2', state: "Available"},{seatId: 'B3', state: "Available"},{seatId: 'B4', state: "Available"},{seatId: 'B5', state: "Available"},{seatId: 'B6', state: "Available"},
     {seatId: 'C1', state: "Available"},{seatId: 'C2', state: "Available"},{seatId: 'C3', state: "Available"},{seatId: 'C4', state: "Available"},{seatId: 'C5', state: "Available"},{seatId: 'C6', state: "Available"},
     {seatId: 'D1', state: "Available"},{seatId: 'D2', state: "Available"},{seatId: 'D3', state: "Available"},{seatId: 'D4', state: "Available"},{seatId: 'D5', state: "Available"},{seatId: 'D6', state: "Available"},
@@ -171,7 +213,7 @@ export class BookFlightComponent{
 
   // Component constructor
   constructor(private _formBuilder: FormBuilder, private router: Router) {
-    this.selectedFlightId = '';
+    this.selectedTravelId = '';
     this.ticketsCuantity = 5;
     this.passengerName = '';
     this.passengerLastName1 = '';
@@ -184,6 +226,7 @@ export class BookFlightComponent{
     window.addEventListener('resize', () => {
       this.isMobile = window.innerWidth <= 767;
     });
+    this.showStepovers = false;
   }
   
   // Linear Mat-Stepper conditions
@@ -219,8 +262,8 @@ export class BookFlightComponent{
   emailFormControl = new FormControl('', [Validators.required, Validators.email]);
 
   // Function for select flight button (first step of stepper)
-  selectFlight(selectedFlightId: string){
-    this.selectedFlightId = selectedFlightId
+  selectFlight(selectedTravelId: string){
+    this.selectedTravelId = selectedTravelId
   }
 
   // Function for personal information update button on desktop (second step of desktop stepper)
@@ -246,10 +289,22 @@ export class BookFlightComponent{
       const index = this.selectedseatsId.indexOf(seatId);
       if (index !== -1) {
         this.selectedseatsId.splice(index, 1);
+        const selectedSeat = this.seats.find((seat) => seat.seatId === seatId);
+        if(selectedSeat){
+          selectedSeat.state = "Available";
+        }else{
+          console.log("Error");
+        }
       }
       this.leftTickets += 1;
     }else if(this.leftTickets > 0) {
       this.selectedseatsId.push(seatId)
+      const selectedSeat = this.seats.find((seat) => seat.seatId === seatId);
+        if(selectedSeat){
+          selectedSeat.state = "Selected";
+        }else{
+          console.log("Error");
+        }
       this.leftTickets -= 1;
     } else {
       console.log("Ya se seleccionaron todos los asientos solicitados");
@@ -262,14 +317,21 @@ export class BookFlightComponent{
   }
 
   reserveFlight(){
-    Swal.fire({
-      position: 'center',
-      icon: 'success',
-      title: 'Vuelo reservado!',
-      showConfirmButton: false,
-      timer: 2000,
-    }).then(() => {
-      this.router.navigate(["tecair"]);
-    });
+    if(this.paymentInformationStepD.valid || this.paymentInformationStepM.valid){
+      Swal.fire({
+        position: 'center',
+        icon: 'success',
+        title: 'Vuelo reservado!',
+        showConfirmButton: false,
+        timer: 2000,
+      }).then(() => {
+        this.router.navigate(["tecair"]);
+      });
+    }
+    
+  }
+
+  showHideStepOvers(travelIndex: number){
+    this.travels[travelIndex].showStepOvers = !this.travels[travelIndex].showStepOvers;
   }
 }

@@ -12,40 +12,84 @@
                 </div>
                 
                 <div class="flights-list">
-                    <mat-card class="flight-card" *ngFor="let flight of flights">
+                    <mat-card class="flight-card" *ngFor="let travel of travels; let i = index">
                         <mat-card-content>
-                          <button class="custom-material-button" matStepperNext (click)="selectFlight(flight.flightIid)">
+
+                          <button class="custom-material-button" matStepperNext (click)="selectFlight(travel.travelId)">
                             <div class="flight-information">
                                 <div class="flight-dep-land-information">
-                                    <h2> {{ flight.departureAirportIATA }} </h2>
-                                    <h3> {{ flight.departureTime }} </h3>
+                                    <h2> {{ travel.departureAirportIATA }} </h2>
+                                    <h3> {{ travel.departureTime }} </h3>
                                 </div>
                                 <div class="flight-duration-information">
-                                    <h3> {{ flight.duration }} </h3>
+                                    <h3> {{ travel.duration }} </h3>
                                     <div class="diagram-line-icon-line">
                                         <div class="horizontal-line"></div>
                                         <mat-icon>flight_takeoff</mat-icon>
                                         <div class="horizontal-line"></div>
                                     </div>
-                                    <h6> {{ flight.flightIid }} </h6>
+                                    <h6> {{ travel.travelId }} </h6>
                                 </div>
                                 <div class="flight-dep-land-information">
-                                    <h2> {{ flight.landingAirportIATA }} </h2>
-                                    <h3> {{ flight.landingTime }} </h3>
+                                    <h2> {{ travel.landingAirportIATA }} </h2>
+                                    <h3> {{ travel.landingTime }} </h3>
                                 </div>
                                 <div class="vertical-line"></div>
                                 <div class="flight-price-information">
-                                    <h2> {{ flight.price }} </h2>
+                                    <h2> {{ travel.price }} </h2>
                                 </div>
                             </div>
                           </button>
+                          
+                          <div class="stepovers-container">
+
+                            <div class="horizontal-line-travel-stepovers" *ngIf="travel.showStepOvers"></div>
+
+                            <h2 *ngIf="travel.showStepOvers">Escalas del vuelo</h2>
+
+                            <div class="stepovers-list" *ngFor="let flight of flights">
+                              <div class="stepover" *ngIf="flight.parentTravelId == travel.travelId && travel.showStepOvers">
+                                <div class="flight-dep-land-information">
+                                  <h2> {{ flight.departureAirportIATA }} </h2>
+                                  <h3> {{ flight.departureTime }} </h3>
+                              </div>
+                              <div class="flight-duration-information">
+                                  <h3> {{ flight.duration }} </h3>
+                                  <div class="diagram-line-icon-line">
+                                      <div class="horizontal-line"></div>
+                                      <mat-icon>flight_takeoff</mat-icon>
+                                      <div class="horizontal-line"></div>
+                                  </div>
+                                  <h6> {{ flight.flightId }} </h6>
+                              </div>
+                              <div class="flight-dep-land-information">
+                                  <h2> {{ flight.landingAirportIATA }} </h2>
+                                  <h3> {{ flight.landingTime }} </h3>
+                              </div>
+                              <div class="vertical-line"></div>
+                              <div class="flight-price-information">
+                                  <h2> {{ flight.price }} </h2>
+                              </div>
+                              </div>
+                            </div>
+
+                            <button mat-icon-button matTooltip="Mostrar escalas" *ngIf="!travel.showStepOvers" (click)="showHideStepOvers(i)">
+                              <mat-icon>keyboard_arrow_down</mat-icon>
+                            </button>
+                            <button mat-icon-button matTooltip="Ocultar escalas" *ngIf="travel.showStepOvers" (click)="showHideStepOvers(i)">
+                              <mat-icon>keyboard_arrow_up</mat-icon>
+                            </button>
+
+                          </div>
+
                         </mat-card-content>
                     </mat-card>
+
                 </div>
               </form>
             </mat-step>
 
-            <mat-step [stepControl]="travelInformationStepD" errorMessage="*">
+            <mat-step [stepControl]="travelInformationStepD">
               <form [formGroup]="travelInformationStepD">
                 <ng-template matStepLabel>Información personal</ng-template>
                 <div class="personal-information-main-container">
@@ -100,8 +144,13 @@
                         <h6> {{seat.seatId}} </h6>
                       </button>
 
-                      <button mat-icon-button (click)="selectSeat(seat.seatId)" *ngIf="seat.state != 'Available'" disabled>
-                        <mat-icon>event_seat</mat-icon>
+                      <button mat-icon-button  class="selected-seat" (click)="selectSeat(seat.seatId)" *ngIf="seat.state == 'Selected'">
+                        <mat-icon class="selected-seat">event_seat</mat-icon>
+                        <h6> {{seat.seatId}} </h6>
+                      </button>
+
+                      <button mat-icon-button class="busy-seat" (click)="selectSeat(seat.seatId)" *ngIf="seat.state == 'Busy'" disabled>
+                        <mat-icon class="busy-seat">event_seat</mat-icon>
                         <h6> {{seat.seatId}} </h6>
                       </button>
                     </div>
@@ -117,7 +166,7 @@
               
             </mat-step>
 
-            <mat-step [stepControl]="paymentInformationStepD" errorMessage="*">
+            <mat-step [stepControl]="paymentInformationStepD">
               <ng-template matStepLabel>Facturación</ng-template>
               <form [formGroup]="paymentInformationStepD">
                 <div class="personal-information-main-container">
@@ -166,46 +215,88 @@
               </ng-template>
 
               <! Contenido que se muestra si no hay vuelos disponibles >
-              <div class="no-flights-container" *ngIf="flights.length === 0">
+              <div class="no-flights-container" *ngIf="travels.length === 0">
                   <mat-icon class="no-flights-icon">sentiment_very_dissatisfied</mat-icon>
                   <h3>¡Ups! Lo sentimos, no encontramos ningún vuelo para la fecha o ruta que seleccionaste</h3>
               </div>
               
               <div class="flights-list">
-                  <mat-card class="flight-card" *ngFor="let flight of flights">
+                  <mat-card class="flight-card" *ngFor="let travel of travels; let i = index">
                       <mat-card-content>
-                        <button class="custom-material-button" matStepperNext (click)="selectFlight(flight.flightIid)">
+                        <button class="custom-material-button" matStepperNext (click)="selectFlight(travel.travelId)">
                           <div class="flight-information">
                               <div class="flight-dep-land-information">
-                                  <h2> {{ flight.departureAirportIATA }} </h2>
-                                  <h3> {{ flight.departureTime }} </h3>
+                                  <h2> {{ travel.departureAirportIATA }} </h2>
+                                  <h3> {{ travel.departureTime }} </h3>
                               </div>
                               <div class="flight-duration-information">
-                                  <h3> {{ flight.duration }} </h3>
+                                  <h3> {{ travel.duration }} </h3>
                                   <div class="diagram-line-icon-line">
                                       <div class="horizontal-line"></div>
                                       <mat-icon>flight_takeoff</mat-icon>
                                       <div class="horizontal-line"></div>
                                   </div>
-                                  <h6> {{ flight.flightIid }} </h6>
+                                  <h6> {{ travel.travelId }} </h6>
                               </div>
                               <div class="flight-dep-land-information">
-                                  <h2> {{ flight.landingAirportIATA }} </h2>
-                                  <h3> {{ flight.landingTime }} </h3>
+                                  <h2> {{ travel.landingAirportIATA }} </h2>
+                                  <h3> {{ travel.landingTime }} </h3>
                               </div>
                               <div class="vertical-line"></div>
                               <div class="flight-price-information">
-                                  <h2> {{ flight.price }} </h2>
+                                  <h2> {{ travel.price }} </h2>
                               </div>
                           </div>
                         </button>
+
+                        <div class="stepovers-container">
+
+                          <div class="horizontal-line-travel-stepovers" *ngIf="travel.showStepOvers"></div>
+
+                          <h2 *ngIf="travel.showStepOvers">Escalas del vuelo</h2>
+
+                          <div class="stepovers-list" *ngFor="let flight of flights">
+                            <div class="stepover" *ngIf="flight.parentTravelId == travel.travelId && travel.showStepOvers">
+                              <div class="flight-dep-land-information">
+                                <h2> {{ flight.departureAirportIATA }} </h2>
+                                <h3> {{ flight.departureTime }} </h3>
+                            </div>
+                            <div class="flight-duration-information">
+                                <h3> {{ flight.duration }} </h3>
+                                <div class="diagram-line-icon-line">
+                                    <div class="horizontal-line"></div>
+                                    <mat-icon>flight_takeoff</mat-icon>
+                                    <div class="horizontal-line"></div>
+                                </div>
+                                <h6> {{ flight.flightId }} </h6>
+                            </div>
+                            <div class="flight-dep-land-information">
+                                <h2> {{ flight.landingAirportIATA }} </h2>
+                                <h3> {{ flight.landingTime }} </h3>
+                            </div>
+                            <div class="vertical-line"></div>
+                            <div class="flight-price-information">
+                                <h2> {{ flight.price }} </h2>
+                            </div>
+                            </div>
+                          </div>
+
+                          <button mat-icon-button matTooltip="Mostrar escalas" *ngIf="!travel.showStepOvers" (click)="showHideStepOvers(i)">
+                            <mat-icon>keyboard_arrow_down</mat-icon>
+                          </button>
+                          <button mat-icon-button matTooltip="Ocultar escalas" *ngIf="travel.showStepOvers" (click)="showHideStepOvers(i)">
+                            <mat-icon>keyboard_arrow_up</mat-icon>
+                          </button>
+
+                        </div>
+
                       </mat-card-content>
                   </mat-card>
               </div>
             </form>
           </mat-step>
 
-          <mat-step [stepControl]="travelInformationStepM" errorMessage="*">
+          <mat-step [stepControl]="travelInformationStepM">
             <form [formGroup]="travelInformationStepM">
               <ng-template matStepLabel>
                 <mat-icon>person</mat-icon>
@@ -255,10 +346,22 @@
               <img class="aircraft-image-M" src="../../../assets/aircraftShadow.png">
               <div class="plane-seats-grid-M">
                 <div class="seat-button-container-M" *ngFor="let seat of seats; let i = index">
-                  <button mat-icon-button (click)="selectSeat(seat.seatId)">
+                  
+                  <button mat-icon-button (click)="selectSeat(seat.seatId)" *ngIf="seat.state == 'Available'">
                     <mat-icon>event_seat</mat-icon>
                     <h6> {{seat.seatId}} </h6>
                   </button>
+
+                  <button mat-icon-button  class="selected-seat" (click)="selectSeat(seat.seatId)" *ngIf="seat.state == 'Selected'">
+                    <mat-icon class="selected-seat">event_seat</mat-icon>
+                    <h6> {{seat.seatId}} </h6>
+                  </button>
+
+                  <button mat-icon-button class="busy-seat" (click)="selectSeat(seat.seatId)" *ngIf="seat.state == 'Busy'" disabled>
+                    <mat-icon class="busy-seat">event_seat</mat-icon>
+                    <h6> {{seat.seatId}} </h6>
+                  </button>
+
                 </div>
               </div>
             </div>
@@ -271,7 +374,7 @@
 
           </mat-step>
 
-          <mat-step [stepControl]="paymentInformationStepM" errorMessage="*">
+          <mat-step [stepControl]="paymentInformationStepM">
             <ng-template matStepLabel>
               <mat-icon>payment</mat-icon>
             </ng-template>
