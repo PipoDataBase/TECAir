@@ -2,6 +2,22 @@
     <h1 class="mb-3">Agregar Promoción</h1>
     <div class="row">
         <div class="mat-elevation-z8" style="width: 450px; padding: 1%;">
+            <!-- trip -->
+            <div class="mb-1">
+                <mat-select placeholder="Selecciona un viaje" [(ngModel)]="promocion.viajeId" name="id"
+                    class="custom-select">
+                    <mat-option *ngFor="let viaje of viajes" [value]="viaje.id">
+                        {{ 'Id: ' + viaje.id }} / {{ 'Origen: ' + viaje.origen }} / {{ 'Destino: ' + viaje.destino }}
+                    </mat-option>
+                </mat-select>
+            </div>
+
+            <!-- image -->
+            <div class="mb-3">
+                <input type="file" class="form-control" id="imagenPath" name="imagenPath"
+                    (change)="onImageSelected($event)">
+            </div>
+
             <!-- start date -->
             <div class="mb-3">
                 <mat-form-field color="accent">
@@ -21,6 +37,15 @@
                     <mat-hint>MM/DD/YYYY</mat-hint>
                     <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
                     <mat-datepicker #picker2 color="primary"></mat-datepicker>
+                </mat-form-field>
+            </div>
+
+            <!-- flight price -->
+            <div>
+                <mat-form-field class="custom-mat-form-field">
+                    <mat-label>Precio $</mat-label>
+                    <input matInput placeholder="USD" type="number" [(ngModel)]="promocion.precio" name="precio"
+                        min="1">
                 </mat-form-field>
             </div>
 

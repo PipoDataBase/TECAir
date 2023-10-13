@@ -93,28 +93,40 @@ namespace TECAir.Controllers
         [HttpPost]
         public async Task<ActionResult<Promocion>> PostPromocion(Promocion promocion)
         {
-          if (_context.Promocions == null)
-          {
-              return Problem("Entity set 'TecairDbContext.Promocions'  is null.");
-          }
-            _context.Promocions.Add(promocion);
-            try
+            if (_context.Promocions == null)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (PromocionExists(promocion.ViajeId))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
+                return Problem("Entity set 'TecairDbContext.Promocions'  is null.");
             }
 
-            return CreatedAtAction("GetPromocion", new { id = promocion.ViajeId }, promocion);
+            // Validar que el Viaje existe
+            var viajeExistente = await _context.Viajes.FindAsync(promocion.ViajeId);
+            if (viajeExistente == null)
+            {
+                return BadRequest("El viaje especificado no existe.");
+            }
+
+            try
+            {
+                // Asignar el viaje a la propiedad de navegación
+                promocion.Viaje = viajeExistente;
+
+                // Agregar promoción a la base de datos
+                try
+                {
+                    _context.Promocions.Add(promocion);
+                    await _context.SaveChangesAsync();
+                }
+                catch
+                {
+                    return BadRequest();
+                }
+
+                return Ok(promocion.ViajeId);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error interno del servidor: {ex.Message}");
+            }
         }
 
         // DELETE: api/Promociones/5
@@ -131,10 +143,12 @@ namespace TECAir.Controllers
                 return NotFound();
             }
 
+            // Eliminar promoción
             _context.Promocions.Remove(promocion);
+
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok(1);
         }
 
         private bool PromocionExists(int id)

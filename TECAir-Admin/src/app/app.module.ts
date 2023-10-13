@@ -21,6 +21,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CalendarModule, DatePickerModule, TimePickerModule, DateRangePickerModule, DateTimePickerModule } from '@syncfusion/ej2-angular-calendars';
 import { DatePipe } from '@angular/common';
 
+// Firebase
+import { AngularFireModule } from '@angular/fire/compat';
+
 // Components
 import { AppComponent } from './app.component';
 import { LoginComponent } from './components/login/login/login.component';
@@ -35,6 +38,7 @@ import { TripsComponent } from './components/tecairlines/trips/trips/trips.compo
 import { AddTripComponent } from './components/tecairlines/trips/add-trip/add-trip.component';
 import { EditTripComponent } from './components/tecairlines/trips/edit-trip/edit-trip.component';
 import { CheckBoardingpassBaggagesComponent } from './components/tecairlines/check-boardingpass-baggages/check-boardingpass-baggages.component';
+import { environment } from './environments/environment.development';
 
 
 @NgModule({
@@ -66,7 +70,8 @@ import { CheckBoardingpassBaggagesComponent } from './components/tecairlines/che
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    CalendarModule, DatePickerModule, TimePickerModule, DateRangePickerModule, DateTimePickerModule
+    CalendarModule, DatePickerModule, TimePickerModule, DateRangePickerModule, DateTimePickerModule,
+    AngularFireModule.initializeApp(environment.firebaseConfig)
   ],
   providers: [
     DatePipe

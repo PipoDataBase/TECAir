@@ -34,3 +34,7 @@ h1 {
 mat-form-field {
     width: 100%;
 }
+
+input:-webkit-autofill {
+    -webkit-background-clip: text;
+}
