@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './components/login/login/login.component';
 import { TecairlinesComponent } from './components/tecairlines/tecairlines/tecairlines.component';
-import { HomeComponent } from './components/tecairlines/home/home.component';
 import { TripsComponent } from './components/tecairlines/trips/trips/trips.component';
 import { AddTripComponent } from './components/tecairlines/trips/add-trip/add-trip.component';
 import { EditTripComponent } from './components/tecairlines/trips/edit-trip/edit-trip.component';
@@ -21,8 +20,7 @@ const routes: Routes = [
     path: 'tecair-admin/:id',
     component: TecairlinesComponent,
     children: [
-      { path: '', pathMatch: 'full', redirectTo: 'home' },
-      { path: 'home', component: HomeComponent },
+      { path: '', pathMatch: 'full', redirectTo: 'trips' },
       { path: 'trips', component: TripsComponent },
       { path: 'add-trip', component: AddTripComponent },
       { path: 'edit-trip/:id', component: EditTripComponent },

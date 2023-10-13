@@ -28,7 +28,6 @@ import { AngularFireModule } from '@angular/fire/compat';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './components/login/login/login.component';
 import { TecairlinesComponent } from './components/tecairlines/tecairlines/tecairlines.component';
-import { HomeComponent } from './components/tecairlines/home/home.component';
 import { FlightsComponent } from './components/tecairlines/flights/flights/flights.component';
 import { AddFlightComponent } from './components/tecairlines/flights/add-flight/add-flight.component';
 import { PromotionsComponent } from './components/tecairlines/promotions/promotions/promotions.component';
@@ -46,7 +45,6 @@ import { environment } from './environments/environment.development';
     AppComponent,
     LoginComponent,
     TecairlinesComponent,
-    HomeComponent,
     FlightsComponent,
     AddFlightComponent,
     PromotionsComponent,

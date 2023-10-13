@@ -37,7 +37,7 @@ export class TecairlinesComponent {
   }
 
   home(): void {
-    this.router.navigate(["tecair-admin", this.username, "home"]);
+    this.router.navigate(["tecair-admin", this.username, "trips"]);
   }
 
   openLoginDialog(): void {
