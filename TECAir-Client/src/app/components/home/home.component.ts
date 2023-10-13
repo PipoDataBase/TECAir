@@ -5,18 +5,10 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { Aeropuerto } from 'src/app/models/aeropuerto.module';
-import { Promotion } from 'src/app/models/promotion.module';
+import { Promocion } from 'src/app/models/promocion.module';
 import { AeropuertosService } from 'src/app/services/aeropuertos.service';
-
-export const _filter = (opt: Aeropuerto[], value: string): Aeropuerto[] => {
-  const filterValue = value.toLowerCase();
-
-  return opt.filter(item =>
-    item.ubicacion.toLowerCase().includes(filterValue) ||
-    item.id.toLowerCase().includes(filterValue) ||
-    item.nombre.toLowerCase().includes(filterValue)
-  );
-};
+import { PromocionesService } from 'src/app/services/promociones.service';
+import { SharedService } from 'src/app/services/shared.service';
 
 @Component({
   selector: 'app-home',
@@ -49,37 +41,12 @@ export class HomeComponent {
     passengers: 1
   });
 
-  promotions: Promotion[] = [
-    {
-      origin: 'San José, Costa Rica',
-      destination: 'Guatemala',
-      price: 68,
-      imagePath: '../../../assets/promo1.jpg'
-    },
-    {
-      origin: 'San José, Costa Rica',
-      destination: 'San Salvador',
-      price: 87,
-      imagePath: '../../../assets/promo2.jpg'
-    },
-    {
-      origin: 'San José, Costa Rica',
-      destination: 'Bogotá',
-      price: 105,
-      imagePath: '../../../assets/promo3.jpg'
-    },
-    {
-      origin: 'San José, Costa Rica',
-      destination: 'Ciudad de México',
-      price: 114,
-      imagePath: '../../../assets/promo4.jpg'
-    }
-  ]
+  promociones: Promocion[] = [];
 
   airportOptions1: Observable<Aeropuerto[]> | undefined;
   airportOptions2: Observable<Aeropuerto[]> | undefined;
 
-  constructor(private renderer: Renderer2, private _formBuilder: FormBuilder, private router: Router, private aeropuertosService: AeropuertosService) {
+  constructor(private renderer: Renderer2, private _formBuilder: FormBuilder, private router: Router, private aeropuertosService: AeropuertosService, private promocionesService: PromocionesService, public sharedService: SharedService) {
     this.isMobile = window.innerWidth <= 767;
     window.addEventListener('resize', () => {
       this.isMobile = window.innerWidth <= 767;
@@ -98,13 +65,22 @@ export class HomeComponent {
 
     this.airportOptions1 = this.airportForm.get('originAirportGroup')!.valueChanges.pipe(
       startWith(''),
-      map(value => this._filterAirports(value || '')),
+      map(value => this.sharedService._filterAirports(this.aeropuertos, value || '')),
     );
 
     this.airportOptions2 = this.airportForm.get('destinationAirportGroup')!.valueChanges.pipe(
       startWith(''),
-      map(value => this._filterAirports(value || '')),
+      map(value => this.sharedService._filterAirports(this.aeropuertos, value || '')),
     );
+
+    this.promocionesService.getNPromociones(4).subscribe({
+      next: (promociones) => {
+        this.promociones = promociones;
+      },
+      error: (response) => {
+        console.log(response);
+      }
+    })
   }
 
   changeImage(direction: number) {
@@ -136,13 +112,6 @@ export class HomeComponent {
 
       this.renderer.setAttribute(imgElement, 'src', newPath);
     }
-  }
-
-  private _filterAirports(value: string): Aeropuerto[] {
-    if (value && typeof value === 'string') {
-      return _filter(this.aeropuertos, value);
-    }
-    return this.aeropuertos;
   }
 
   searchFlights(): void {

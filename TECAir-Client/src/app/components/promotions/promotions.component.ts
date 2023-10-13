@@ -1,7 +1,11 @@
 import { Component } from '@angular/core';
 import { Renderer2 } from '@angular/core';
 import { Router } from '@angular/router';
-import { Promotion } from 'src/app/models/promotion.module';
+import { Aeropuerto } from 'src/app/models/aeropuerto.module';
+import { Promocion } from 'src/app/models/promocion.module';
+import { AeropuertosService } from 'src/app/services/aeropuertos.service';
+import { PromocionesService } from 'src/app/services/promociones.service';
+import { SharedService } from 'src/app/services/shared.service';
 
 @Component({
   selector: 'app-promotions',
@@ -10,75 +14,34 @@ import { Promotion } from 'src/app/models/promotion.module';
 })
 export class PromotionsComponent {
   isMobile: boolean;
+  aeropuertos: Aeropuerto[] = [];
+  promociones: Promocion[] = [];
 
-  promotions: Promotion[] = [
-    {
-      origin: 'San José, Costa Rica',
-      destination: 'Guatemala',
-      price: 68,
-      imagePath: '../../../assets/promo1.jpg'
-    },
-    {
-      origin: 'San José, Costa Rica',
-      destination: 'San Salvador',
-      price: 87,
-      imagePath: '../../../assets/promo2.jpg'
-    },
-    {
-      origin: 'San José, Costa Rica',
-      destination: 'Bogotá',
-      price: 105,
-      imagePath: '../../../assets/promo3.jpg'
-    },
-    {
-      origin: 'San José, Costa Rica',
-      destination: 'Ciudad de México',
-      price: 114,
-      imagePath: '../../../assets/promo4.jpg'
-    },
-    {
-      origin: 'San José, Costa Rica',
-      destination: 'Guatemala',
-      price: 68,
-      imagePath: '../../../assets/promo4.jpg'
-    },
-    {
-      origin: 'San José, Costa Rica',
-      destination: 'San Salvador',
-      price: 87,
-      imagePath: '../../../assets/promo3.jpg'
-    },
-    {
-      origin: 'San José, Costa Rica',
-      destination: 'Bogotá',
-      price: 105,
-      imagePath: '../../../assets/promo2.jpg'
-    },
-    {
-      origin: 'San José, Costa Rica',
-      destination: 'Ciudad de México',
-      price: 114,
-      imagePath: '../../../assets/promo1.jpg'
-    },
-    {
-      origin: 'San José, Costa Rica',
-      destination: 'Guatemala',
-      price: 68,
-      imagePath: '../../../assets/promo1.jpg'
-    },
-    {
-      origin: 'San José, Costa Rica',
-      destination: 'San Salvador',
-      price: 87,
-      imagePath: '../../../assets/promo2.jpg'
-    }
-  ]
-
-  constructor(private renderer: Renderer2, private router: Router) {
+  constructor(private router: Router, private aeropuertosService: AeropuertosService, private promocionesService: PromocionesService, public sharedService: SharedService) {
     this.isMobile = window.innerWidth <= 767;
     window.addEventListener('resize', () => {
       this.isMobile = window.innerWidth <= 767;
     });
+  }
+
+  ngOnInit() {
+    this.aeropuertosService.getAeropuertos().subscribe({
+      next: (aeropuertos) => {
+        this.aeropuertos = aeropuertos;
+      },
+      error: (response) => {
+        console.log(response);
+      }
+    })
+
+    this.promocionesService.getPromociones().subscribe({
+      next: (promociones) => {
+        this.promociones = promociones;
+      },
+      error: (response) => {
+        console.log(response);
+      }
+    })
   }
 
   onCardClick(promotion: any): void {

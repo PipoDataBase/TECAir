@@ -1,15 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../environments/environment';
-import { Promocion } from '../models/promotion.module';
-import { Promocion2 } from '../models/promotion2.module';
+import { Promocion } from '../models/promocion.module';
+import { Promocion2 } from '../models/promocion2.module';
 import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PromocionesService {
-
   baseApiUrl: string = environment.baseApiUrl;
 
   constructor(private http: HttpClient) { }

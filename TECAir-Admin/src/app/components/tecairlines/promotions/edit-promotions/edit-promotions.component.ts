@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Promocion2 } from 'src/app/models/promotion2.module';
+import { Promocion2 } from 'src/app/models/promocion2.module';
 import { Viaje } from 'src/app/models/viaje.module';
 import { PromocionesService } from 'src/app/services/promociones.service';
 import { AngularFireStorage } from '@angular/fire/compat/storage';

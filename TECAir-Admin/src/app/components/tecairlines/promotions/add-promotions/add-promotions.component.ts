@@ -4,7 +4,7 @@ import { PromocionesService } from 'src/app/services/promociones.service';
 import { Viaje } from 'src/app/models/viaje.module';
 import { ViajesService } from 'src/app/services/viajes.service';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
-import { Promocion2 } from 'src/app/models/promotion2.module';
+import { Promocion2 } from 'src/app/models/promocion2.module';
 import { DatePipe } from '@angular/common';
 import Swal from 'sweetalert2';
 

@@ -39,6 +39,26 @@ namespace TECAir.Controllers
             return Ok(promociones);
         }
 
+        // GET: api/Promociones/N/4
+        [HttpGet("N/{n}")]
+        public async Task<ActionResult<IEnumerable<Promocion>>> GetNPromocions(int n)
+        {
+            var promociones = await _context.Promocions
+              .Select(p => new
+              {
+                  p.ViajeId,
+                  p.Precio,
+                  p.FechaInicio,
+                  p.FechaVencimiento,
+                  p.ImagenPath,
+                  p.Viaje
+              })
+              .Take(n) // Tomar los primeros n elementos
+              .ToListAsync();
+
+            return Ok(promociones);
+        }
+
         // GET: api/Promociones/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Promocion>> GetPromocion(int id)

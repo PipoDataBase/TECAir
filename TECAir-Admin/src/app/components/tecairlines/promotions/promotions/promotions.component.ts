@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { PromocionesService } from 'src/app/services/promociones.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
-import { Promocion } from 'src/app/models/promotion.module';
+import { Promocion } from 'src/app/models/promocion.module';
 import { MatTableDataSource } from '@angular/material/table';
 import Swal from 'sweetalert2';
 

@@ -169,22 +169,22 @@
     </div>
 
     <div class="promotion-grid">
-        <mat-card *ngFor="let promotion of promotions; let i=index" fxLayout="column">
-            <button class="custom-button2" (click)="onCardClick(promotion)">
+        <mat-card *ngFor="let promocion of promociones; let i=index" fxLayout="column">
+            <button class="custom-button2" (click)="onCardClick(promocion)">
                 <div class="image-container2">
-                    <img style="margin-top: 1%;" src="{{ promotion.imagePath }}" alt="Promotion Image" />
+                    <img style="margin-top: 1%;" src="{{ promocion.imagenPath }}" alt="Promotion Image" />
                 </div>
             </button>
 
             <div class="text-overlay">
-                <mat-label>{{ promotion.origin }}</mat-label>
+                <mat-label>{{ sharedService.getName(aeropuertos, promocion.viaje.origen) }}</mat-label>
                 <div class="icon-container">
                     <mat-icon>trending_flat</mat-icon>
-                    <mat-label>{{ promotion.destination }}</mat-label>
+                    <mat-label>{{ sharedService.getName(aeropuertos, promocion.viaje.destino) }}</mat-label>
                 </div>
             </div>
             <mat-label class="per-way-from">Por trayecto desde</mat-label>
-            <mat-label class="price">USD {{ promotion.price }}</mat-label>
+            <mat-label class="price">USD {{ promocion.precio }}</mat-label>
         </mat-card>
         <button *ngIf="isMobile" mat-stroked-button class="custom-button" (click)="more_promotions()">Descubre más
             destinos</button>
