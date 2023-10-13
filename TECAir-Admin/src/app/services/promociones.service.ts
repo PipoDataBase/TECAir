@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class PromotionService {
+export class PromocionesService {
 
   baseApiUrl: string = environment.baseApiUrl;
 
@@ -18,8 +18,16 @@ export class PromotionService {
     return this.http.get<Promocion[]>(this.baseApiUrl + '/api/Promociones');
   }
 
+  getPromocion(id: string): Observable<Promocion2> {
+    return this.http.get<Promocion2>(this.baseApiUrl + '/api/Promociones/' + id);
+  }
+
   postPromocion(promocion: Promocion2): Observable<number> {
     return this.http.post<number>(this.baseApiUrl + '/api/Promociones', promocion);
+  }
+
+  putPromocion(id: number, promocion: Promocion2): Observable<number> {
+    return this.http.put<number>(this.baseApiUrl + '/api/Promociones/' + id, promocion);
   }
 
   deletePromocion(id: number): Observable<number> {

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PromotionService } from 'src/app/services/promotion.service';
+import { PromocionesService } from 'src/app/services/promociones.service';
 import { Viaje } from 'src/app/models/viaje.module';
 import { ViajesService } from 'src/app/services/viajes.service';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
@@ -27,7 +27,7 @@ export class AddPromotionsComponent {
   startDate: string = '';
   expirationDate: string = '';
 
-  constructor(private route: ActivatedRoute, private router: Router, private storage: AngularFireStorage, private datePipe: DatePipe, private promotionService: PromotionService, private viajesService: ViajesService) { }
+  constructor(private route: ActivatedRoute, private router: Router, private storage: AngularFireStorage, private datePipe: DatePipe, private promocionesService: PromocionesService, private viajesService: ViajesService) { }
 
   ngOnInit(): void {
     this.route.parent?.paramMap.subscribe({
@@ -127,8 +127,8 @@ export class AddPromotionsComponent {
     }
 
     // add promotion to database
-    this.promotionService.postPromocion(this.promocion).subscribe({
-      next: (id) => {
+    this.promocionesService.postPromocion(this.promocion).subscribe({
+      next: (response) => {
       },
       error: (response) => {
         Swal.fire({

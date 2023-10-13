@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { PromotionService } from 'src/app/services/promotion.service';
+import { PromocionesService } from 'src/app/services/promociones.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { Promocion } from 'src/app/models/promotion.module';
@@ -17,10 +17,10 @@ export class PromotionsComponent {
   dataSource = new MatTableDataSource(this.promociones);
   columnHeaders: string[] = ['viajeId', 'imagenPath', 'origen', 'destino', 'fechaInicio', 'fechaVencimiento', 'precio', 'accion'];
 
-  constructor(private route: ActivatedRoute, private router: Router, private datePipe: DatePipe, private promocionService: PromotionService) { }
+  constructor(private route: ActivatedRoute, private router: Router, private datePipe: DatePipe, private promocionesService: PromocionesService) { }
 
   updatePromotions(): void {
-    this.promocionService.getPromociones().subscribe({
+    this.promocionesService.getPromociones().subscribe({
       next: (promociones) => {
         this.promociones = promociones;
         this.dataSource = new MatTableDataSource(this.promociones);
@@ -66,7 +66,7 @@ export class PromotionsComponent {
       confirmButtonText: '¡Sí, bórralo!'
     }).then((result) => {
       if (result.isConfirmed) {
-        this.promocionService.deletePromocion(id).subscribe({
+        this.promocionesService.deletePromocion(id).subscribe({
           next: (response) => {
             this.updatePromotions();
           },

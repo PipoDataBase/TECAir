@@ -1,1 +1,57 @@
-<p>edit-promotions works!</p>
+<div class="container my-5">
+    <h1 class="mb-3">Editar Promoción</h1>
+    <div class="row">
+        <div class="mat-elevation-z8" style="width: 450px; padding: 1%;">
+            <!-- trip -->
+            <div class="mb-1">
+                <mat-select placeholder="Selecciona un viaje" [(ngModel)]="promocionDetails.viajeId" name="id" class="custom-select" readonly disabled>
+                    <mat-option *ngFor="let viaje of viajes" [value]="viaje.id">
+                        {{ 'Id: ' + viaje.id }} / {{ 'Origen: ' + viaje.origen }} / {{ 'Destino: ' + viaje.destino }}
+                    </mat-option>
+                </mat-select>
+            </div>
+
+            <!-- image -->
+            <div class="mb-3">
+                <input type="file" class="form-control" id="imagenPath" name="imagenPath"
+                    (change)="onImageSelected($event)">
+            </div>
+
+            <!-- start date -->
+            <div class="mb-3">
+                <mat-form-field color="accent">
+                    <mat-label>Fecha de inicio</mat-label>
+                    <input matInput [matDatepicker]="picker1" [(ngModel)]="startDate" name="fechaInicio">
+                    <mat-hint>MM/DD/YYYY</mat-hint>
+                    <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
+                    <mat-datepicker #picker1 color="primary"></mat-datepicker>
+                </mat-form-field>
+            </div>
+
+            <!-- expiration date -->
+            <div class="mb-3">
+                <mat-form-field color="accent">
+                    <mat-label>Fecha de vencimiento</mat-label>
+                    <input matInput [matDatepicker]="picker2" [(ngModel)]="expirationDate" name="fechaVencimiento">
+                    <mat-hint>MM/DD/YYYY</mat-hint>
+                    <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
+                    <mat-datepicker #picker2 color="primary"></mat-datepicker>
+                </mat-form-field>
+            </div>
+
+            <!-- flight price -->
+            <div>
+                <mat-form-field class="custom-mat-form-field">
+                    <mat-label>Precio $</mat-label>
+                    <input matInput placeholder="USD" type="number" [(ngModel)]="promocionDetails.precio" name="precio"
+                        min="1">
+                </mat-form-field>
+            </div>
+
+            <button mat-flat-button color="primary" class="btn-block custom-back" (click)="back()">Regresar</button>
+            <span class="mx-1"></span>
+            <button mat-flat-button color="primary" class="btn-block custom-save"
+                (click)="updatePromotion()">Guardar</button>
+        </div>
+    </div>
+</div>

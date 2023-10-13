@@ -43,18 +43,29 @@ namespace TECAir.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Promocion>> GetPromocion(int id)
         {
-          if (_context.Promocions == null)
-          {
-              return NotFound();
-          }
-            var promocion = await _context.Promocions.FindAsync(id);
+            if (_context.Promocions == null)
+            {
+                return NotFound();
+            }
+
+            var promocion = await _context.Promocions
+                    .Where(p => p.ViajeId == id)
+                    .Select(p => new
+                    {
+                        p.ViajeId,
+                        p.Precio,
+                        p.FechaInicio,
+                        p.FechaVencimiento,
+                        p.ImagenPath
+                    })
+                    .FirstOrDefaultAsync();
 
             if (promocion == null)
             {
                 return NotFound();
             }
 
-            return promocion;
+            return Ok(promocion);
         }
 
         // PUT: api/Promociones/5
@@ -62,30 +73,47 @@ namespace TECAir.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPromocion(int id, Promocion promocion)
         {
+            if (_context.Promocions == null)
+            {
+                return Problem("Entity set 'TecairDbContext.Promocions'  is null.");
+            }
+
+            // Validar el ViajeId
             if (id != promocion.ViajeId)
             {
                 return BadRequest();
             }
 
-            _context.Entry(promocion).State = EntityState.Modified;
+            // Validar que el Viaje existe
+            var viajeExistente = await _context.Viajes.FindAsync(promocion.ViajeId);
+            if (viajeExistente == null)
+            {
+                return BadRequest("El viaje especificado no existe.");
+            }
+
+            var _promocion = await _context.Promocions.FindAsync(id);
+            if (_promocion == null)
+            {
+                return NotFound();
+            }
 
             try
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PromocionExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+                // Asignar el viaje a la propiedad de navegación
+                _promocion.Viaje = viajeExistente;
 
-            return NoContent();
+                _promocion.Precio = promocion.Precio;
+                _promocion.FechaInicio = promocion.FechaInicio;
+                _promocion.FechaVencimiento = promocion.FechaVencimiento;
+                _promocion.ImagenPath = promocion.ImagenPath;
+                await _context.SaveChangesAsync();
+
+                return Ok(_promocion.ViajeId);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error interno del servidor: {ex.Message}");
+            }
         }
 
         // POST: api/Promociones

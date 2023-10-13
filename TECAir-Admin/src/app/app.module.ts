@@ -32,6 +32,7 @@ import { FlightsComponent } from './components/tecairlines/flights/flights/fligh
 import { AddFlightComponent } from './components/tecairlines/flights/add-flight/add-flight.component';
 import { PromotionsComponent } from './components/tecairlines/promotions/promotions/promotions.component';
 import { AddPromotionsComponent } from './components/tecairlines/promotions/add-promotions/add-promotions.component';
+import { EditPromotionsComponent } from './components/tecairlines/promotions/edit-promotions/edit-promotions.component';
 import { EditFlightComponent } from './components/tecairlines/flights/edit-flight/edit-flight.component';
 import { TripsComponent } from './components/tecairlines/trips/trips/trips.component';
 import { AddTripComponent } from './components/tecairlines/trips/add-trip/add-trip.component';
@@ -45,14 +46,15 @@ import { environment } from './environments/environment.development';
     AppComponent,
     LoginComponent,
     TecairlinesComponent,
-    FlightsComponent,
-    AddFlightComponent,
-    PromotionsComponent,
-    AddPromotionsComponent,
-    EditFlightComponent,
     TripsComponent,
     AddTripComponent,
     EditTripComponent,
+    FlightsComponent,
+    AddFlightComponent,
+    EditFlightComponent,
+    PromotionsComponent,
+    AddPromotionsComponent,
+    EditPromotionsComponent,
     CheckBoardingpassBaggagesComponent
 
   ],
