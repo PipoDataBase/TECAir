@@ -36,7 +36,8 @@ export class SignUpComponent {
     telefono: 0,
     nombre: '',
     apellido1: '',
-    apellido2: ''
+    apellido2: '',
+    estudiante: []
   }
   estudiante: Estudiante = {
     carnet: 0,

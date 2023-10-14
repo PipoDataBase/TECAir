@@ -3,15 +3,15 @@ import { FormBuilder, Validators, FormsModule, ReactiveFormsModule, FormControl 
 import { Observable } from 'rxjs';
 import { Profile } from 'src/app/models/profile.module';
 import { Student } from 'src/app/models/student.module';
-import { ProfileService} from 'src/app/services/profile.service';
+import { ProfileService } from 'src/app/services/profile.service';
 import { StudentService } from 'src/app/services/student.service';
-import {MatButtonToggleChange, MatButtonToggleModule} from '@angular/material/button-toggle'
+import { MatButtonToggleChange, MatButtonToggleModule } from '@angular/material/button-toggle'
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css'],
-  
+
 })
 export class ProfileComponent {
 
@@ -19,7 +19,7 @@ export class ProfileComponent {
 
   isEdit: boolean;
 
-  perfiles : Profile[] = [];
+  perfiles: Profile[] = [];
   students: Student[] = [];
 
 
@@ -43,7 +43,7 @@ export class ProfileComponent {
 
   StudentBurn = {
     Credential: '2021571438',
-    Miles:'84.3',
+    Miles: '84.3',
     University: 'Tecnologico de Costa Rica'
   }
 
@@ -53,26 +53,26 @@ export class ProfileComponent {
     millas: '',
     universidadId: ''
   };
- 
+
 
   profileOption: Observable<Profile> | undefined;
   studentOption: Observable<Student> | undefined;
 
 
-  constructor(private _formBuilder: FormBuilder, private profileServce: ProfileService, private studentService: StudentService){
+  constructor(private _formBuilder: FormBuilder, private profileServce: ProfileService, private studentService: StudentService) {
 
     this.isMobile = window.innerWidth <= 767;
     window.addEventListener('resize', () => {
       this.isMobile = window.innerWidth <= 767;
     });
-    
+
 
     this.isEdit = false;
 
 
   }
-  ngOnInit(){
-    
+  ngOnInit() {
+
     this.profileServce.getClients().subscribe({
       next: (perfiles) => {
         this.perfiles = perfiles;
@@ -81,43 +81,43 @@ export class ProfileComponent {
       error: (response) => {
         console.log(response);
       }
-      
+
     })
 
-    
 
-   }
-    Load(){
+
+  }
+  Load() {
     const employeeFound = this.perfiles.find((profile) => profile.correo === this.ProfileBurn.Email)
-    
+
     console.log('loading...')
-   
-     if (employeeFound) {
+
+    if (employeeFound) {
       this.Profile = employeeFound;
-        console.log('testing for student')
-        this.findIn();
-      
+      console.log('testing for student')
+      this.findIn();
+
       console.log('Loaded')
-     } else {
-       alert("No User Found!");
-     }
+    } else {
+      alert("No User Found!");
+    }
   };
 
-   findIn(){
-    
+  findIn() {
+
 
     this.studentService.getClient(this.Profile.correo).subscribe({
       next: (student) => {
         this.Student = student;
-       //console.log(this.Student)
-       //console.log(student)
-        
+        //console.log(this.Student)
+        //console.log(student)
+
       },
       error: (response) => {
         console.log(response);
       }
 
-      
+
     })
 
     /*const studentFound = this.Student
@@ -130,7 +130,7 @@ export class ProfileComponent {
        console.log('student not Found')
      }*/
   }
-  
+
 
 
 }

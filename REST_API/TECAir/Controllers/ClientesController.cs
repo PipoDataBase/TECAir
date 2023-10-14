@@ -35,18 +35,25 @@ namespace TECAir.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Cliente>> GetCliente(string id)
         {
-          if (_context.Clientes == null)
-          {
-              return NotFound();
-          }
-            var cliente = await _context.Clientes.FindAsync(id);
+            var cliente = await _context.Clientes
+                    .Where(c => c.Correo == id)
+                    .Select(c => new
+                    {
+                        c.Correo,
+                        c.Telefono,
+                        c.Nombre,
+                        c.Apellido1,
+                        c.Apellido2,
+                        c.Estudiantes
+                    })
+                    .FirstOrDefaultAsync();
 
             if (cliente == null)
             {
                 return NotFound();
             }
 
-            return cliente;
+            return Ok(cliente);
         }
 
         // PUT: api/Clientes/5
