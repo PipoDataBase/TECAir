@@ -20,7 +20,7 @@ const routes: Routes = [
       { path: 'login', component: LoginComponent },
       { path: 'sign-up', component: SignUpComponent },
       { path: 'promotions', component: PromotionsComponent },
-      { path: 'profile', component: ProfileComponent }
+      { path: 'profile/:email', component: ProfileComponent }
     ],
   },
   

@@ -9,9 +9,11 @@
 <div mat-dialog-content class="row">
     <div style="width: 600px;">
         <div class="mt-3">
+            <mat-label *ngIf="loginFailed" style="color: #e13a2d; margin-left: 2%;">Correo incorrecto</mat-label>
             <mat-form-field style="width: 100%;">
                 <mat-label>Correo</mat-label>
-                <input matInput placeholder="pedroperico@tecair.com" type="email" required>
+                <input matInput placeholder="pedroperico@tecair.com" type="email" required [(ngModel)]="email"
+                    name="email">
                 <mat-icon matSuffix>email</mat-icon>
             </mat-form-field>
         </div>
