@@ -6,41 +6,42 @@
                 <ng-template matStepLabel>Seleccion de vuelo</ng-template>
 
                 <! Contenido que se muestra si no hay vuelos disponibles >
-                <div class="no-flights-container" *ngIf="flights.length === 0">
+                <div class="no-flights-container" *ngIf="getViajes().length === 0">
                     <mat-icon class="no-flights-icon">sentiment_very_dissatisfied</mat-icon>
                     <h3>¡Ups! Lo sentimos, no encontramos ningún vuelo para la fecha o ruta que seleccionaste</h3>
                 </div>
                 
                 <div class="flights-list">
-                    <mat-card class="flight-card" *ngFor="let travel of travels; let i = index">
+                    <mat-card class="flight-card" *ngFor="let travel of getViajes(); let i = index">
                         <mat-card-content>
 
-                          <button class="custom-material-button" matStepperNext (click)="selectFlight(travel.travelId)">
+                          <button class="custom-material-button" matStepperNext (click)="selectFlight(travel.id)">
                             <div class="flight-information">
                                 <div class="flight-dep-land-information">
-                                    <h2> {{ travel.departureAirportIATA }} </h2>
-                                    <h3> {{ travel.departureTime }} </h3>
+                                    <h2> {{ travel.origen }} </h2>
+                                    <h3> {{ travel.fechaSalida }} </h3>
                                 </div>
                                 <div class="flight-duration-information">
-                                    <h3> {{ travel.duration }} </h3>
+                                    <h3> Duracion </h3>
                                     <div class="diagram-line-icon-line">
                                         <div class="horizontal-line"></div>
                                         <mat-icon>flight_takeoff</mat-icon>
                                         <div class="horizontal-line"></div>
                                     </div>
-                                    <h6> {{ travel.travelId }} </h6>
+                                    <h6> {{ travel.id }} </h6>
                                 </div>
                                 <div class="flight-dep-land-information">
-                                    <h2> {{ travel.landingAirportIATA }} </h2>
-                                    <h3> {{ travel.landingTime }} </h3>
+                                    <h2> {{ travel.destino }} </h2>
+                                    <h3> {{ travel.fechaLlegada }} </h3>
                                 </div>
                                 <div class="vertical-line"></div>
                                 <div class="flight-price-information">
-                                    <h2> {{ travel.price }} </h2>
+                                    <h2> {{ travel.precio }} </h2>
                                 </div>
                             </div>
                           </button>
                           
+                          <!----
                           <div class="stepovers-container">
 
                             <div class="horizontal-line-travel-stepovers" *ngIf="travel.showStepOvers"></div>
@@ -80,7 +81,7 @@
                               <mat-icon>keyboard_arrow_up</mat-icon>
                             </button>
 
-                          </div>
+                          </div>-->
 
                         </mat-card-content>
                     </mat-card>
@@ -128,6 +129,7 @@
                 </div>
               </form>
 
+              <!--
               <div class="seats-selection-container">
                 <div class="selected-seats-id-label-contanier">
                   <h2>Asientos seleccionados:</h2>
@@ -157,6 +159,7 @@
                   </div>
                 </div>
               </div>
+            -->
 
               <div class="personal-information-form-field-container">
                 <button mat-flat-button color="primary" matStepperPrevious>Regresar</button>
@@ -215,40 +218,41 @@
               </ng-template>
 
               <! Contenido que se muestra si no hay vuelos disponibles >
-              <div class="no-flights-container" *ngIf="travels.length === 0">
+              <div class="no-flights-container" *ngIf="getViajes().length === 0">
                   <mat-icon class="no-flights-icon">sentiment_very_dissatisfied</mat-icon>
                   <h3>¡Ups! Lo sentimos, no encontramos ningún vuelo para la fecha o ruta que seleccionaste</h3>
               </div>
               
               <div class="flights-list">
-                  <mat-card class="flight-card" *ngFor="let travel of travels; let i = index">
+                  <mat-card class="flight-card" *ngFor="let travel of getViajes(); let i = index">
                       <mat-card-content>
-                        <button class="custom-material-button" matStepperNext (click)="selectFlight(travel.travelId)">
+                        <button class="custom-material-button" matStepperNext (click)="selectFlight(travel.id)">
                           <div class="flight-information">
                               <div class="flight-dep-land-information">
-                                  <h2> {{ travel.departureAirportIATA }} </h2>
-                                  <h3> {{ travel.departureTime }} </h3>
+                                  <h2> {{ travel.origen }} </h2>
+                                  <h3> Departure Time </h3>
                               </div>
                               <div class="flight-duration-information">
-                                  <h3> {{ travel.duration }} </h3>
+                                  <h3> Duration </h3>
                                   <div class="diagram-line-icon-line">
                                       <div class="horizontal-line"></div>
                                       <mat-icon>flight_takeoff</mat-icon>
                                       <div class="horizontal-line"></div>
                                   </div>
-                                  <h6> {{ travel.travelId }} </h6>
+                                  <h6> {{ travel.id }} </h6>
                               </div>
                               <div class="flight-dep-land-information">
-                                  <h2> {{ travel.landingAirportIATA }} </h2>
-                                  <h3> {{ travel.landingTime }} </h3>
+                                  <h2> {{ travel.destino }} </h2>
+                                  <h3> {{ travel.fechaLlegada }} </h3>
                               </div>
                               <div class="vertical-line"></div>
                               <div class="flight-price-information">
-                                  <h2> {{ travel.price }} </h2>
+                                  <h2> {{ travel.precio }} </h2>
                               </div>
                           </div>
                         </button>
 
+                        <!--
                         <div class="stepovers-container">
 
                           <div class="horizontal-line-travel-stepovers" *ngIf="travel.showStepOvers"></div>
@@ -289,6 +293,7 @@
                           </button>
 
                         </div>
+                      -->
 
                       </mat-card-content>
                   </mat-card>
@@ -342,6 +347,7 @@
               <h4 class="left-seast-lablel-M">Asientos restantes: {{getleftTickets()}} </h4>
             </div>
 
+            <!--
             <div class="seats-selection-container-M">
               <img class="aircraft-image-M" src="../../../assets/aircraftShadow.png">
               <div class="plane-seats-grid-M">
@@ -365,6 +371,7 @@
                 </div>
               </div>
             </div>
+          -->
 
             <div class="personal-information-form-field-container">
               <button mat-flat-button color="primary" matStepperPrevious>Regresar</button>

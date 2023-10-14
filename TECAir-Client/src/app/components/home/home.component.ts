@@ -10,6 +10,8 @@ import { AeropuertosService } from 'src/app/services/aeropuertos.service';
 import { PromocionesService } from 'src/app/services/promociones.service';
 import { SharedService } from 'src/app/services/shared.service';
 
+import { BookFlightComponent } from '../book-flight/book-flight.component';
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -119,6 +121,17 @@ export class HomeComponent {
     console.log(this.airportForm.get('destinationAirportGroup')?.value);
     console.log(this.airportForm.get('departureDate')?.value);
     console.log(this.airportForm.get('passengers')?.value);
+
+    const searchedOrigin = this.airportForm.get('originAirportGroup')?.value;
+    const searchedDestiny = this.airportForm.get('destinationAirportGroup')?.value;
+    const selectedDate = this.airportForm.get('departureDate')?.value;
+
+    if (searchedOrigin && searchedDestiny && selectedDate){
+      this.sharedService.searchedOrigin = this.sharedService.getCode(searchedOrigin);
+      this.sharedService.searchedDestiny = this.sharedService.getCode(searchedDestiny);
+      this.sharedService.selectedDate = selectedDate;
+    }
+
     this.router.navigate(["tecair", "book-flight"]);
   }
 

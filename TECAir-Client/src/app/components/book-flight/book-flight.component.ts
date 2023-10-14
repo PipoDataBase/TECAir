@@ -11,11 +11,23 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatGridListModule } from '@angular/material/grid-list';
 import Swal from 'sweetalert2';
-import {MatExpansionModule} from '@angular/material/expansion';
 import {MatTooltipModule} from '@angular/material/tooltip';
 
 import { Router } from '@angular/router';
 
+import { Viaje } from 'src/app/models/viaje.module';
+import { Vuelo } from 'src/app/models/vuelo.module';
+import { ViajeVuelo } from 'src/app/models/viaje-vuelo.module'
+import { VueloAeropuerto } from 'src/app/models/vuelo-aeropuerto.module';
+
+import { ViajesService } from 'src/app/services/viajes.service';
+import { VuelosService } from 'src/app/services/vuelos.service';
+import { ViajesVuelosService } from 'src/app/services/viajes-vuelos.service';
+import { VuelosAeropuertosService } from 'src/app/services/vuelos-aeropuertos.service';
+
+import { SharedService } from 'src/app/services/shared.service';
+
+/*
 interface Travel{
   travelId: string, price: string,
   departureAirportIATA: string,
@@ -25,6 +37,7 @@ interface Travel{
   duration: string,
   showStepOvers: boolean
 }
+*/
 
 interface Flight {
   parentTravelId: string, flightId: string, price: string,
@@ -63,14 +76,13 @@ interface Seat {
     MatIconModule,
     MatDatepickerModule,
     MatGridListModule,
-    MatExpansionModule,
     MatTooltipModule
   ]
 })
 
 export class BookFlightComponent{
   private isMobile: boolean;
-  private selectedTravelId: string;
+  private selectedTravelId: number;
   private ticketsCuantity: number;
   private passengerName: string;
   private passengerLastName1: String;
@@ -81,6 +93,11 @@ export class BookFlightComponent{
   private selectedseatsId: string[];
 
   private showStepovers: boolean;
+
+  private viajes: Viaje[];
+  private vuelos: Vuelo[];
+  private viajes_vuelos: ViajeVuelo[];
+  private vuelos_aeropuertos: VueloAeropuerto[];
   
 
   // Getters and setters
@@ -90,10 +107,10 @@ export class BookFlightComponent{
   public setisMobile(value: boolean) {
     this.isMobile = value;
   }
-  public getselectedTravelId(): string {
+  public getselectedTravelId(): number {
     return this.selectedTravelId;
   }
-  public setselectedTravelId(value: string) {
+  public setselectedTravelId(value: number) {
     this.selectedTravelId = value;
   }
   public getticketsCuantity(): number {
@@ -152,8 +169,22 @@ export class BookFlightComponent{
     this.showStepovers = value;
   }
 
+  public getViajes(): Viaje[] {
+    return this.viajes;
+  }
+  public setViajes(value: Viaje[]) {
+    this.viajes = value;
+  }
+  public getVuelos(): Vuelo[] {
+    return this.vuelos;
+  }
+  public setVuelos(value: Vuelo[]) {
+    this.vuelos = value;
+  }
+
   // Default data for testing
-  travels: Travel[] = [
+  /*
+  travels: Viaje[] = [
     {travelId: '1', price: 'USD 400',
     departureAirportIATA: 'SJO', departureTime: '1:00PM', 
     landingAirportIATA: 'EZE', landingTime: '6:00PM', 
@@ -208,12 +239,12 @@ export class BookFlightComponent{
     {seatId: 'X1', state: "Available"},{seatId: 'X2', state: "Available"},{seatId: 'X3', state: "Available"},{seatId: 'X4', state: "Available"},{seatId: 'X5', state: "Available"},{seatId: 'X6', state: "Available"},
     {seatId: 'Y1', state: "Available"},{seatId: 'Y2', state: "Available"},{seatId: 'Y3', state: "Available"},{seatId: 'Y4', state: "Available"},{seatId: 'Y5', state: "Available"},{seatId: 'Y6', state: "Available"},
     {seatId: 'Z1', state: "Available"},{seatId: 'Z2', state: "Available"},{seatId: 'Z3', state: "Available"},{seatId: 'Z4', state: "Available"},{seatId: 'Z5', state: "Available"},{seatId: 'Z6', state: "Available"}
-
   ]
+  */
 
   // Component constructor
-  constructor(private _formBuilder: FormBuilder, private router: Router) {
-    this.selectedTravelId = '';
+  constructor(private _formBuilder: FormBuilder, private router: Router, private vuelosService: VuelosService, private viajesService: ViajesService, private viajesVuelosService: ViajesVuelosService,private sharedService: SharedService) {
+    this.selectedTravelId = 0;
     this.ticketsCuantity = 5;
     this.passengerName = '';
     this.passengerLastName1 = '';
@@ -223,10 +254,62 @@ export class BookFlightComponent{
     this.leftTickets = this.ticketsCuantity;
     this.selectedseatsId = [];
     this.isMobile = window.innerWidth <= 767;
+
     window.addEventListener('resize', () => {
       this.isMobile = window.innerWidth <= 767;
     });
+
     this.showStepovers = false;
+
+    this.viajes = [];
+    this.vuelos = [];
+    this.viajes_vuelos = [];
+    this.vuelos_aeropuertos = [];
+  }
+
+  loadTravels(): void {
+    this.viajesService.getViajes().subscribe({
+      next: (viajes) => {
+        this.viajes = viajes;
+
+        console.log("Filtros: ", this.sharedService.searchedOrigin, this.sharedService.searchedDestiny, this.sharedService.formatDate2(this.sharedService.selectedDate.toString()))
+
+        this.viajes = this.sharedService._filterTravelsByOriginDestiny(this.viajes, this.sharedService.searchedOrigin, this.sharedService.searchedDestiny, this.sharedService.formatDate2(this.sharedService.selectedDate.toString()));
+      },
+      error: (response) => {
+        console.log(response);
+      }
+    })
+  }
+
+  loadFlights(): void {
+    this.vuelosService.getVuelos().subscribe({
+      next: (vuelos) => {
+        this.vuelos = vuelos;
+        console.log("Vuelos: ", this.vuelos)
+      },
+      error: (response) => {
+        console.log(response);
+      }
+    })
+  }
+
+  loadTravelFlights(): void {
+    this.viajesVuelosService.getViajesVuelos().subscribe({
+      next: (viajesVuelos) => {
+        this.viajes_vuelos = viajesVuelos;
+        console.log("Viajes-vuelos: ", this.viajes_vuelos)
+      },
+      error: (response) => {
+        console.log(response);
+      }
+    })
+  }
+
+  ngOnInit(): void {
+    this.loadTravels();
+    this.loadFlights();
+    this.loadTravelFlights();
   }
   
   // Linear Mat-Stepper conditions
@@ -262,7 +345,7 @@ export class BookFlightComponent{
   emailFormControl = new FormControl('', [Validators.required, Validators.email]);
 
   // Function for select flight button (first step of stepper)
-  selectFlight(selectedTravelId: string){
+  selectFlight(selectedTravelId: number){
     this.selectedTravelId = selectedTravelId
   }
 
@@ -284,6 +367,7 @@ export class BookFlightComponent{
     this.passengerTelephone = String(this.travelInformationStepM.get('passengerTelephoneInputM')?.value);
   }
 
+  /*
   selectSeat(seatId: string){
     if(this.selectedseatsId.includes(seatId) && this.leftTickets >= 0){
       const index = this.selectedseatsId.indexOf(seatId);
@@ -315,6 +399,7 @@ export class BookFlightComponent{
     console.log("Asientos seleccionados: " + this.selectedseatsId);
     console.log("Asientos restantes: " + this.leftTickets);
   }
+  */
 
   reserveFlight(){
     if(this.paymentInformationStepD.valid || this.paymentInformationStepM.valid){
@@ -331,7 +416,9 @@ export class BookFlightComponent{
     
   }
 
+  /*
   showHideStepOvers(travelIndex: number){
     this.travels[travelIndex].showStepOvers = !this.travels[travelIndex].showStepOvers;
   }
+  */
 }
