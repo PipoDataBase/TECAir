@@ -39,6 +39,7 @@ interface Travel{
 }
 */
 
+/*
 interface Flight {
   parentTravelId: string, flightId: string, price: string,
   departureAirportIATA: string,
@@ -47,6 +48,7 @@ interface Flight {
   landingTime: string,
   duration: string
 }
+*/
 
 interface Seat {
   seatId: string,
@@ -92,7 +94,7 @@ export class BookFlightComponent{
   private leftTickets: number;
   private selectedseatsId: string[];
 
-  private showStepovers: boolean;
+  private showStepovers: boolean[];
 
   private viajes: Viaje[];
   private vuelos: Vuelo[];
@@ -162,10 +164,10 @@ export class BookFlightComponent{
     this.selectedseatsId = value;
   }
 
-  public getShowStepovers(): boolean {
+  public getShowStepovers(): boolean[] {
     return this.showStepovers;
   }
-  public setShowStepovers(value: boolean) {
+  public setShowStepovers(value: boolean[]) {
     this.showStepovers = value;
   }
 
@@ -180,6 +182,12 @@ export class BookFlightComponent{
   }
   public setVuelos(value: Vuelo[]) {
     this.vuelos = value;
+  }
+  public getViajes_vuelos(): ViajeVuelo[] {
+    return this.viajes_vuelos;
+  }
+  public setViajes_vuelos(value: ViajeVuelo[]) {
+    this.viajes_vuelos = value;
   }
 
   // Default data for testing
@@ -259,7 +267,7 @@ export class BookFlightComponent{
       this.isMobile = window.innerWidth <= 767;
     });
 
-    this.showStepovers = false;
+    this.showStepovers = [];
 
     this.viajes = [];
     this.vuelos = [];
@@ -272,6 +280,10 @@ export class BookFlightComponent{
       next: (viajes) => {
         this.viajes = viajes;
 
+        for(let i = 0; i < viajes.length ; i++){
+          this.showStepovers.push(false);
+        }
+
         console.log("Filtros: ", this.sharedService.searchedOrigin, this.sharedService.searchedDestiny, this.sharedService.formatDate2(this.sharedService.selectedDate.toString()))
 
         this.viajes = this.sharedService._filterTravelsByOriginDestiny(this.viajes, this.sharedService.searchedOrigin, this.sharedService.searchedDestiny, this.sharedService.formatDate2(this.sharedService.selectedDate.toString()));
@@ -283,27 +295,47 @@ export class BookFlightComponent{
   }
 
   loadFlights(): void {
+    var vuelosTmp: Vuelo[] = [];
+    this.vuelos = [];
+
+    // Load flights form DB
     this.vuelosService.getVuelos().subscribe({
       next: (vuelos) => {
-        this.vuelos = vuelos;
-        console.log("Vuelos: ", this.vuelos)
+        vuelosTmp = vuelos;
+
+        // Load TravelFlights form DB
+        this.viajesVuelosService.getViajesVuelos().subscribe({
+          next: (viajesVuelos) => {
+            this.viajes_vuelos = viajesVuelos;
+
+            for(let i = 0; i < vuelosTmp.length; i++){
+              for(let j = 0; j < this.viajes_vuelos.length; j++){
+                var isSearchedTravelFlightMatch = this.viajes.some((travel) => travel.id === this.viajes_vuelos[j].viajeId && vuelosTmp[i].nVuelo === this.viajes_vuelos[j].nVuelo)
+                if(isSearchedTravelFlightMatch){
+                  vuelosTmp[i].fechaSalida = this.sharedService.formatDate3(vuelosTmp[i].fechaSalida)
+                  vuelosTmp[i].fechaLlegada = this.sharedService.formatDate3(vuelosTmp[i].fechaLlegada)
+                  this.vuelos.push(vuelosTmp[i])
+                }
+              }
+            }
+
+            console.log("Vuelos: ", this.vuelos)
+          },
+          error: (response) => {
+            console.log(response);
+          }
+        })
       },
       error: (response) => {
         console.log(response);
       }
     })
+
+    
   }
 
   loadTravelFlights(): void {
-    this.viajesVuelosService.getViajesVuelos().subscribe({
-      next: (viajesVuelos) => {
-        this.viajes_vuelos = viajesVuelos;
-        console.log("Viajes-vuelos: ", this.viajes_vuelos)
-      },
-      error: (response) => {
-        console.log(response);
-      }
-    })
+    
   }
 
   ngOnInit(): void {
@@ -416,9 +448,9 @@ export class BookFlightComponent{
     
   }
 
-  /*
+  
   showHideStepOvers(travelIndex: number){
-    this.travels[travelIndex].showStepOvers = !this.travels[travelIndex].showStepOvers;
+    this.showStepovers[travelIndex] = !this.showStepovers[travelIndex];
   }
-  */
+  
 }
