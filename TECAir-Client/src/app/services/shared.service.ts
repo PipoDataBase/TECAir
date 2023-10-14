@@ -86,15 +86,30 @@ export class SharedService {
     return date;
   }
 
+  // departure and arrival format date
+  formatDate3(date: string): string {
+    date = date.replace(':00Z', '');
+    const result = this.datePipe.transform(date, 'M/d/yyyy');
+    if (result) {
+      return result
+    }
+    return date;
+  }
+
    // filter trips by origin, destiny and date
   _filterTravelsByOriginDestiny(viajes: Viaje[], origen: string, destino: string, fecha: string): Viaje[] {
     if (origen && destino && fecha) {
+      const viajesTmp = viajes;
+
       for (let i = 0; i < viajes.length; i++) {
         viajes[i].fechaSalida = this.formatDate2(viajes[i].fechaSalida);
         viajes[i].fechaLlegada = this.formatDate2(viajes[i].fechaLlegada);
+
+        viajesTmp[i].fechaSalida = this.formatDate3(viajesTmp[i].fechaSalida);
+        viajesTmp[i].fechaLlegada = this.formatDate3(viajesTmp[i].fechaLlegada);
       }
 
-      return _filterOfTravels(viajes, origen, destino, fecha);
+      return _filterOfTravels(viajesTmp, origen, destino, this.formatDate3(fecha));
     }
     return viajes;
   }
