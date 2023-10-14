@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -88,28 +90,48 @@ namespace TECAir.Controllers
         [HttpPost]
         public async Task<ActionResult<Estudiante>> PostEstudiante(Estudiante estudiante)
         {
-          if (_context.Estudiantes == null)
-          {
-              return Problem("Entity set 'TecairDbContext.Estudiantes'  is null.");
-          }
-            _context.Estudiantes.Add(estudiante);
-            try
+            if (_context.Estudiantes == null)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (EstudianteExists(estudiante.Carnet))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
+                return Problem("Entity set 'TecairDbContext.Estudiantes' is null.");
             }
 
-            return CreatedAtAction("GetEstudiante", new { id = estudiante.Carnet }, estudiante);
+            // Validar que el Cliente existe
+            var clienteExistente = await _context.Clientes.FindAsync(estudiante.Correo);
+            if (clienteExistente == null)
+            {
+                return BadRequest("El cliente especificado no existe.");
+            }
+
+            try
+            {
+                // Asignar el cliente existente a la propiedad de navegación
+                estudiante.CorreoNavigation = clienteExistente;
+
+                // Agregar el estudiante a la base de datos
+                _context.Estudiantes.Add(estudiante);
+                await _context.SaveChangesAsync();
+
+                try
+                {
+                    // Agregar estudiante en su especifico cliente
+                    var cliente = await _context.Clientes.FindAsync(estudiante.Correo);
+                    if (cliente != null)
+                    {
+                        cliente.Estudiantes.Add(estudiante);
+                    }
+                    await _context.SaveChangesAsync();
+                }
+                catch
+                {
+                    return BadRequest("No se pudo almacenar vueloAeropuerto en Vuelos.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error interno del servidor: {ex.Message}");
+            }
+
+            return Ok(JsonSerializer.Serialize(estudiante, jsonSerializerOptions));
         }
 
         // DELETE: api/Estudiantes/5
@@ -136,5 +158,7 @@ namespace TECAir.Controllers
         {
             return (_context.Estudiantes?.Any(e => e.Carnet == id)).GetValueOrDefault();
         }
+
+        private static readonly JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions { ReferenceHandler = ReferenceHandler.Preserve };
     }
 }

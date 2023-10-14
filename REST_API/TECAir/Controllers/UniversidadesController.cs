@@ -24,10 +24,10 @@ namespace TECAir.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Universidad>>> GetUniversidads()
         {
-          if (_context.Universidads == null)
-          {
-              return NotFound();
-          }
+            if (_context.Universidads == null)
+            {
+                return NotFound();
+            }
             return await _context.Universidads.ToListAsync();
         }
 

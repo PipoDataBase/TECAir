@@ -29,7 +29,7 @@ CREATE TABLE "Vuelo" (
 
 
 CREATE TABLE "Cliente" (
-	"Correo" varchar(20) NOT NULL,
+	"Correo" varchar(40) NOT NULL,
 	"Telefono" integer NOT NULL,
 	"Nombre" varchar(20) NOT NULL,
 	"Apellido1" varchar(20) NOT NULL,
@@ -42,7 +42,7 @@ CREATE TABLE "Cliente" (
 
 CREATE TABLE "Pase_Abordaje" (
 	"Id" integer NOT NULL,
-	"Correo_Cliente" varchar(20) NOT NULL,
+	"Correo_Cliente" varchar(40) NOT NULL,
 	"Check_In" BOOLEAN NOT NULL,
 	"Puerta" varchar(10) NOT NULL,
 	"Viaje_Id" integer NOT NULL,
@@ -55,7 +55,7 @@ CREATE TABLE "Pase_Abordaje" (
 
 CREATE TABLE "Estudiante" (
 	"Carnet" integer NOT NULL,
-	"Correo" varchar(20) NOT NULL,
+	"Correo" varchar(40) NOT NULL,
 	"Universidad_Id" integer NOT NULL,
 	"Millas" numeric(6,2) NOT NULL DEFAULT '0',
 	CONSTRAINT "Estudiante_pk" PRIMARY KEY ("Carnet")
@@ -187,7 +187,7 @@ CREATE TABLE "Viaje_Vuelo" (
 
 
 CREATE TABLE "Cliente_Viaje" (
-	"Correo_Cliente" varchar(20) NOT NULL,
+	"Correo_Cliente" varchar(40) NOT NULL,
 	"Viaje_Id" integer NOT NULL,
 	CONSTRAINT "Cliente_Viaje_pk" PRIMARY KEY ("Correo_Cliente","Viaje_Id")
 ) WITH (

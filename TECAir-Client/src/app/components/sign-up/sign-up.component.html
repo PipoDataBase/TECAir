@@ -62,7 +62,8 @@
         <div *ngIf="!isMobile" class="column">
             <mat-form-field style="width: 49%; margin-right: 1%;">
                 <mat-label>Teléfono</mat-label>
-                <input matInput placeholder="77737426" required [(ngModel)]="cliente.telefono" name="telefono">
+                <input matInput type="tel" maxlength="8" placeholder="77737426" required [(ngModel)]="cliente.telefono"
+                    name="telefono">
                 <mat-icon matSuffix>phone</mat-icon>
             </mat-form-field>
 
@@ -72,7 +73,8 @@
         <div *ngIf="isMobile" class="column">
             <mat-form-field style="width: 100%;">
                 <mat-label>Teléfono</mat-label>
-                <input matInput placeholder="77737426" required [(ngModel)]="cliente.telefono" name="telefono">
+                <input matInput type="tel" maxlength="8" placeholder="77737426" required [(ngModel)]="cliente.telefono"
+                    name="telefono">
                 <mat-icon matSuffix>phone</mat-icon>
             </mat-form-field>
 
@@ -81,14 +83,15 @@
         </div>
 
         <div *ngIf="student" class="column">
-            <mat-form-field style="width: 100%;">
-                <input matInput placeholder="Universidad">
-                <mat-icon matSuffix>school</mat-icon>
-            </mat-form-field>
+            <mat-select placeholder="Universidad" [(ngModel)]="estudiante.universidadId" name="universidadId">
+                <mat-option *ngFor="let universidad of universidades" [value]="universidad.id">
+                    {{ universidad.nombre }} / {{ universidad.ubicacion }}
+                </mat-option>
+            </mat-select>
 
             <mat-form-field style="width: 100%;">
                 <mat-label>Carnet</mat-label>
-                <input matInput placeholder="2023067500" required>
+                <input matInput placeholder="2023067500" required [(ngModel)]="estudiante.carnet" name="carnet">
                 <mat-icon matSuffix>featured_play_list</mat-icon>
             </mat-form-field>
         </div>

@@ -13,7 +13,7 @@ public partial class Estudiante
 
     public decimal Millas { get; set; }
 
-    public virtual Cliente CorreoNavigation { get; set; } = null!;
+    public virtual Cliente? CorreoNavigation { get; set; } = null!;
 
-    public virtual Universidad Universidad { get; set; } = null!;
+    public virtual Universidad? Universidad { get; set; } = null!;
 }

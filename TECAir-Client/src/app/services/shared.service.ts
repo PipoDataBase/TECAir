@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Aeropuerto } from '../models/aeropuerto.module';
 import { Viaje } from '../models/viaje.module';
-import { DatePipe, formatDate } from '@angular/common';
+import { DatePipe } from '@angular/common';
 
 export const _filter = (opt: Aeropuerto[], value: string): Aeropuerto[] => {
   const filterValue = value.toLowerCase();
@@ -30,6 +30,7 @@ export const _filterOfTravels = (opt: Viaje[], origen: string, destino: string, 
 })
 export class SharedService {
   regex = /\((.*?)\)/;
+  regex2 = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   searchedOrigin: string = "";
   searchedDestiny: string = "";
@@ -85,6 +86,7 @@ export class SharedService {
     return date;
   }
 
+   // filter trips by origin, destiny and date
   _filterTravelsByOriginDestiny(viajes: Viaje[], origen: string, destino: string, fecha: string): Viaje[] {
     if (origen && destino && fecha) {
       for (let i = 0; i < viajes.length; i++) {
@@ -95,5 +97,15 @@ export class SharedService {
       return _filterOfTravels(viajes, origen, destino, fecha);
     }
     return viajes;
+  }
+
+  // validate client or student email
+  validateEmail(email: string) {
+    return this.regex2.test(email);
+  }
+
+  // validate client phone
+  validatePhone(phone: number) {
+    return phone >= 10000000 && phone <= 99999999;
   }
 }
