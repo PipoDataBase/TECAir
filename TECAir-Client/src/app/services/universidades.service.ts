@@ -15,4 +15,8 @@ export class UniversidadesService {
   getUniversidades(): Observable<Universidad[]> {
     return this.http.get<Universidad[]>(this.baseApiUrl + '/api/Universidades');
   }
+
+  getUniversidad(id: number): Observable<Universidad> {
+    return this.http.get<Universidad>(this.baseApiUrl + '/api/Universidades/' + id);
+  }
 }

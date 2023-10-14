@@ -1,359 +1,162 @@
 <div class="profile-Container" style="position: relative;">
-
-
-
     <div class="profile-Button">
-
-        <mat-button-toggle-group 
-        class="buttonBorder" 
-        name="fontStyle" 
-        aria-label="Font Style"
-        >
-            <mat-button-toggle (change)="isEdit = false">Ver Informacion</mat-button-toggle>
-            <mat-button-toggle (change)="isEdit = true">Editar Informacion</mat-button-toggle>
-
-          </mat-button-toggle-group>
-    
+        <mat-button-toggle-group class="buttonBorder" name="fontStyle" aria-label="Font Style">
+            <mat-button-toggle (change)="isEdit = false">Ver Información</mat-button-toggle>
+            <mat-button-toggle (change)="isEdit = true">Editar Información</mat-button-toggle>
+        </mat-button-toggle-group>
     </div>
 
+    <div class="buttonStyle" *ngIf="!isEdit">
+        <mat-card class="subMatCards">
+            <mat-card-header>
+                <mat-card-title>Perfil</mat-card-title>
+            </mat-card-header>
 
+            <mat-card-content>
+                <p class="paragrafBold">Correo: </p>
+                <p class="paragrafInfo">{{ cliente.correo }}</p>
+                <span class="brmedium"> </span>
 
-<div class="buttonStyle" *ngIf="!isEdit">
-   
+                <p class="paragrafBold">Nombre: </p>
+                <p class="paragrafInfo">{{ cliente.nombre }} {{ cliente.apellido1 }} {{ cliente.apellido2 }}</p>
+                <span class="brmedium"> </span>
 
-
-    <mat-card class="subMatCards"> 
-    <mat-card-header >
-
-        <mat-card-title>Perfil</mat-card-title>
-        
-        <mat-card-subtitle>Informacion de Usuario:</mat-card-subtitle>
-        
-
-    </mat-card-header>
-        <mat-card-content>
-
-        <p class="paragrafBold">Correo Electronico</p>
-        <p class="paragrafInfo">{{Profile.correo}}</p>
-        <span class="brmedium"> </span>
-
-        <p class="paragrafBold">Numero de Telefono</p>
-        <p class="paragrafInfo">{{ Profile.telefono }} </p>
-        <span class="brmedium"> </span>
-
-        <p class="paragrafBold">Nombre Completo</p>
-        <p class="paragrafInfo">{{ Profile.nombre }} {{Profile.apellido1}} {{Profile.apellido2}}</p>
-
-
-                                
-
-        </mat-card-content>
-
-    </mat-card>
-
-    <br>
-
-    <mat-card *ngIf="Student.carnet != ''" class="subMatCards"> 
-        <mat-card-header>
-    
-            <mat-card-title>Estudiante</mat-card-title>
-            
-            <mat-card-subtitle>Datos de Estudiante:</mat-card-subtitle>
-            
-    
-        </mat-card-header>
-        <br>
-        <mat-card-content >
-    
-
-
-            <p class="paragrafBold" >Credenciales de Estudiante: </p>
-
-            <span class="brmedium"> </span>
-            <p class="paragrafInfo">{{Student.carnet}}</p>
-
-            
-            <p class="paragrafBold" >Millas Acumuladas: </p>
-            <span class="brmedium"> </span>
-            <p class="paragrafInfo"> {{ Student.millas }} </p>
-       
-
-            <p class="paragrafBold" >Nombre de la Universidad: </p>
-            <span class="brmedium"> </span>
-            <p class="paragrafInfo"> {{ Student.universidadId }} </p>
-    
-        </mat-card-content>
-    
+                <p class="paragrafBold">Teléfono: </p>
+                <p class="paragrafInfo">{{ cliente.telefono }} </p>
+            </mat-card-content>
         </mat-card>
 
-        <br>
+        <mat-card *ngIf="student" class="subMatCards">
+            <mat-card-header>
+                <mat-card-title>Datos de Estudiante</mat-card-title>
+            </mat-card-header>
 
-    <mat-card  class="subMatCards"> 
-        <mat-card-header>
-
-            <mat-card-title>Vuelos</mat-card-title>
-        
-            <mat-card-subtitle>Vuelos Reservados:</mat-card-subtitle>
-        
-
-        </mat-card-header>
             <mat-card-content>
+                <p class="paragrafBold">Millas: </p>
+                <span class="brmedium"> </span>
+                <p class="paragrafInfo"> {{ cliente.estudiantes[0].millas }} </p>
 
-            <br>                
+                <p class="paragrafBold">Universidad: </p>
+                <span class="brmedium"> </span>
+                <p class="paragrafInfo">{{ universidad.nombre }} / {{ universidad.ubicacion }}</p>
 
-        </mat-card-content>
+                <p class="paragrafBold">Carnet: </p>
+                <span class="brmedium"> </span>
+                <p class="paragrafInfo">{{ cliente.estudiantes[0].carnet }}</p>
+            </mat-card-content>
+        </mat-card>
 
-    </mat-card>
+        <mat-card class="subMatCards">
+            <mat-card-header>
+                <mat-card-title>Vuelos Reservados</mat-card-title>
+            </mat-card-header>
 
-</div>
-
-
-
-<div class="buttonStyle" *ngIf="isEdit" >
-   
-
-    <mat-card class="subMatCards" > 
-    <mat-card-header >
-
-        <mat-card-title>Perfil</mat-card-title>
-        
-        <mat-card-subtitle>Informacion del Usuario:</mat-card-subtitle>
-        
-
-    </mat-card-header>
-        <mat-card-content>
-
-            <p class="paragrafBold">Correo Electronico</p>
-
-        <mat-form-field appearance="outline">
-            <mat-label>Correo Electronico</mat-label>
-            <input matInput placeholder="Placeholder">
-            <mat-icon matSuffix>alternate_email</mat-icon>
-    
-        </mat-form-field>
-
-        <p class="paragrafBold">Numero de Telefono</p>
-        <mat-form-field appearance="outline">
-            <mat-label>Numero de Telefono</mat-label>
-            <input matInput placeholder="Placeholder">
-            <mat-icon matSuffix>call</mat-icon>
-    
-        </mat-form-field>
-        <span class="brmedium"> </span>
-
-        <p class="paragrafBold">Full Name</p>
-        <div class="matCardContent">
-
-
-        <mat-form-field appearance="outline">
-            <mat-label>Nombre</mat-label>
-            <input matInput placeholder="Placeholder">
-
-    
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-            <mat-label>Apellido</mat-label>
-            <input matInput placeholder="Placeholder">
-
-    
-        </mat-form-field>
-
-
-        <mat-form-field appearance="outline">
-            <mat-label>Apellido</mat-label>
-            <input matInput placeholder="Placeholder">
-
-            <mat-icon matSuffix>person</mat-icon>
-    
-        </mat-form-field>
-
+            <mat-card-content>
+            </mat-card-content>
+        </mat-card>
     </div>
-       
 
-        </mat-card-content>
+    <div class="buttonStyle" *ngIf="isEdit">
+        <mat-card class="subMatCards">
+            <mat-card-header>
+                <mat-card-title>Perfil</mat-card-title>
+            </mat-card-header>
 
-    </mat-card>
-
-    <br>
-
-    <mat-card *ngIf="Student != null" class="subMatCards"> 
-        <mat-card-header>
-    
-            <mat-card-title>Estudiante</mat-card-title>
-            
-            <mat-card-subtitle>Datos de Estudiante:</mat-card-subtitle>
-            
-    
-        </mat-card-header>
-        <br>
-        <mat-card-content >
-            
-            <mat-form-field appearance="outline">
-                <mat-label>Credenciales</mat-label>
-                <input matInput placeholder="Placeholder">
-                <mat-icon matSuffix>person_pin</mat-icon>
-        
-            </mat-form-field>
-    
-            <p class="paragrafBold" >Millas Acumuladas: </p>
-            <span class="brmedium"> </span>
-            <p class="paragrafInfo"> {{ Student.millas }} </p>
-    
-            <p class="paragrafBold">Universidad</p>
-           
-            <mat-form-field appearance="outline">
-                <mat-label>Universidad</mat-label>
-                <input matInput placeholder="Placeholder">
-
-        
-            </mat-form-field>
-    
-        </mat-card-content>
-    
-        </mat-card>
-
-        <br>
-
-    <mat-card  class="subMatCards"> 
-        <mat-card-header>
-
-            <mat-card-title>Vuelos</mat-card-title>
-        
-            <mat-card-subtitle>Vuelos Reservados:</mat-card-subtitle>
-        
-
-        </mat-card-header>
             <mat-card-content>
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Correo</mat-label>
+                    <input matInput placeholder="pedroperico@tecair.com" type="email" readonly
+                        [(ngModel)]="cliente.correo" name="correo">
+                    <mat-icon matSuffix>email</mat-icon>
+                </mat-form-field>
 
-            <br>                
+                <div *ngIf="!isMobile">
+                    <mat-form-field style="width: 32%;">
+                        <mat-label>Nombre</mat-label>
+                        <input matInput placeholder="Pedro" type="text" required [(ngModel)]="cliente.nombre"
+                            name="nombre">
+                        <mat-icon matSuffix>person</mat-icon>
+                    </mat-form-field>
 
-        </mat-card-content>
+                    <mat-form-field style="width: 32%; margin-left: 2%; margin-right: 2%;">
+                        <mat-label>Primer apellido</mat-label>
+                        <input matInput placeholder="Perico" type="text" required [(ngModel)]="cliente.apellido1"
+                            name="apellido1">
+                        <mat-icon matSuffix>person</mat-icon>
+                    </mat-form-field>
 
-    </mat-card>
+                    <mat-form-field style="width: 32%;">
+                        <mat-label>Segundo apellido</mat-label>
+                        <input matInput placeholder="Perico" type="text" [(ngModel)]="cliente.apellido2"
+                            name="apellido2">
+                        <mat-icon matSuffix>person</mat-icon>
+                    </mat-form-field>
+                </div>
 
-</div>
+                <div *ngIf="isMobile">
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>Nombre</mat-label>
+                        <input matInput placeholder="Pedro" type="text" required [(ngModel)]="cliente.nombre"
+                            name="nombre">
+                        <mat-icon matSuffix>person</mat-icon>
+                    </mat-form-field>
 
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>Primer apellido</mat-label>
+                        <input matInput placeholder="Perico" type="text" required [(ngModel)]="cliente.apellido1"
+                            name="apellido1">
+                        <mat-icon matSuffix>person</mat-icon>
+                    </mat-form-field>
 
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>Segundo apellido</mat-label>
+                        <input matInput placeholder="Perico" type="text" [(ngModel)]="cliente.apellido2"
+                            name="apellido2">
+                        <mat-icon matSuffix>person</mat-icon>
+                    </mat-form-field>
+                </div>
 
+                <div *ngIf="!isMobile" class="column">
+                    <mat-form-field style="width: 49%; margin-right: 1%;">
+                        <mat-label>Teléfono</mat-label>
+                        <input matInput type="tel" maxlength="8" placeholder="77737426" required
+                            [(ngModel)]="cliente.telefono" name="telefono">
+                        <mat-icon matSuffix>phone</mat-icon>
+                    </mat-form-field>
 
-<div class="buttonStyle" *ngIf="isEdit" >
-   
+                    <mat-form-field *ngIf="student" style="width: 49%; margin-left: 1%;">
+                        <mat-label>Carnet</mat-label>
+                        <input matInput placeholder="2023067500" readonly [(ngModel)]="cliente.estudiantes[0].carnet"
+                            name="carnet">
+                        <mat-icon matSuffix>featured_play_list</mat-icon>
+                    </mat-form-field>
+                </div>
 
-    <mat-card class="subMatCards" > 
-    <mat-card-header >
+                <div *ngIf="isMobile" class="column">
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>Teléfono</mat-label>
+                        <input matInput type="tel" maxlength="8" placeholder="77737426" required
+                            [(ngModel)]="cliente.telefono" name="telefono">
+                        <mat-icon matSuffix>phone</mat-icon>
+                    </mat-form-field>
 
-        <mat-card-title>Perfil</mat-card-title>
-        
-        <mat-card-subtitle>Informacion del Usuario:</mat-card-subtitle>
-        
+                    <mat-form-field *ngIf="student" style="width: 100%;">
+                        <mat-label>Carnet</mat-label>
+                        <input matInput placeholder="2023067500" readonly [(ngModel)]="cliente.estudiantes[0].carnet"
+                            name="carnet">
+                        <mat-icon matSuffix>featured_play_list</mat-icon>
+                    </mat-form-field>
+                </div>
 
-    </mat-card-header>
-        <mat-card-content>
-
-            <p class="paragrafBold">Correo Electronico</p>
-            <p class="paragrafInfo">{{Profile.correo}}</p>
-            <span class="brmedium"> </span>
-
-        <p class="paragrafBold">Numero de Telefono</p>
-        <mat-form-field appearance="outline">
-            <mat-label>Numero de Telefono</mat-label>
-            <input matInput placeholder="Placeholder">
-            <mat-icon matSuffix>call</mat-icon>
-    
-        </mat-form-field>
-        <span class="brmedium"> </span>
-
-        <p class="paragrafBold">Full Name</p>
-        <div class="matCardContent">
-
-
-        <mat-form-field appearance="outline">
-            <mat-label>Nombre</mat-label>
-            <input matInput placeholder="Placeholder">
-
-    
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-            <mat-label>Apellido</mat-label>
-            <input matInput placeholder="Placeholder">
-
-    
-        </mat-form-field>
-
-
-        <mat-form-field appearance="outline">
-            <mat-label>Apellido</mat-label>
-            <input matInput placeholder="Placeholder">
-
-            <mat-icon matSuffix>person</mat-icon>
-    
-        </mat-form-field>
-
+                <div *ngIf="student">
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>Universidad</mat-label>
+                        <input matInput placeholder="2023067500" readonly [(ngModel)]="universidad.nombre"
+                            name="carnet">
+                        <mat-icon matSuffix>featured_play_list</mat-icon>
+                    </mat-form-field>
+                </div>
+            </mat-card-content>
+        </mat-card>
     </div>
-       
-
-        </mat-card-content>
-
-    </mat-card>
-
-    <br>
-
-    <mat-card *ngIf="Student.carnet != ''" class="subMatCards"> 
-        <mat-card-header>
-    
-            <mat-card-title>Estudiante</mat-card-title>
-            
-            <mat-card-subtitle>Datos de Estudiante:</mat-card-subtitle>
-            
-    
-        </mat-card-header>
-        <br>
-        <mat-card-content >
-            
-            <p class="paragrafBold" >Credenciales de Estudiante: </p>
-            <span class="brmedium"> </span>
-            <p class="paragrafInfo">{{Student.carnet}}</p>
-    
-            <p class="paragrafBold" >Millas Acumuladas: </p>
-            <span class="brmedium"> </span>
-            <p class="paragrafInfo"> {{ Student.millas }} </p>
-    
-            <p class="paragrafBold">Universidad</p>
-           
-            <mat-form-field appearance="outline">
-                <mat-label>Universidad</mat-label>
-                <input matInput placeholder="Placeholder">
-
-        
-            </mat-form-field>
-    
-        </mat-card-content>
-    
-        </mat-card>
-
-        <br>
-
-    <mat-card  class="subMatCards"> 
-        <mat-card-header>
-
-            <mat-card-title>Vuelos</mat-card-title>
-        
-            <mat-card-subtitle>Vuelos Reservados:</mat-card-subtitle>
-        
-
-        </mat-card-header>
-            <mat-card-content>
-
-            <br>                
-
-        </mat-card-content>
-
-    </mat-card>
-
 </div>
-
-</div>
-
-
