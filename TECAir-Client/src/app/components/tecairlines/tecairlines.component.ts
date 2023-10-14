@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Renderer2 } from '@angular/core';
 import { Router } from '@angular/router';
 import { SignUpComponent } from '../sign-up/sign-up.component';
+import { LoginComponent } from '../login/login.component';
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
@@ -24,9 +25,7 @@ export class TecairlinesComponent {
   }
 
   openLoginDialog() {
-    console.log("Mostrar dialogo");
-    this.matDialog.open(SignUpComponent);
-    
+    this.matDialog.open(LoginComponent);
   }
 
   test(): void {
