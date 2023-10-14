@@ -3,5 +3,4 @@ export interface Student{
     correo: string;
     universidadId: string;
     millas: string;
-    
 }
