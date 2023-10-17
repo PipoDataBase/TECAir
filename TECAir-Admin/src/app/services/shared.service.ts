@@ -20,6 +20,19 @@ export class SharedService {
   // regular expression to get the airport code
   regex = /\((.*?)\)/;
 
+  searchedOrigin: string = "";
+  searchedDestiny: string = "";
+  selectedDate: string = "";
+
+  // get the airport location
+  getName(aeropuertos: Aeropuerto[], value: string): string {
+    var result = aeropuertos.find(aeropuerto => aeropuerto.id === value);
+    if (result) {
+      return result.ubicacion;
+    }
+    return "";
+  }
+
   // get the airport code
   getCode(value: string): string {
     const match = value.match(this.regex);

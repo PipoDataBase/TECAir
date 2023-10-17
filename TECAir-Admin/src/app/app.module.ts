@@ -37,6 +37,9 @@ import { EditFlightComponent } from './components/tecairlines/flights/edit-fligh
 import { TripsComponent } from './components/tecairlines/trips/trips/trips.component';
 import { AddTripComponent } from './components/tecairlines/trips/add-trip/add-trip.component';
 import { EditTripComponent } from './components/tecairlines/trips/edit-trip/edit-trip.component';
+import { ReservationsComponent } from './components/tecairlines/reservations/reservations/reservations.component';
+import { BookFlightComponent } from './components/tecairlines/reservations/book-flight/book-flight.component';
+import { ViewPromotionsComponent } from './components/tecairlines/reservations/view-promotions/view-promotions.component';
 import { CheckBoardingpassBaggagesComponent } from './components/tecairlines/check-boardingpass-baggages/check-boardingpass-baggages.component';
 import { environment } from './environments/environment.development';
 
@@ -55,6 +58,9 @@ import { environment } from './environments/environment.development';
     PromotionsComponent,
     AddPromotionsComponent,
     EditPromotionsComponent,
+    ReservationsComponent,
+    BookFlightComponent,
+    ViewPromotionsComponent,
     CheckBoardingpassBaggagesComponent
 
   ],

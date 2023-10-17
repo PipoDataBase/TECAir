@@ -11,6 +11,9 @@ import { EditFlightComponent } from './components/tecairlines/flights/edit-fligh
 import { PromotionsComponent } from './components/tecairlines/promotions/promotions/promotions.component';
 import { AddPromotionsComponent } from './components/tecairlines/promotions/add-promotions/add-promotions.component';
 import { EditPromotionsComponent } from './components/tecairlines/promotions/edit-promotions/edit-promotions.component';
+import { ReservationsComponent } from './components/tecairlines/reservations/reservations/reservations.component';
+import { BookFlightComponent } from './components/tecairlines/reservations/book-flight/book-flight.component';
+import { ViewPromotionsComponent } from './components/tecairlines/reservations/view-promotions/view-promotions.component';
 import { CheckBoardingpassBaggagesComponent } from './components/tecairlines/check-boardingpass-baggages/check-boardingpass-baggages.component';
 
 const routes: Routes = [
@@ -30,6 +33,9 @@ const routes: Routes = [
       { path: 'promotions', component: PromotionsComponent},
       { path: 'add-promotion', component: AddPromotionsComponent},
       { path: 'edit-promotion/:id', component: EditPromotionsComponent},
+      { path: 'reservations', component: ReservationsComponent },
+      { path: 'book-flight', component: BookFlightComponent },
+      { path: 'view-promotions', component: ViewPromotionsComponent },
       { path: 'chack-boardingpass-baggages', component: CheckBoardingpassBaggagesComponent }
     ],
   },

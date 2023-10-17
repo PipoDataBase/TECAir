@@ -1,0 +1,32 @@
+<div class="promotions-main">
+    <div style="text-align: center;">
+        <p class="promotion-text1">Vuelos baratos a todo el mundo</p>
+        <p class="promotion-text2">Apresúrate y compra a estos precios increíbles</p>
+    </div>
+
+    <div class="promotion-grid">
+        <mat-card *ngFor="let promocion of promociones; let i=index" fxLayout="column">
+            <button class="custom-button2" (click)="onCardClick(promocion)">
+                <div class="image-container2">
+                    <img style="margin-top: 1%;" src="{{ promocion.imagenPath }}" alt="Promotion Image" />
+                </div>
+            </button>
+
+            <div class="text-overlay">
+                <mat-label>{{ sharedService.getName(aeropuertos, promocion.viaje.origen) }}</mat-label>
+                <div class="icon-container">
+                    <mat-icon>trending_flat</mat-icon>
+                    <mat-label>{{ sharedService.getName(aeropuertos, promocion.viaje.destino) }}</mat-label>
+                </div>
+            </div>
+            <mat-label class="per-way-from">Por trayecto desde</mat-label>
+            <mat-label class="price">USD {{ promocion.precio }}</mat-label>
+        </mat-card>
+        <button *ngIf="isMobile" mat-stroked-button class="custom-button" (click)="back()">Regresar</button>
+    </div>
+
+    <div *ngIf="!isMobile" class="discover-button-container">
+        <button mat-stroked-button class="custom-button" (click)="back()">Regresar</button>
+    </div>
+
+</div>
