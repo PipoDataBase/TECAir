@@ -6,6 +6,8 @@ import { Observable } from 'rxjs';
 import { Profile } from '../models/profile.module';
 import { Aeropuerto } from '../models/aeropuerto.module';
 import { Student } from '../models/student.module';
+import { Viaje } from '../models/viaje.module';
+import { Vuelo } from '../models/vuelo.module';
 
 
 const DB_TECAir = 'TECAirDB';
@@ -45,10 +47,14 @@ async InitializeDB(){
     const schemaCliente = `CREATE TABLE IF NOT EXISTS Cliente (correo TEXT PRIMARY KEY NOT NULL, telefono NUMBER NOT NULL );`;
     const schemaAeropuerto = 'CREATE TABLE IF NOT EXISTS Aeropuerto (id TEXT PRIMARY KEY NOT NULL, nombre TEXT NOT NULL ,ubicacion TEXT NOT NULL);';
     const schemaEstudiante = 'CREATE TABLE IF NOT EXISTS Estudiante (carnet TEXT PRIMARY KEY NOT NULL, correo TEXT NOT NULL, universidadId NOT NULL, millas NUMBER NOT NULL DEFAULT 0);';
+    const schemaViaje = 'CREATE TABLE IF NOT EXISTS Viaje (id NUMBER PRIMARY KEY NOT NULL, origen TEXT NOT NULL, destino TEXT NOT NULL, fechaSalida TEXT NOT NULL, fechaLlegada TEXT NOT NULL, precio NUMBER NOT NULL);';
+    const schemaVuelo = 'CREATE TABLE IF NOT EXISTS Viaje (nVuelo NUMBER PRIMARY KEY NOT NULL, avionMatricula TEXT NOT NULL, fechaSalida TEXT NOT NULL, fechaLlegada TEXT NOT NULL, estado TEXT NOT NULL, precio NUMBER NOT NULL);';
 
     await this.db.execute(schemaCliente);
     await this.db.execute(schemaAeropuerto);
     await this.db.execute(schemaEstudiante);
+    await this.db.execute(schemaViaje);
+    await this.db.execute(schemaVuelo);
     this.loadClientsProfile();
 }
 
