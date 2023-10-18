@@ -1,1 +1,14 @@
-<p>login works!</p>
+<h1 mat-dialog-title>Sign In</h1>
+<form #form="ngForm">
+    <div mat-dialog-content>
+        <p><mat-form-field>
+            <input matInput type="email" placeholder = "Correo" id="correo" required name="correo" [(ngModel)]="loggedInClient.correo">
+            <mat-icon matSuffix> drafts </mat-icon>
+        </mat-form-field></p>
+    </div>
+    <div mat-dialog-actions align="end">
+        <button mat-flat-button color="primary" (click)="logInClient()" matDialogClose> Login </button>
+        <button mat-flat-button color="accent" (click)="goSignUp()" matDialogClose> SignUp </button>
+        <button mat-flat-button color="warn" matDialogClose>Close</button>
+    </div>
+</form>

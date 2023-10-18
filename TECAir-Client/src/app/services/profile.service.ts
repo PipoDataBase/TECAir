@@ -16,6 +16,7 @@ export class ProfileService  {
   public getClients(): Observable<Profile[]> {
     return this.http.get<Profile[]>(this.baseApiUrl + '/api/Clientes/' );
   }
+  
   public getClient(id: string): Observable<Profile> {
 
     id.replace("@", "%40");
@@ -24,4 +25,9 @@ export class ProfileService  {
 
     return this.http.get<Profile>(this.baseApiUrl + '/api/Clientes/' + id);
   }
+
+  addClient(addClientRequest: Profile): Observable<Profile> {
+    return this.http.post<Profile>(this.baseApiUrl + '/api/Clientes', addClientRequest);
+}
+
 }

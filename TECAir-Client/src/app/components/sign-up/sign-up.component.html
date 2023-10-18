@@ -1,35 +1,37 @@
 <h1 mat-dialog-title>Sign Up</h1>
-<div mat-dialog-content>
-    <p><mat-form-field>
-        <input matInput placeholder = "Correo" required>
-        <mat-icon matSuffix> drafts </mat-icon>
-    </mat-form-field></p>
-    <p><mat-form-field>
-        <input matInput placeholder = "Nombre">
-        <mat-icon matSuffix> person </mat-icon>
-    </mat-form-field></p>
-    <p><mat-form-field>
-        <input matInput placeholder = "Apellido 1">
-        <mat-icon matSuffix> person </mat-icon>
-    </mat-form-field></p>
-    <p><mat-form-field>
-        <input matInput placeholder = "Apellido 2">
-        <mat-icon matSuffix> person </mat-icon>
-    </mat-form-field></p>
-    <p><mat-form-field>
-        <input matInput placeholder = "Teléfono">
-        <mat-icon matSuffix> phone </mat-icon>
-    </mat-form-field></p>
-    <p><mat-form-field>
-        <input matInput placeholder = "Carne">
-        <mat-icon matSuffix> featured_play_list </mat-icon>
-    </mat-form-field></p>
-    <p><mat-form-field>
-        <input matInput placeholder = "Universidad">
-        <mat-icon matSuffix>add_comment</mat-icon>
-    </mat-form-field></p>
-</div>
-<div mat-dialog-actions align="end">
-    <button mat-flat-button color="primary"> Done </button>
-    <button mat-flat-button color="warn" matDialogClose>Close</button>
-</div>
+<form #form="ngForm">
+    <div mat-dialog-content>
+        <p><mat-form-field>
+            <input matInput type="email" placeholder = "Correo" id="correo" required name="correo" [(ngModel)]="addClientRequest.correo">
+            <mat-icon matSuffix> drafts </mat-icon>
+        </mat-form-field></p>
+        <p><mat-form-field>
+            <input matInput placeholder = "Nombre" name="nombre" [(ngModel)]="addClientRequest.nombre">
+            <mat-icon matSuffix> person </mat-icon>
+        </mat-form-field></p>
+        <p><mat-form-field>
+            <input matInput placeholder = "Apellido 1" name="LName1" [(ngModel)]="addClientRequest.apellido1">
+            <mat-icon matSuffix> person </mat-icon>
+        </mat-form-field></p>
+        <p><mat-form-field>
+            <input matInput placeholder = "Apellido 2" name="LName2" [(ngModel)]="addClientRequest.apellido2">
+            <mat-icon matSuffix> person </mat-icon>
+        </mat-form-field></p>
+        <p><mat-form-field>
+            <input matInput type="number" placeholder = "Teléfono" name="telefono" [(ngModel)]="addClientRequest.telefono">
+            <mat-icon matSuffix> phone </mat-icon>
+        </mat-form-field></p>
+        <p><mat-form-field>
+            <input matInput type="number" placeholder = "Carne">
+            <mat-icon matSuffix> featured_play_list </mat-icon>
+        </mat-form-field></p>
+        <p><mat-form-field>
+            <input matInput placeholder = "Universidad">
+            <mat-icon matSuffix>add_comment</mat-icon>
+        </mat-form-field></p>
+    </div>
+    <div mat-dialog-actions align="end">
+        <button mat-flat-button color="primary" (click)="addClient()" matDialogClose> Done </button>
+        <button mat-flat-button color="warn" matDialogClose>Close</button>
+    </div>
+</form>

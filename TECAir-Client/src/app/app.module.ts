@@ -15,6 +15,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
 
 // FormsModule
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -28,6 +29,8 @@ import { HomeComponent } from './components/home/home.component';
 import { PromotionsComponent } from './components/promotions/promotions.component';
 import { BookFlightComponent } from './components/book-flight/book-flight.component';
 import { ProfileComponent } from './components/profile/profile.component';
+import { SignUpComponent } from './components/sign-up/sign-up.component';
+import { LoginComponent } from './components/login/login.component';
 
 
 @NgModule({
@@ -36,7 +39,9 @@ import { ProfileComponent } from './components/profile/profile.component';
     TecairlinesComponent,
     HomeComponent,
     ProfileComponent,
-    PromotionsComponent
+    PromotionsComponent,
+    SignUpComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -51,7 +56,8 @@ import { ProfileComponent } from './components/profile/profile.component';
     FormsModule,
     ReactiveFormsModule,
     MatIconModule,
-    MatDialogModule
+    MatDialogModule,
+    MatButtonModule
   ],
   providers: [
     DatePipe

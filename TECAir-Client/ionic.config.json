@@ -1,0 +1,10 @@
+{
+  "defaultProject": "TestTecAir",
+  "projects": {
+    "TestTecAir": {
+      "name": "TestTecAir",
+      "integrations": {},
+      "type": "angular"
+    }
+  }
+}

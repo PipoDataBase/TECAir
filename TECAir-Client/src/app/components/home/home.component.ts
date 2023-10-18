@@ -9,6 +9,11 @@ import { Promocion } from 'src/app/models/promocion.module';
 import { AeropuertosService } from 'src/app/services/aeropuertos.service';
 import { PromocionesService } from 'src/app/services/promociones.service';
 import { SharedService } from 'src/app/services/shared.service';
+import { DatabaseService } from 'src/app/services/database.service';
+import { Profile } from 'src/app/models/profile.module';
+import { ThisReceiver } from '@angular/compiler';
+import { Network, ConnectionStatus } from '@capacitor/network';
+import { Capacitor } from '@capacitor/core';
 
 @Component({
   selector: 'app-home',
@@ -19,6 +24,13 @@ export class HomeComponent {
   isMobile: boolean;
   panelOpenState = false;
   aeropuertos: Aeropuerto[] = [];
+
+  ClientesArray: Profile[] = []; // SQLite
+  Clientes = this.database.getClientes(); // SQLite
+  newClienteCorreo = ''; // SQLite
+  newClienteTelefono = 0; // SQLite
+  isOnline:boolean = false; // SQLite
+
 
   images = [
     '../../../assets/img1.jpg',
@@ -46,14 +58,95 @@ export class HomeComponent {
   airportOptions1: Observable<Aeropuerto[]> | undefined;
   airportOptions2: Observable<Aeropuerto[]> | undefined;
 
-  constructor(private renderer: Renderer2, private _formBuilder: FormBuilder, private router: Router, private aeropuertosService: AeropuertosService, private promocionesService: PromocionesService, public sharedService: SharedService) {
+  constructor(private renderer: Renderer2, private _formBuilder: FormBuilder, private router: Router, private aeropuertosService: AeropuertosService, private promocionesService: PromocionesService, public sharedService: SharedService, private database: DatabaseService) {
     this.isMobile = window.innerWidth <= 767;
     window.addEventListener('resize', () => {
       this.isMobile = window.innerWidth <= 767;
     });
+    
   }
 
-  ngOnInit() {
+  // Create a Cliente in SQLite database
+  async createCliente(){
+    await this.database.addCliente(this.newClienteCorreo, this.newClienteTelefono);
+    this.newClienteCorreo ='';
+    this.newClienteTelefono = 0;
+    this.getClientesArray();
+  }
+
+  // sets the variable correo with the string in the input panel (for SQLite)
+  setCorreo(correo: string){
+    this.newClienteCorreo = correo;
+  }
+  // sets the variable telefono with the string in the input panel (for SQLite)
+  setTelefono(telefono: string){
+    var NumTelefono = Number(telefono);
+    this.newClienteTelefono = NumTelefono;
+  }
+
+  // Gets the clientes from sqlite database and update the showing list in html
+  getClientesArray(){
+    var clientesTemp = this.database.getClientes();
+    this.ClientesArray = clientesTemp();
+  }
+
+  // loads the aeropuertos from sqlite
+  getSQLiteAeropuertos(){
+    var aeropuertosTemp = this.database.getAeropuertos();
+    this.aeropuertos = aeropuertosTemp();
+  }
+
+  // Create several aeropuertos en SQLite con los datos del api
+  async addAeros(){
+    await this.database.addAeropuertos(this.aeropuertos); // Prueba
+  }
+
+  // Chooses the protocol according with the device where is running the program
+  deviceProtocol(){
+
+    if (this.isAndroid() && this.isOnline) {
+      this.addAeros();
+    } 
+    else if (this.isAndroid() && !this.isOnline) {
+      this.getClientesArray(); 
+      this.getSQLiteAeropuertos(); 
+      this.offlineAutofill();
+    }
+    // There are no specific protocols for web because it only matters if it is connected to internet or not
+
+  }
+
+  // verifies if the application is running on a mobile device
+  isAndroid(){
+    return (Capacitor.getPlatform() === 'android');
+  }
+
+
+  offlineAutofill(){
+    this.airportOptions1 = this.airportForm.get('originAirportGroup')!.valueChanges.pipe(
+      startWith(''),
+      map(value => this.sharedService._filterAirports(this.aeropuertos, value || '')),
+    );
+
+    this.airportOptions2 = this.airportForm.get('destinationAirportGroup')!.valueChanges.pipe(
+      startWith(''),
+      map(value => this.sharedService._filterAirports(this.aeropuertos, value || '')),
+    );
+
+    this.promocionesService.getNPromociones(4).subscribe({
+      next: (promociones) => {
+        this.promociones = promociones;
+      },
+      error: (response) => {
+        console.log(response);
+      }
+    })
+  }
+
+
+  // excecutes procedure for an onnline web or mobile app
+  onnlineInit(){
+    
     this.aeropuertosService.getAeropuertos().subscribe({
       next: (aeropuertos) => {
         this.aeropuertos = aeropuertos;
@@ -80,7 +173,47 @@ export class HomeComponent {
       error: (response) => {
         console.log(response);
       }
-    })
+    })    
+
+  }
+
+  // Is called when the program is initialized and when the internet connection is connected or disconected
+  // If isOnline, loads api data
+  async checkNetworkStatus() {
+    
+    const status = await Network.getStatus();
+  
+    if (status.connected) {
+      console.log('Connected to the internet');
+      this.isOnline = true;
+      this.onnlineInit(); // Loads data from API
+    }
+     else {
+      console.log('No internet connection');
+      this.isOnline = false;
+    }
+    
+  }
+
+  // Initializes an observer that checks if the internet connection have changed (connected or disconected)
+  // Calls for functions to act depending on the connection change and the device running (mobile or web)
+  initNetworkObserver(){
+    
+      Network.addListener('networkStatusChange', status => {
+      console.log('Network status changed', status);
+      this.checkNetworkStatus();
+      this.deviceProtocol();
+    });
+
+  }
+
+  // This function is excecuted when this component is called
+  ngOnInit() {
+
+    this.initNetworkObserver();
+    this.checkNetworkStatus();
+    this.deviceProtocol();
+
   }
 
   changeImage(direction: number) {

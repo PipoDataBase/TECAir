@@ -25,7 +25,7 @@ export class ProfileComponent {
 
   Profile = {
     correo: '',
-    telefono: '',
+    telefono: 0,
     nombre: '',
     apellido1: '',
     apellido2: ''
@@ -34,7 +34,7 @@ export class ProfileComponent {
   ProfileBurn = {
 
     Email: 'piporin@gmail.com',
-    Phone: '83572342',
+    Phone: 83572342,
     Name: 'Pipo',
     LName1: 'Rin',
     LName2: 'Ron'

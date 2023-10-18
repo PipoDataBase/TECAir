@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 import { Renderer2 } from '@angular/core';
+import { DatabaseService } from './services/database.service';
+import { SplashScreen } from '@capacitor/splash-screen';
+import { Capacitor } from '@capacitor/core';
 
 @Component({
   selector: 'app-root',
@@ -23,11 +26,22 @@ export class AppComponent {
   currentImage = 0;
   currentMobileImage = 0;
 
-  constructor(private renderer: Renderer2) {
+  constructor(private renderer: Renderer2, private database: DatabaseService) {
     this.isMobile = window.innerWidth <= 767;
     window.addEventListener('resize', () => {
       this.isMobile = window.innerWidth <= 767;
     });
+
+    // If running on android, initializes SQLite database
+    if (Capacitor.getPlatform() === 'android') {
+      this.initSQLite();
+    }
+
+  }
+
+  async initSQLite(){
+    await this.database.InitializeDB();
+    SplashScreen.hide();
   }
 
   openLoginDialog(): void {
