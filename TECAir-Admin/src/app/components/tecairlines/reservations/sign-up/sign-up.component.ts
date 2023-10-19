@@ -17,6 +17,9 @@ import { Estudiante } from 'src/app/models/estudiante.module';
 import { UniversidadesService } from 'src/app/services/universidades.service';
 import { SharedService } from 'src/app/services/shared.service';
 import { EstudiantesService } from 'src/app/services/estudiantes.service';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogConfig } from '@angular/material/dialog';
+import { Inject } from '@angular/core';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -28,6 +31,7 @@ import Swal from 'sweetalert2';
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SignUpComponent {
+  username: string = '';
   isMobile: boolean;
   student: boolean = false;
   universidades: Universidad[] = [];
@@ -46,7 +50,7 @@ export class SignUpComponent {
     millas: 0,
   }
 
-  constructor(public dialogRef: MatDialogRef<SignUpComponent>, private matDialog: MatDialog, private clientesService: ClientesService, private estudiantesService: EstudiantesService, private universidadesService: UniversidadesService, private sharedService: SharedService) {
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<SignUpComponent>, private matDialog: MatDialog, private clientesService: ClientesService, private estudiantesService: EstudiantesService, private universidadesService: UniversidadesService, private sharedService: SharedService) {
     this.isMobile = window.innerWidth <= 767;
     window.addEventListener('resize', () => {
       this.isMobile = window.innerWidth <= 767;
@@ -54,6 +58,8 @@ export class SignUpComponent {
   }
 
   ngOnInit() {
+    this.username = this.data.username;
+    
     this.universidadesService.getUniversidades().subscribe({
       next: (universidades) => {
         this.universidades = universidades;
@@ -67,8 +73,11 @@ export class SignUpComponent {
   // go to login view
   login() {
     this.dialogRef.close();
-    const dialogRef = this.matDialog.open(LogInComponent, {
-    });
+    const username = this.username;
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.data = { username };
+
+    const dialogRef = this.matDialog.open(LogInComponent, dialogConfig);
 
     dialogRef.afterClosed().subscribe(result => {
     });

@@ -5,27 +5,27 @@
             <a mat-button class="custom-a" (click)="home()">TECAirlines</a>
             <span class="separator"></span>
 
-            <a mat-button routerLink="trips">Viajes</a>
+            <a mat-button routerLink="trips" *ngIf="!isMobile">Viajes</a>
             <span class="separator"></span>
 
-            <a mat-button routerLink="flights">Vuelos</a>
+            <a mat-button routerLink="flights" *ngIf="!isMobile">Vuelos</a>
             <span class="separator"></span>
 
-            <a mat-button routerLink="promotions">Promociones</a>
+            <a mat-button routerLink="promotions" *ngIf="!isMobile">Promociones</a>
             <span class="separator"></span>
 
-            <a mat-button routerLink="reservations">Reservaciones</a>
+            <a mat-button routerLink="reservations" *ngIf="!isMobile">Reservaciones</a>
             <span class="separator"></span>
 
-            <a mat-button routerLink="chack-boardingpass-baggages">Check-in</a>
+            <a mat-button routerLink="chack-boardingpass-baggages" *ngIf="!isMobile">Check-in</a>
             <span class="separator"></span>
 
             <span class="spacer"></span>
 
-            <a mat-button (click)="openLoginDialog()">TECAir<mat-icon>account_circle</mat-icon></a>
+            <a mat-button (click)="openLoginDialog()" *ngIf="!isMobile">TECAir<mat-icon>account_circle</mat-icon></a>
             <span class="separator"></span>
 
-            <a mat-button (click)="logout()">
+            <a mat-button (click)="logout()" *ngIf="!isMobile">
                 <p>{{empleado.nombre[0] + empleado.apellido1[0]}}</p>
                 <mat-icon>exit_to_app</mat-icon>
             </a>

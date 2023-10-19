@@ -14,6 +14,7 @@ import { EditPromotionsComponent } from './components/tecairlines/promotions/edi
 import { ReservationsComponent } from './components/tecairlines/reservations/reservations/reservations.component';
 import { BookFlightComponent } from './components/tecairlines/reservations/book-flight/book-flight.component';
 import { ViewPromotionsComponent } from './components/tecairlines/reservations/view-promotions/view-promotions.component';
+import { ProfileComponent } from './components/tecairlines/reservations/profile/profile.component';
 import { CheckBoardingpassBaggagesComponent } from './components/tecairlines/check-boardingpass-baggages/check-boardingpass-baggages.component';
 
 const routes: Routes = [
@@ -36,6 +37,7 @@ const routes: Routes = [
       { path: 'reservations', component: ReservationsComponent },
       { path: 'book-flight', component: BookFlightComponent },
       { path: 'view-promotions', component: ViewPromotionsComponent },
+      { path: 'profile/:email', component: ProfileComponent },
       { path: 'chack-boardingpass-baggages', component: CheckBoardingpassBaggagesComponent }
     ],
   },

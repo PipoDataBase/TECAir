@@ -10,6 +10,9 @@ import { ClientesService } from 'src/app/services/clientes.service';
 import { FormsModule } from '@angular/forms';
 import { NgIf } from '@angular/common';
 import { Router } from '@angular/router';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogConfig } from '@angular/material/dialog';
+import { Inject } from '@angular/core';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -20,16 +23,23 @@ import Swal from 'sweetalert2';
   imports: [MatDialogModule, MatButtonModule, MatIconModule, MatInputModule, MatToolbarModule, FormsModule, NgIf]
 })
 export class LogInComponent {
+  username: string = '';
   email: string = '';
   loginFailed: boolean = false;
 
-  constructor(public dialogRef: MatDialogRef<LogInComponent>, public matDialog: MatDialog, private router: Router, private sharedService: SharedService, private clientesService: ClientesService) { }
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<LogInComponent>, public matDialog: MatDialog, private router: Router, private sharedService: SharedService, private clientesService: ClientesService) { }
 
+  ngOnInit() {
+    this.username = this.data.username;
+  }
+  
   // go to sign-up view
   signUp(): void {
     this.dialogRef.close();
-    const dialogRef = this.matDialog.open(SignUpComponent, {
-    });
+    const username = this.username;
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.data = { username };
+    const dialogRef = this.matDialog.open(SignUpComponent, dialogConfig);
 
     dialogRef.afterClosed().subscribe(result => {
     });
@@ -56,7 +66,7 @@ export class LogInComponent {
     this.clientesService.getCliente(this.email).subscribe({
       next: (response) => {
         this.dialogRef.close();
-        this.router.navigate(["tecair", "profile", this.email]);
+        this.router.navigate(["tecair-admin", this.username, "profile", this.email]);
       },
       error: (response) => {
         this.loginFailed = true;

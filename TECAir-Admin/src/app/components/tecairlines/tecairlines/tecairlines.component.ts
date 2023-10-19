@@ -4,6 +4,7 @@ import { Empleado } from 'src/app/models/empleado.module';
 import { EmpleadosService } from 'src/app/services/empleados.service';
 import { LogInComponent } from '../reservations/log-in/log-in.component';
 import { MatDialog } from '@angular/material/dialog';
+import { MatDialogConfig } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-tecairlines',
@@ -12,6 +13,7 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class TecairlinesComponent {
   username: string = '';
+  isMobile: boolean;
   empleado: Empleado = {
     usuario: '',
     contraseña: '',
@@ -20,7 +22,12 @@ export class TecairlinesComponent {
     apellido2: '',
   }
 
-  constructor(private route: ActivatedRoute, private router: Router, private empleadosService: EmpleadosService, private matDialog: MatDialog) { }
+  constructor(private route: ActivatedRoute, private router: Router, private empleadosService: EmpleadosService, private matDialog: MatDialog) {
+    this.isMobile = window.innerWidth <= 767;
+    window.addEventListener('resize', () => {
+      this.isMobile = window.innerWidth <= 767;
+    });
+  }
 
   ngOnInit() {
     this.route.paramMap.subscribe({
@@ -43,7 +50,10 @@ export class TecairlinesComponent {
   }
 
   openLoginDialog(): void {
-    this.matDialog.open(LogInComponent);
+    const username = this.username;
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.data = { username };
+    this.matDialog.open(LogInComponent, dialogConfig);
   }
 
   logout(): void {
