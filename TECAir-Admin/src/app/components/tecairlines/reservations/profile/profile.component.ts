@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Cliente } from 'src/app/models/cliente.module';
 import { Universidad } from 'src/app/models/universidad.module';
 import { ClientesService } from 'src/app/services/clientes.service';
@@ -11,6 +11,7 @@ import { UniversidadesService } from 'src/app/services/universidades.service';
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent {
+  username: string = '';
   isMobile: boolean;
   student: boolean = false;
 
@@ -29,7 +30,7 @@ export class ProfileComponent {
     ubicacion: '',
   }
 
-  constructor(private route: ActivatedRoute, private clientesService: ClientesService, private universidadesService: UniversidadesService) {
+  constructor(private route: ActivatedRoute, private router: Router, private clientesService: ClientesService, private universidadesService: UniversidadesService) {
     this.isMobile = window.innerWidth <= 767;
     window.addEventListener('resize', () => {
       this.isMobile = window.innerWidth <= 767;
@@ -37,6 +38,15 @@ export class ProfileComponent {
   }
 
   ngOnInit() {
+    this.route.parent?.paramMap.subscribe({
+      next: (params) => {
+        const id = params.get('id');
+        if (id) {
+          this.username = id;
+        }
+      }
+    })
+
     this.route.paramMap.subscribe({
       next: (params) => {
         const email = params.get('email');
@@ -67,5 +77,9 @@ export class ProfileComponent {
         console.log(response);
       }
     })
+  }
+
+  close(): void {
+    this.router.navigate(["tecair-admin", this.username]);
   }
 }

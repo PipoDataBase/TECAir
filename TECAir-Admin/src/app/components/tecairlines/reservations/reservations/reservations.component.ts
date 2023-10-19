@@ -139,7 +139,7 @@ export class ReservationsComponent {
       this.sharedService.selectedDate = selectedDate;
     }
 
-    this.router.navigate(["tecair", "book-flight"]);
+    //this.router.navigate(["tecair", "book-flight"]);
   }
 
   onCardClick(promotion: any): void {
