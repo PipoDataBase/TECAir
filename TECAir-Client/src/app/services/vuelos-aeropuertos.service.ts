@@ -12,6 +12,10 @@ export class VuelosAeropuertosService {
 
   constructor(private http: HttpClient) { }
 
+  getVuelosAeropuertos(): Observable<VueloAeropuerto[]> {
+    return this.http.get<VueloAeropuerto[]>(this.baseApiUrl + '/api/VuelosAeropuertos');
+  }
+
   postVueloAeropuerto(vueloAeropuerto: VueloAeropuerto): Observable<VueloAeropuerto> {
     return this.http.post<VueloAeropuerto>(this.baseApiUrl + '/api/VuelosAeropuertos', vueloAeropuerto);
   }

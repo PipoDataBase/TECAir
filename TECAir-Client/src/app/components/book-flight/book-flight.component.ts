@@ -100,7 +100,6 @@ export class BookFlightComponent{
   private vuelos: Vuelo[];
   private viajes_vuelos: ViajeVuelo[];
   private vuelos_aeropuertos: VueloAeropuerto[];
-  
 
   // Getters and setters
   public getisMobile(): boolean {
@@ -189,6 +188,12 @@ export class BookFlightComponent{
   public setViajes_vuelos(value: ViajeVuelo[]) {
     this.viajes_vuelos = value;
   }
+  public getVuelos_aeropuertos(): VueloAeropuerto[] {
+    return this.vuelos_aeropuertos;
+  }
+  public setVuelos_aeropuertos(value: VueloAeropuerto[]) {
+    this.vuelos_aeropuertos = value;
+  }
 
   // Default data for testing
   /*
@@ -251,7 +256,7 @@ export class BookFlightComponent{
   */
 
   // Component constructor
-  constructor(private _formBuilder: FormBuilder, private router: Router, private vuelosService: VuelosService, private viajesService: ViajesService, private viajesVuelosService: ViajesVuelosService,private sharedService: SharedService) {
+  constructor(private _formBuilder: FormBuilder, private router: Router, private vuelosService: VuelosService, private viajesService: ViajesService, private viajesVuelosService: ViajesVuelosService, private vuelosAeropuertosService: VuelosAeropuertosService, private sharedService: SharedService) {
     this.selectedTravelId = 0;
     this.ticketsCuantity = 5;
     this.passengerName = '';
@@ -298,28 +303,51 @@ export class BookFlightComponent{
     var vuelosTmp: Vuelo[] = [];
     this.vuelos = [];
 
-    // Load flights form DB
+    var vuelos_aeropuertosTmp: VueloAeropuerto[] = [];
+    this.vuelos_aeropuertos = [];
+
+    // Load flights from DB
     this.vuelosService.getVuelos().subscribe({
       next: (vuelos) => {
         vuelosTmp = vuelos;
 
-        // Load TravelFlights form DB
+        // Load TravelFlights from DB
         this.viajesVuelosService.getViajesVuelos().subscribe({
           next: (viajesVuelos) => {
             this.viajes_vuelos = viajesVuelos;
 
-            for(let i = 0; i < vuelosTmp.length; i++){
-              for(let j = 0; j < this.viajes_vuelos.length; j++){
-                var isSearchedTravelFlightMatch = this.viajes.some((travel) => travel.id === this.viajes_vuelos[j].viajeId && vuelosTmp[i].nVuelo === this.viajes_vuelos[j].nVuelo)
-                if(isSearchedTravelFlightMatch){
-                  vuelosTmp[i].fechaSalida = this.sharedService.formatDate3(vuelosTmp[i].fechaSalida)
-                  vuelosTmp[i].fechaLlegada = this.sharedService.formatDate3(vuelosTmp[i].fechaLlegada)
-                  this.vuelos.push(vuelosTmp[i])
-                }
-              }
-            }
+            // Orders the array viajes_vuelos
+            this.viajes_vuelos.sort((a, b) => a.escala - b.escala);
 
-            console.log("Vuelos: ", this.vuelos)
+            // Load FlightsAAirports from DB
+            this.vuelosAeropuertosService.getVuelosAeropuertos().subscribe({
+              next: (vuelosAeropuertos) => {
+
+                this.vuelos_aeropuertos = vuelosAeropuertos;
+
+                // Filters flights by searched information
+                for(let i = 0; i < vuelosTmp.length; i++){
+                  for(let j = 0; j < this.viajes_vuelos.length; j++){
+                    var isSearchedTravelFlightMatch = this.viajes.some((travel) => travel.id === this.viajes_vuelos[j].viajeId && vuelosTmp[i].nVuelo === this.viajes_vuelos[j].nVuelo)
+                    if(isSearchedTravelFlightMatch){
+                      vuelosTmp[i].fechaSalida = this.sharedService.formatDate3(vuelosTmp[i].fechaSalida)
+                      vuelosTmp[i].fechaLlegada = this.sharedService.formatDate3(vuelosTmp[i].fechaLlegada)
+                      this.vuelos.push(vuelosTmp[i])
+                    }
+                  }
+                }
+
+                console.log("Vuelos: ", this.vuelos)
+
+                console.log("ViajesVuelos: ", this.viajes_vuelos)
+
+                console.log("VuelosAeropuertos: ", this.vuelos_aeropuertos)
+              
+              },
+            error: (response) => {
+              console.log(response);
+            }
+          })
           },
           error: (response) => {
             console.log(response);
@@ -330,8 +358,6 @@ export class BookFlightComponent{
         console.log(response);
       }
     })
-
-    
   }
 
   loadTravelFlights(): void {

@@ -47,28 +47,34 @@
 
                             <h2 *ngIf="getShowStepovers()[i]">Escalas del vuelo</h2>
 
-                            <div class="stepovers-list" *ngFor="let flight of getVuelos(); let j = index">
-                              <div class="stepover" *ngIf="getViajes_vuelos()[j].viajeId === getViajes()[i].id && getShowStepovers()[i]">
-                                <div class="flight-dep-land-information">
-                                  <h2> Aeropuerto Salida </h2>
-                                  <h3> {{ flight.fechaSalida }} </h3>
-                                </div>
-                                <div class="flight-duration-information">
-                                    <h3> Duracion </h3>
-                                    <div class="diagram-line-icon-line">
-                                        <div class="horizontal-line"></div>
-                                        <mat-icon>flight_takeoff</mat-icon>
-                                        <div class="horizontal-line"></div>
+                            <div class="stepovers-list" *ngFor="let travelFlight of getViajes_vuelos()">
+                              <div class="stepovers-list" *ngFor="let flight of getVuelos(); let j = index">
+                                <div class="stepover" *ngIf="travelFlight.viajeId == travel.id && travelFlight.nVuelo == flight.nVuelo && getShowStepovers()[i]">
+                                  <div class="flight-dep-land-information">
+                                    <div *ngFor="let flight_airport of getVuelos_aeropuertos(); let k = index">
+                                      <h2 *ngIf="flight.nVuelo == flight_airport.vueloNumero && flight_airport.tipo === 'Origen'"> {{ flight_airport.aeropuertoId }} </h2>
                                     </div>
-                                    <h6> {{ flight.nVuelo }} </h6>
-                                </div>
-                                <div class="flight-dep-land-information">
-                                    <h2> Aeropuerto Llegada </h2>
-                                    <h3> {{ flight.fechaLlegada }} </h3>
-                                </div>
-                                <div class="vertical-line"></div>
-                                <div class="flight-price-information">
-                                    <h2> {{ flight.precio }} </h2>
+                                    <h3> {{ flight.fechaSalida }} </h3>
+                                  </div>
+                                  <div class="flight-duration-information">
+                                      <h3> Duracion </h3>
+                                      <div class="diagram-line-icon-line">
+                                          <div class="horizontal-line"></div>
+                                          <mat-icon>flight_takeoff</mat-icon>
+                                          <div class="horizontal-line"></div>
+                                      </div>
+                                      <h6> {{ flight.nVuelo }} </h6>
+                                  </div>
+                                  <div class="flight-dep-land-information">
+                                    <div *ngFor="let flight_airport of getVuelos_aeropuertos(); let k = index">
+                                      <h2 *ngIf="flight.nVuelo == flight_airport.vueloNumero && flight_airport.tipo === 'Destino'"> {{ flight_airport.aeropuertoId }} </h2>
+                                    </div>
+                                      <h3> {{ flight.fechaLlegada }} </h3>
+                                  </div>
+                                  <div class="vertical-line"></div>
+                                  <div class="flight-price-information">
+                                      <h2> {{ flight.precio }} </h2>
+                                  </div>
                                 </div>
                               </div>
                             </div>
@@ -257,28 +263,34 @@
 
                           <h2 *ngIf="getShowStepovers()[i]">Escalas del vuelo</h2>
 
-                          <div class="stepovers-list" *ngFor="let flight of getVuelos(); let j = index">
-                            <div class="stepover" *ngIf="getViajes_vuelos()[j].viajeId === getViajes()[i].id && getShowStepovers()[i]">
-                              <div class="flight-dep-land-information">
-                                <h2> Aeropuerto Salida </h2>
-                                <h5> {{ flight.fechaSalida }} </h5>
-                              </div>
-                              <div class="flight-duration-information">
-                                  <h3> Duracion </h3>
-                                  <div class="diagram-line-icon-line">
-                                      <div class="horizontal-line"></div>
-                                      <mat-icon>flight_takeoff</mat-icon>
-                                      <div class="horizontal-line"></div>
+                          <div class="stepovers-list" *ngFor="let travelFlight of getViajes_vuelos()">
+                            <div class="stepovers-list" *ngFor="let flight of getVuelos(); let j = index">
+                              <div class="stepover" *ngIf="travelFlight.viajeId == travel.id && travelFlight.nVuelo == flight.nVuelo && getShowStepovers()[i]">
+                                <div class="flight-dep-land-information">
+                                  <div *ngFor="let flight_airport of getVuelos_aeropuertos(); let k = index">
+                                    <h2 *ngIf="flight.nVuelo == flight_airport.vueloNumero && flight_airport.tipo === 'Origen'"> {{ flight_airport.aeropuertoId }} </h2>
                                   </div>
-                                  <h6> {{ flight.nVuelo }} </h6>
-                              </div>
-                              <div class="flight-dep-land-information">
-                                  <h2> Aeropuerto Llegada </h2>
-                                  <h5> {{ flight.fechaLlegada }} </h5>
-                              </div>
-                              <div class="vertical-line"></div>
-                              <div class="flight-price-information">
-                                  <h2> {{ flight.precio }} </h2>
+                                  <h5> {{ flight.fechaSalida }} </h5>
+                                </div>
+                                <div class="flight-duration-information">
+                                    <h3> Duracion </h3>
+                                    <div class="diagram-line-icon-line">
+                                        <div class="horizontal-line"></div>
+                                        <mat-icon>flight_takeoff</mat-icon>
+                                        <div class="horizontal-line"></div>
+                                    </div>
+                                    <h6> {{ flight.nVuelo }} </h6>
+                                </div>
+                                <div class="flight-dep-land-information">
+                                  <div *ngFor="let flight_airport of getVuelos_aeropuertos(); let k = index">
+                                    <h2 *ngIf="flight.nVuelo == flight_airport.vueloNumero && flight_airport.tipo === 'Destino'"> {{ flight_airport.aeropuertoId }} </h2>
+                                  </div>
+                                    <h5> {{ flight.fechaLlegada }} </h5>
+                                </div>
+                                <div class="vertical-line"></div>
+                                <div class="flight-price-information">
+                                    <h2> {{ flight.precio }} </h2>
+                                </div>
                               </div>
                             </div>
                           </div>

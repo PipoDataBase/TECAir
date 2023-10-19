@@ -395,7 +395,7 @@ h3 {
 .stepovers-list {
     display: flex;
     flex-direction: column;
-    width: 80%;
+    width: 90%;
     height: fit-content;
     align-items: center;
     justify-content: center;
@@ -420,4 +420,11 @@ mat-expansion-panel-header {
 
 .busy-seat{
     color: #808080 !important;
+}
+
+.custom-div1 {
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
 }
