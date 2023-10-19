@@ -19,10 +19,13 @@ export const _filter = (opt: Aeropuerto[], value: string): Aeropuerto[] => {
 export class SharedService {
   // regular expression to get the airport code
   regex = /\((.*?)\)/;
+  regex2 = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   searchedOrigin: string = "";
   searchedDestiny: string = "";
   selectedDate: string = "";
+
+  constructor(private datePipe: DatePipe) { }
 
   // get the airport location
   getName(aeropuertos: Aeropuerto[], value: string): string {
@@ -80,6 +83,14 @@ export class SharedService {
     }
     return "Cerrado";
   }
-  
-  constructor(private datePipe: DatePipe) { }
+
+  // validate client or student email
+  validateEmail(email: string) {
+    return this.regex2.test(email);
+  }
+
+  // validate client phone
+  validatePhone(phone: number) {
+    return phone >= 10000000 && phone <= 99999999;
+  }
 }

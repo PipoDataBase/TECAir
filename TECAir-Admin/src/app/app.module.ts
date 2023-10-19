@@ -13,6 +13,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatNativeDateModule } from '@angular/material/core';
+import { MatDialogModule } from '@angular/material/dialog';
 
 // FormsModule
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -73,6 +74,7 @@ import { environment } from './environments/environment.development';
     MatInputModule,
     MatFormFieldModule,
     MatNativeDateModule,
+    MatDialogModule,
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,

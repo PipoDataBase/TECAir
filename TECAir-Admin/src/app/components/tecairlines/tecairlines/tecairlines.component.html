@@ -22,14 +22,13 @@
 
             <span class="spacer"></span>
 
-            <a mat-button>TECAir<mat-icon>account_circle</mat-icon></a>
+            <a mat-button (click)="openLoginDialog()">TECAir<mat-icon>account_circle</mat-icon></a>
             <span class="separator"></span>
 
-            <a mat-button (click)="openLoginDialog()">{{empleado.nombre + ' ' +
-                empleado.apellido1}}<mat-icon>account_circle</mat-icon></a>
-            <span class="separator"></span>
-
-            <a mat-button (click)="logout()">Cerrar sesion<mat-icon>exit_to_app</mat-icon></a>
+            <a mat-button (click)="logout()">
+                <p>{{empleado.nombre[0] + empleado.apellido1[0]}}</p>
+                <mat-icon>exit_to_app</mat-icon>
+            </a>
             <span class="long-separator"></span>
         </mat-toolbar-row>
     </mat-toolbar>

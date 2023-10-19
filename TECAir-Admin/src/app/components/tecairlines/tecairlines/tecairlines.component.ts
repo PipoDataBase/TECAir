@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Empleado } from 'src/app/models/empleado.module';
 import { EmpleadosService } from 'src/app/services/empleados.service';
+import { LogInComponent } from '../reservations/log-in/log-in.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-tecairlines',
@@ -18,7 +20,7 @@ export class TecairlinesComponent {
     apellido2: '',
   }
 
-  constructor(private route: ActivatedRoute, private router: Router, private empleadosService: EmpleadosService) { }
+  constructor(private route: ActivatedRoute, private router: Router, private empleadosService: EmpleadosService, private matDialog: MatDialog) { }
 
   ngOnInit() {
     this.route.paramMap.subscribe({
@@ -41,7 +43,7 @@ export class TecairlinesComponent {
   }
 
   openLoginDialog(): void {
-    console.log("Mostrar dialogo");
+    this.matDialog.open(LogInComponent);
   }
 
   logout(): void {
@@ -51,5 +53,4 @@ export class TecairlinesComponent {
   test(): void {
     console.log("Probar boton");
   }
-
 }

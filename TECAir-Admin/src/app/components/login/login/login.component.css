@@ -23,7 +23,7 @@
     max-width: 550px;
 }
 
-.login-wrapper .custom-form {
+.login-wrapper .custom-div {
     display: flex;
     flex-direction: column;
     justify-content: center;

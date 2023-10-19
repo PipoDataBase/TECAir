@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { Renderer2 } from '@angular/core';
 import { Router } from '@angular/router';
-import { SignUpComponent } from '../sign-up/sign-up.component';
 import { LoginComponent } from '../login/login.component';
 import { MatDialog } from '@angular/material/dialog';
 

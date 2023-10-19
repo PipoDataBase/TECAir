@@ -1,0 +1,22 @@
+.custom-a {
+    height: 100%;
+}
+
+.custom-back {
+    background-color: #e13a2d;
+}
+
+.custom-save {
+    background-color: #3F51B5;
+}
+
+mat-select {
+    border: 1px solid #ccc;
+    padding: 2%;
+    border-radius: 2%;
+    margin-bottom: 3%;
+}
+
+input:-webkit-autofill {
+    -webkit-background-clip: text;
+}
