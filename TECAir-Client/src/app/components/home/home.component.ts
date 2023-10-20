@@ -14,6 +14,8 @@ import { Profile } from 'src/app/models/profile.module';
 import { ThisReceiver } from '@angular/compiler';
 import { Network, ConnectionStatus } from '@capacitor/network';
 import { Capacitor } from '@capacitor/core';
+import { OfflineChange } from 'src/app/models/offlineChange.module';
+import { ProfileService } from 'src/app/services/profile.service';
 
 @Component({
   selector: 'app-home',
@@ -58,7 +60,7 @@ export class HomeComponent {
   airportOptions1: Observable<Aeropuerto[]> | undefined;
   airportOptions2: Observable<Aeropuerto[]> | undefined;
 
-  constructor(private renderer: Renderer2, private _formBuilder: FormBuilder, private router: Router, private aeropuertosService: AeropuertosService, private promocionesService: PromocionesService, public sharedService: SharedService, private database: DatabaseService) {
+  constructor(private renderer: Renderer2, private _formBuilder: FormBuilder, private router: Router, private aeropuertosService: AeropuertosService, private promocionesService: PromocionesService, public sharedService: SharedService, private database: DatabaseService, private profileService: ProfileService) {
     this.isMobile = window.innerWidth <= 767;
     window.addEventListener('resize', () => {
       this.isMobile = window.innerWidth <= 767;
@@ -66,12 +68,41 @@ export class HomeComponent {
     
   }
 
+  async uploadOfflineChange(offlineChange: OfflineChange){
+    console.log("UPLOADER");
+    if (offlineChange.tableName == "Cliente") {
+      this.database.getCliente(offlineChange.changeId);
+    }
+}
+
+
+  // Updload to the API the changes done in offline mode
+  handleOfflineChanges(){
+    console.log("HANDLER Offline");
+    if (this.isAndroid()) {
+      var offlineChanges: OfflineChange[] = [];
+      var changesTemp = this.database.getOfflineChanges();
+      offlineChanges = changesTemp();
+      this.uploadOfflineChange(offlineChanges[(offlineChanges.length-1)]); //COMENTAR
+      /*
+      while ( 0 < offlineChanges.length ) {
+        this.uploadOfflineChange(offlineChanges[(offlineChanges.length-1)]);
+        offlineChanges.pop();
+      }
+      */
+    }
+  }
+
+
   // Create a Cliente in SQLite database
   async createCliente(){
     await this.database.addCliente(this.newClienteCorreo, this.newClienteTelefono);
+    this.getClientesArray();
+    if (!this.isOnline && this.isAndroid()) {
+      await this.database.addOfflineChange('Cliente', this.newClienteCorreo);
+    }
     this.newClienteCorreo ='';
     this.newClienteTelefono = 0;
-    this.getClientesArray();
   }
 
   // sets the variable correo with the string in the input panel (for SQLite)
@@ -106,6 +137,7 @@ export class HomeComponent {
 
     if (this.isAndroid() && this.isOnline) {
       this.addAeros();
+      this.handleOfflineChanges();
     } 
     else if (this.isAndroid() && !this.isOnline) {
       this.getClientesArray(); 
