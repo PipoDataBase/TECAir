@@ -42,6 +42,8 @@ async InitializeDB(){
     false
   );
 
+  
+
   await this.db.open();
 
     const schemaCliente = `CREATE TABLE IF NOT EXISTS Cliente (correo TEXT PRIMARY KEY NOT NULL, telefono NUMBER NOT NULL );`;
@@ -97,6 +99,8 @@ async InitializeDB(){
 
 
  async deleteCliente(Correo: string){
+
+  
 
   const query = `DELETE FROM Cliente WHERE Correo=${Correo}`;
   const result = this.db.query(query);

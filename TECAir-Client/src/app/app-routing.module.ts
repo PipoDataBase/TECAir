@@ -7,6 +7,7 @@ import { LoginComponent } from './components/login/login.component';
 import { SignUpComponent } from './components/sign-up/sign-up.component';
 import { PromotionsComponent } from './components/promotions/promotions.component';
 import { ProfileComponent } from './components/profile/profile.component';
+import { PDFComponent } from './components/pdf/pdf.component';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo:'tecair' },
@@ -20,7 +21,8 @@ const routes: Routes = [
       { path: 'login', component: LoginComponent },
       { path: 'sign-up', component: SignUpComponent },
       { path: 'promotions', component: PromotionsComponent },
-      { path: 'profile', component: ProfileComponent }
+      { path: 'profile', component: ProfileComponent },
+      { path: 'pdf', component: PDFComponent}
     ],
   },
   

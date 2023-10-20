@@ -22,6 +22,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { DatePipe } from '@angular/common';
 
+
 // Components
 import { AppComponent } from './app.component';
 import { TecairlinesComponent } from './components/tecairlines/tecairlines.component';
@@ -31,6 +32,7 @@ import { BookFlightComponent } from './components/book-flight/book-flight.compon
 import { ProfileComponent } from './components/profile/profile.component';
 import { SignUpComponent } from './components/sign-up/sign-up.component';
 import { LoginComponent } from './components/login/login.component';
+import { PDFComponent } from './components/pdf/pdf.component';
 
 
 @NgModule({
@@ -41,7 +43,8 @@ import { LoginComponent } from './components/login/login.component';
     ProfileComponent,
     PromotionsComponent,
     SignUpComponent,
-    LoginComponent
+    LoginComponent,
+    PDFComponent
   ],
   imports: [
     BrowserModule,
