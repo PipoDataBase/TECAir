@@ -36,6 +36,8 @@ export class SharedService {
   searchedDestiny: string = "";
   selectedDate: string = "";
 
+  selectedSeatsCuantity: number = 0;
+
   constructor(private datePipe: DatePipe) { }
 
   // get the airport location

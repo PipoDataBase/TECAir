@@ -19,41 +19,15 @@ import { Viaje } from 'src/app/models/viaje.module';
 import { Vuelo } from 'src/app/models/vuelo.module';
 import { ViajeVuelo } from 'src/app/models/viaje-vuelo.module'
 import { VueloAeropuerto } from 'src/app/models/vuelo-aeropuerto.module';
+import { Asiento } from 'src/app/models/asiento.module';
 
 import { ViajesService } from 'src/app/services/viajes.service';
 import { VuelosService } from 'src/app/services/vuelos.service';
 import { ViajesVuelosService } from 'src/app/services/viajes-vuelos.service';
 import { VuelosAeropuertosService } from 'src/app/services/vuelos-aeropuertos.service';
+import { AsientosService } from 'src/app/services/asientos.service';
 
 import { SharedService } from 'src/app/services/shared.service';
-
-/*
-interface Travel{
-  travelId: string, price: string,
-  departureAirportIATA: string,
-  departureTime: string,
-  landingAirportIATA: string,
-  landingTime: string,
-  duration: string,
-  showStepOvers: boolean
-}
-*/
-
-/*
-interface Flight {
-  parentTravelId: string, flightId: string, price: string,
-  departureAirportIATA: string,
-  departureTime: string,
-  landingAirportIATA: string,
-  landingTime: string,
-  duration: string
-}
-*/
-
-interface Seat {
-  seatId: string,
-  state: string
-}
 
 @Component({
   selector: 'app-book-flight',
@@ -93,6 +67,7 @@ export class BookFlightComponent{
   private passengerTelephone: string;
   private leftTickets: number;
   private selectedseatsId: string[];
+  private selectedAircraftId: string;
 
   private showStepovers: boolean[];
 
@@ -100,6 +75,7 @@ export class BookFlightComponent{
   private vuelos: Vuelo[];
   private viajes_vuelos: ViajeVuelo[];
   private vuelos_aeropuertos: VueloAeropuerto[];
+  private asientos: Asiento[];
 
   // Getters and setters
   public getisMobile(): boolean {
@@ -162,6 +138,12 @@ export class BookFlightComponent{
   public setselectedseatsId(value: string[]) {
     this.selectedseatsId = value;
   }
+  public getSelectedAircraftId(): string {
+    return this.selectedAircraftId;
+  }
+  public setSelectedAircraftId(value: string) {
+    this.selectedAircraftId = value;
+  }
 
   public getShowStepovers(): boolean[] {
     return this.showStepovers;
@@ -194,71 +176,17 @@ export class BookFlightComponent{
   public setVuelos_aeropuertos(value: VueloAeropuerto[]) {
     this.vuelos_aeropuertos = value;
   }
-
-  // Default data for testing
-  /*
-  travels: Viaje[] = [
-    {travelId: '1', price: 'USD 400',
-    departureAirportIATA: 'SJO', departureTime: '1:00PM', 
-    landingAirportIATA: 'EZE', landingTime: '6:00PM', 
-    duration: '5h', showStepOvers: false},
-    {travelId: '2', price: 'USD 500',
-    departureAirportIATA: 'SJO', departureTime: '1:00PM', 
-    landingAirportIATA: 'MIA', landingTime: '6:00PM', 
-    duration: '5h', showStepOvers: false}
-  ]
-  flights: Flight[] = [
-    {parentTravelId: '1', flightId: '1', price: 'USD 100',
-    departureAirportIATA: 'SJO', departureTime: '1:00PM', 
-    landingAirportIATA: 'PTY', landingTime: '2:00PM', 
-    duration: '1h'},
-    {parentTravelId: '1', flightId: '2', price: 'USD 300',
-    departureAirportIATA: 'PTY', departureTime: '2:00PM', 
-    landingAirportIATA: 'EZE', landingTime: '6:00PM', 
-    duration: '4h'},
-    {parentTravelId: '2', flightId: '3', price: 'USD 250',
-    departureAirportIATA: 'SJO', departureTime: '1:00PM', 
-    landingAirportIATA: 'SAL', landingTime: '3:00PM', 
-    duration: '2h'},
-    {parentTravelId: '2', flightId: '4', price: 'USD 250',
-    departureAirportIATA: 'SAL', departureTime: '3:00PM', 
-    landingAirportIATA: 'MIA', landingTime: '6:00PM', 
-    duration: '2h'}
-  ]
-  seats: Seat[] = [
-    {seatId: 'A1', state: "Busy"},{seatId: 'A2', state: "Available"},{seatId: 'A3', state: "Available"},{seatId: 'A4', state: "Available"},{seatId: 'A5', state: "Available"},{seatId: 'A6', state: "Available"},
-    {seatId: 'B1', state: "Available"},{seatId: 'B2', state: "Available"},{seatId: 'B3', state: "Available"},{seatId: 'B4', state: "Available"},{seatId: 'B5', state: "Available"},{seatId: 'B6', state: "Available"},
-    {seatId: 'C1', state: "Available"},{seatId: 'C2', state: "Available"},{seatId: 'C3', state: "Available"},{seatId: 'C4', state: "Available"},{seatId: 'C5', state: "Available"},{seatId: 'C6', state: "Available"},
-    {seatId: 'D1', state: "Available"},{seatId: 'D2', state: "Available"},{seatId: 'D3', state: "Available"},{seatId: 'D4', state: "Available"},{seatId: 'D5', state: "Available"},{seatId: 'D6', state: "Available"},
-    {seatId: 'E1', state: "Available"},{seatId: 'E2', state: "Available"},{seatId: 'E3', state: "Available"},{seatId: 'E4', state: "Available"},{seatId: 'E5', state: "Available"},{seatId: 'E6', state: "Available"},
-    {seatId: 'F1', state: "Available"},{seatId: 'F2', state: "Available"},{seatId: 'F3', state: "Available"},{seatId: 'F4', state: "Available"},{seatId: 'F5', state: "Available"},{seatId: 'F6', state: "Available"},
-    {seatId: 'G1', state: "Available"},{seatId: 'G2', state: "Available"},{seatId: 'G3', state: "Available"},{seatId: 'G4', state: "Available"},{seatId: 'G5', state: "Available"},{seatId: 'G6', state: "Available"},
-    {seatId: 'H1', state: "Available"},{seatId: 'H2', state: "Available"},{seatId: 'H3', state: "Available"},{seatId: 'H4', state: "Available"},{seatId: 'H5', state: "Available"},{seatId: 'H6', state: "Available"},
-    {seatId: 'I1', state: "Available"},{seatId: 'I2', state: "Available"},{seatId: 'I3', state: "Available"},{seatId: 'I4', state: "Available"},{seatId: 'I5', state: "Available"},{seatId: 'I6', state: "Available"},
-    {seatId: 'J1', state: "Available"},{seatId: 'J2', state: "Available"},{seatId: 'J3', state: "Available"},{seatId: 'J4', state: "Available"},{seatId: 'J5', state: "Available"},{seatId: 'J6', state: "Available"},
-    {seatId: 'K1', state: "Available"},{seatId: 'K2', state: "Available"},{seatId: 'K3', state: "Available"},{seatId: 'K4', state: "Available"},{seatId: 'K5', state: "Available"},{seatId: 'K6', state: "Available"},
-    {seatId: 'L1', state: "Available"},{seatId: 'L2', state: "Available"},{seatId: 'L3', state: "Available"},{seatId: 'L4', state: "Available"},{seatId: 'L5', state: "Available"},{seatId: 'L6', state: "Available"},
-    {seatId: 'M1', state: "Available"},{seatId: 'M2', state: "Available"},{seatId: 'M3', state: "Available"},{seatId: 'M4', state: "Available"},{seatId: 'M5', state: "Available"},{seatId: 'M6', state: "Available"},
-    {seatId: 'N1', state: "Available"},{seatId: 'N2', state: "Available"},{seatId: 'N3', state: "Available"},{seatId: 'N4', state: "Available"},{seatId: 'N5', state: "Available"},{seatId: 'N6', state: "Available"},
-    {seatId: 'O1', state: "Available"},{seatId: 'O2', state: "Available"},{seatId: 'O3', state: "Available"},{seatId: 'O4', state: "Available"},{seatId: 'O5', state: "Available"},{seatId: 'O6', state: "Available"},
-    {seatId: 'P1', state: "Available"},{seatId: 'P2', state: "Available"},{seatId: 'P3', state: "Available"},{seatId: 'P4', state: "Available"},{seatId: 'P5', state: "Available"},{seatId: 'P6', state: "Available"},
-    {seatId: 'Q1', state: "Available"},{seatId: 'Q2', state: "Available"},{seatId: 'Q3', state: "Available"},{seatId: 'Q4', state: "Available"},{seatId: 'Q5', state: "Available"},{seatId: 'Q6', state: "Available"},
-    {seatId: 'R1', state: "Available"},{seatId: 'R2', state: "Available"},{seatId: 'R3', state: "Available"},{seatId: 'R4', state: "Available"},{seatId: 'R5', state: "Available"},{seatId: 'R6', state: "Available"},
-    {seatId: 'S1', state: "Available"},{seatId: 'S2', state: "Available"},{seatId: 'S3', state: "Available"},{seatId: 'S4', state: "Available"},{seatId: 'S5', state: "Available"},{seatId: 'S6', state: "Available"},
-    {seatId: 'T1', state: "Available"},{seatId: 'T2', state: "Available"},{seatId: 'T3', state: "Available"},{seatId: 'T4', state: "Available"},{seatId: 'T5', state: "Available"},{seatId: 'T6', state: "Available"},
-    {seatId: 'U1', state: "Available"},{seatId: 'U2', state: "Available"},{seatId: 'U3', state: "Available"},{seatId: 'U4', state: "Available"},{seatId: 'U5', state: "Available"},{seatId: 'U6', state: "Available"},
-    {seatId: 'V1', state: "Available"},{seatId: 'V2', state: "Available"},{seatId: 'V3', state: "Available"},{seatId: 'V4', state: "Available"},{seatId: 'V5', state: "Available"},{seatId: 'V6', state: "Available"},
-    {seatId: 'W1', state: "Available"},{seatId: 'W2', state: "Available"},{seatId: 'W3', state: "Available"},{seatId: 'W4', state: "Available"},{seatId: 'W5', state: "Available"},{seatId: 'W6', state: "Available"},
-    {seatId: 'X1', state: "Available"},{seatId: 'X2', state: "Available"},{seatId: 'X3', state: "Available"},{seatId: 'X4', state: "Available"},{seatId: 'X5', state: "Available"},{seatId: 'X6', state: "Available"},
-    {seatId: 'Y1', state: "Available"},{seatId: 'Y2', state: "Available"},{seatId: 'Y3', state: "Available"},{seatId: 'Y4', state: "Available"},{seatId: 'Y5', state: "Available"},{seatId: 'Y6', state: "Available"},
-    {seatId: 'Z1', state: "Available"},{seatId: 'Z2', state: "Available"},{seatId: 'Z3', state: "Available"},{seatId: 'Z4', state: "Available"},{seatId: 'Z5', state: "Available"},{seatId: 'Z6', state: "Available"}
-  ]
-  */
-
+  public getAsientos(): Asiento[] {
+    return this.asientos;
+  }
+  public setAsientos(value: Asiento[]) {
+    this.asientos = value;
+  }
+ 
   // Component constructor
-  constructor(private _formBuilder: FormBuilder, private router: Router, private vuelosService: VuelosService, private viajesService: ViajesService, private viajesVuelosService: ViajesVuelosService, private vuelosAeropuertosService: VuelosAeropuertosService, private sharedService: SharedService) {
+  constructor(private _formBuilder: FormBuilder, private router: Router, private vuelosService: VuelosService, private viajesService: ViajesService, private viajesVuelosService: ViajesVuelosService, private vuelosAeropuertosService: VuelosAeropuertosService, private asientosService: AsientosService, private sharedService: SharedService) {
     this.selectedTravelId = 0;
-    this.ticketsCuantity = 5;
+    this.ticketsCuantity = this.sharedService.selectedSeatsCuantity;
     this.passengerName = '';
     this.passengerLastName1 = '';
     this.passengerLastName2 = '';
@@ -272,12 +200,15 @@ export class BookFlightComponent{
       this.isMobile = window.innerWidth <= 767;
     });
 
+    this.selectedAircraftId = ""
+
     this.showStepovers = [];
 
     this.viajes = [];
     this.vuelos = [];
     this.viajes_vuelos = [];
     this.vuelos_aeropuertos = [];
+    this.asientos = [];
   }
 
   loadTravels(): void {
@@ -288,8 +219,6 @@ export class BookFlightComponent{
         for(let i = 0; i < viajes.length ; i++){
           this.showStepovers.push(false);
         }
-
-        console.log("Filtros: ", this.sharedService.searchedOrigin, this.sharedService.searchedDestiny, this.sharedService.formatDate2(this.sharedService.selectedDate.toString()))
 
         this.viajes = this.sharedService._filterTravelsByOriginDestiny(this.viajes, this.sharedService.searchedOrigin, this.sharedService.searchedDestiny, this.sharedService.formatDate2(this.sharedService.selectedDate.toString()));
       },
@@ -336,12 +265,6 @@ export class BookFlightComponent{
                     }
                   }
                 }
-
-                console.log("Vuelos: ", this.vuelos)
-
-                console.log("ViajesVuelos: ", this.viajes_vuelos)
-
-                console.log("VuelosAeropuertos: ", this.vuelos_aeropuertos)
               
               },
             error: (response) => {
@@ -405,6 +328,69 @@ export class BookFlightComponent{
   // Function for select flight button (first step of stepper)
   selectFlight(selectedTravelId: number){
     this.selectedTravelId = selectedTravelId
+
+    var vuelosTmp: Vuelo[] = [];
+    var viajes_vuelosTmp: ViajeVuelo[] = [];
+
+    this.asientos = [];
+
+    this.vuelosService.getVuelos().subscribe({
+      next: (vuelos) => {
+        vuelosTmp = vuelos;
+
+        this.viajesVuelosService.getViajesVuelos().subscribe({
+          next: (viajesVuelos) => {
+            viajes_vuelosTmp = viajesVuelos;
+
+            viajes_vuelosTmp.sort((a, b) => a.escala - b.escala);
+
+            var selectedTravelFirstFlight: number = -1;
+
+            for(let i = 0; i < viajes_vuelosTmp.length; i++){
+              if(viajes_vuelosTmp[i].viajeId == this.selectedTravelId){
+                selectedTravelFirstFlight = viajes_vuelosTmp[i].nVuelo;
+                break;
+              }
+            }
+
+            for(let j = 0; j < vuelosTmp.length; j++){
+              if(vuelosTmp[j].nVuelo == selectedTravelFirstFlight){
+                this.selectedAircraftId = vuelosTmp[j].avionMatricula;
+              }
+            }
+
+            var asientosTmp: Asiento[] = []
+
+            this.asientosService.getAsientos().subscribe({
+              next: (asientos) => {
+                asientosTmp = asientos;
+
+                console.log("Asientos temp: ", asientosTmp)
+
+                for(let k = 0; k < asientosTmp.length; k++){
+                  if(asientosTmp[k].avionMatricula == this.selectedAircraftId  && asientosTmp[k].nVuelo == selectedTravelFirstFlight){
+                    this.asientos.push(asientosTmp[k])
+                  }
+                }
+            
+                console.log("Asientos: ", this.asientos)
+
+              },
+              error: (response) => {
+                console.log(response);
+              }
+            })
+
+          },
+          error: (response) => {
+            console.log(response);
+          }
+        })
+      },
+      error: (response) => {
+        console.log(response);
+      }
+    })
   }
 
   // Function for personal information update button on desktop (second step of desktop stepper)
@@ -425,15 +411,14 @@ export class BookFlightComponent{
     this.passengerTelephone = String(this.travelInformationStepM.get('passengerTelephoneInputM')?.value);
   }
 
-  /*
   selectSeat(seatId: string){
     if(this.selectedseatsId.includes(seatId) && this.leftTickets >= 0){
       const index = this.selectedseatsId.indexOf(seatId);
       if (index !== -1) {
         this.selectedseatsId.splice(index, 1);
-        const selectedSeat = this.seats.find((seat) => seat.seatId === seatId);
+        const selectedSeat = this.asientos.find((seat) => seat.id === seatId);
         if(selectedSeat){
-          selectedSeat.state = "Available";
+          selectedSeat.estadoId = 1;
         }else{
           console.log("Error");
         }
@@ -441,9 +426,9 @@ export class BookFlightComponent{
       this.leftTickets += 1;
     }else if(this.leftTickets > 0) {
       this.selectedseatsId.push(seatId)
-      const selectedSeat = this.seats.find((seat) => seat.seatId === seatId);
+      const selectedSeat = this.asientos.find((seat) => seat.id === seatId);
         if(selectedSeat){
-          selectedSeat.state = "Selected";
+          selectedSeat.estadoId = 0;
         }else{
           console.log("Error");
         }
@@ -457,7 +442,6 @@ export class BookFlightComponent{
     console.log("Asientos seleccionados: " + this.selectedseatsId);
     console.log("Asientos restantes: " + this.leftTickets);
   }
-  */
 
   reserveFlight(){
     if(this.paymentInformationStepD.valid || this.paymentInformationStepM.valid){

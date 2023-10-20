@@ -134,7 +134,6 @@
                 </div>
               </form>
 
-              <!--
               <div class="seats-selection-container">
                 <div class="selected-seats-id-label-contanier">
                   <h2>Asientos seleccionados:</h2>
@@ -144,27 +143,26 @@
                 <div class="seats-selection">
                   <img class="aircraft-image" src="../../../assets/aircraftShadow.png">
                   <div class="plane-seats-grid">
-                    <div class="seat-button-container" *ngFor="let seat of seats; let i = index">
+                    <div class="seat-button-container" *ngFor="let seat of getAsientos(); let i = index">
 
-                      <button mat-icon-button (click)="selectSeat(seat.seatId)" *ngIf="seat.state == 'Available'">
+                      <button mat-icon-button (click)="selectSeat(seat.id)" *ngIf="seat.estadoId == 1">
                         <mat-icon>event_seat</mat-icon>
-                        <h6> {{seat.seatId}} </h6>
+                        <h6> {{seat.id}} </h6>
                       </button>
 
-                      <button mat-icon-button  class="selected-seat" (click)="selectSeat(seat.seatId)" *ngIf="seat.state == 'Selected'">
+                      <button mat-icon-button  class="selected-seat" (click)="selectSeat(seat.id)" *ngIf="seat.estadoId != 1 && seat.estadoId != 2">
                         <mat-icon class="selected-seat">event_seat</mat-icon>
-                        <h6> {{seat.seatId}} </h6>
+                        <h6> {{seat.id}} </h6>
                       </button>
 
-                      <button mat-icon-button class="busy-seat" (click)="selectSeat(seat.seatId)" *ngIf="seat.state == 'Busy'" disabled>
+                      <button mat-icon-button class="busy-seat" (click)="selectSeat(seat.id)" *ngIf="seat.estadoId == 2" disabled>
                         <mat-icon class="busy-seat">event_seat</mat-icon>
-                        <h6> {{seat.seatId}} </h6>
+                        <h6> {{seat.id}} </h6>
                       </button>
                     </div>
                   </div>
                 </div>
               </div>
-            -->
 
               <div class="personal-information-form-field-container">
                 <button mat-flat-button color="primary" matStepperPrevious>Regresar</button>
@@ -356,31 +354,30 @@
               <h4 class="left-seast-lablel-M">Asientos restantes: {{getleftTickets()}} </h4>
             </div>
 
-            <!--
-            <div class="seats-selection-container-M">
-              <img class="aircraft-image-M" src="../../../assets/aircraftShadow.png">
-              <div class="plane-seats-grid-M">
-                <div class="seat-button-container-M" *ngFor="let seat of seats; let i = index">
-                  
-                  <button mat-icon-button (click)="selectSeat(seat.seatId)" *ngIf="seat.state == 'Available'">
-                    <mat-icon>event_seat</mat-icon>
-                    <h6> {{seat.seatId}} </h6>
-                  </button>
+            <div class="seats-selection-container">
+              <div class="seats-selection">
+                <img class="aircraft-image" src="../../../assets/aircraftShadow.png">
+                <div class="plane-seats-grid">
+                  <div class="seat-button-container" *ngFor="let seat of getAsientos(); let i = index">
 
-                  <button mat-icon-button  class="selected-seat" (click)="selectSeat(seat.seatId)" *ngIf="seat.state == 'Selected'">
-                    <mat-icon class="selected-seat">event_seat</mat-icon>
-                    <h6> {{seat.seatId}} </h6>
-                  </button>
+                    <button mat-icon-button (click)="selectSeat(seat.id)" *ngIf="seat.estadoId == 1">
+                      <mat-icon>event_seat</mat-icon>
+                      <h6> {{seat.id}} </h6>
+                    </button>
 
-                  <button mat-icon-button class="busy-seat" (click)="selectSeat(seat.seatId)" *ngIf="seat.state == 'Busy'" disabled>
-                    <mat-icon class="busy-seat">event_seat</mat-icon>
-                    <h6> {{seat.seatId}} </h6>
-                  </button>
+                    <button mat-icon-button  class="selected-seat" (click)="selectSeat(seat.id)" *ngIf="seat.estadoId != 1 && seat.estadoId != 2">
+                      <mat-icon class="selected-seat">event_seat</mat-icon>
+                      <h6> {{seat.id}} </h6>
+                    </button>
 
+                    <button mat-icon-button class="busy-seat" (click)="selectSeat(seat.id)" *ngIf="seat.estadoId == 2" disabled>
+                      <mat-icon class="busy-seat">event_seat</mat-icon>
+                      <h6> {{seat.id}} </h6>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
-          -->
 
             <div class="personal-information-form-field-container">
               <button mat-flat-button color="primary" matStepperPrevious>Regresar</button>
