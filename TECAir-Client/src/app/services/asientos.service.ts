@@ -15,4 +15,8 @@ export class AsientosService {
   getAsientos(): Observable<Asiento[]> {
     return this.http.get<Asiento[]>(this.baseApiUrl + '/api/Asientos');
   }
+
+  putAsiento(id: string, nVuelo: number, avionMatricula: string, asiento: Asiento): Observable<number> {
+    return this.http.put<number>(this.baseApiUrl + '/api/Asientos/' + id + '-' + nVuelo + '-' + avionMatricula , asiento);
+  }
 }
