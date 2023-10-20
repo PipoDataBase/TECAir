@@ -197,6 +197,14 @@ namespace TECAir.Controllers
                 return NotFound();
             }
 
+            // Obtener los asientos asociados al vuelo
+            var asientos = await _context.Asientos
+                .Where(a => a.NVuelo == vuelo.NVuelo)
+                .ToListAsync();
+
+            // Eliminar los asientos asociados
+            _context.Asientos.RemoveRange(asientos);
+
             // Obtener los VueloAeropuertos asociados al vuelo
             var vueloAeropuertos = await _context.VueloAeropuertos
                 .Where(va => va.VueloNumero == vuelo.NVuelo)

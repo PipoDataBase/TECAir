@@ -74,8 +74,14 @@ namespace TECAir.Controllers
                 }
                 else
                 {
-                    var primero = viaje.ViajeVuelos.First();
-                    var ultimo = viaje.ViajeVuelos.Last();
+                    var primero = new ViajeVuelo();
+                    var ultimo = new ViajeVuelo();
+
+                    foreach (var viajeVuelo in viaje.ViajeVuelos)
+                    {
+                        if (viajeVuelo.Escala == 1) primero = viajeVuelo;
+                        if (viajeVuelo.Escala == viaje.ViajeVuelos.Count) ultimo = viajeVuelo;
+                    }
 
                     var primerVuelo = await _context.Vuelos
                         .Where(v => v.NVuelo == primero.NVuelo)
@@ -114,7 +120,7 @@ namespace TECAir.Controllers
                         foreach (var viajeVuelo in viaje.ViajeVuelos)
                         {
                             var vuelo = await _context.Vuelos
-                            .Where(v => v.NVuelo == viaje.ViajeVuelos.First().NVuelo)
+                            .Where(v => v.NVuelo == viajeVuelo.NVuelo)
                             .Select(v => new
                             {
                                 v.Precio
