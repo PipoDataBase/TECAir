@@ -173,6 +173,8 @@ namespace TECAir.Controllers
                 _context.Vuelos.Add(vuelo);
                 await _context.SaveChangesAsync();
 
+                _context.Database.ExecuteSqlRaw("CALL sp_crear_asiento_vuelo({0}, {1})", vuelo.NVuelo, vuelo.AvionMatricula);
+
                 return Ok(vuelo.NVuelo);
             }
             catch (Exception ex)

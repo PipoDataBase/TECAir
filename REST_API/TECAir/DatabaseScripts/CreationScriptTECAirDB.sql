@@ -137,9 +137,10 @@ CREATE TABLE "Promocion" (
 
 CREATE TABLE "Asiento" (
 	"id" varchar(5) NOT NULL,
+	"N_Vuelo" integer NOT NULL,
 	"Avion_Matricula" varchar(10) NOT NULL,
 	"Estado_Id" integer NOT NULL,
-	CONSTRAINT "Asiento_pk" PRIMARY KEY ("id")
+	CONSTRAINT "Asiento_pk" PRIMARY KEY ("id", "N_Vuelo", "Avion_Matricula")
 ) WITH (
   OIDS=FALSE
 );
@@ -216,6 +217,7 @@ ALTER TABLE "Vuelo" ADD CONSTRAINT "Vuelo_fk1" FOREIGN KEY ("Avion_Matricula") R
 
 ALTER TABLE "Asiento" ADD CONSTRAINT "Asiento_fk0" FOREIGN KEY ("Avion_Matricula") REFERENCES "Avion"("Matricula");
 ALTER TABLE "Asiento" ADD CONSTRAINT "Asiento_fk1" FOREIGN KEY ("Estado_Id") REFERENCES "Estados"("id");
+ALTER TABLE "Asiento" ADD CONSTRAINT "Asiento_fk2" FOREIGN KEY ("N_Vuelo") REFERENCES "Vuelo"("N_Vuelo");
 
 
 ALTER TABLE "Precio_Maleta" ADD CONSTRAINT "Precio_Maleta_fk0" FOREIGN KEY ("Empleado_Usuario") REFERENCES "Empleado"("Usuario");
@@ -236,3 +238,21 @@ ALTER TABLE "Vuelo" ALTER COLUMN "Fecha_Llegada" TYPE timestamp with time zone;
 
 ALTER TABLE "Viaje" ALTER COLUMN "Fecha_Salida" TYPE timestamp with time zone;
 ALTER TABLE "Viaje" ALTER COLUMN "Fecha_Llegada" TYPE timestamp with time zone;
+
+CREATE OR REPLACE PROCEDURE sp_crear_asiento_vuelo(n_vuelo INT, avion_matricula VARCHAR)
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    letra CHAR;
+    numero INT;
+    asiento_id VARCHAR;
+BEGIN
+    FOR letra IN SELECT unnest(string_to_array('A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z', ',')) LOOP
+        FOR numero IN 1..6 LOOP
+            asiento_id := letra || numero;
+            INSERT INTO "Asiento" ("id", "N_Vuelo", "Avion_Matricula", "Estado_Id")
+            VALUES (asiento_id, n_vuelo, avion_matricula, 1);
+        END LOOP;
+    END LOOP;
+END;
+$$;

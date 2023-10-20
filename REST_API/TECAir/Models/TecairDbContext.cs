@@ -66,7 +66,7 @@ public partial class TecairDbContext : DbContext
 
         modelBuilder.Entity<Asiento>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("Asiento_pk");
+            entity.HasKey(e => new { e.Id, e.NVuelo, e.AvionMatricula }).HasName("Asiento_pk");
 
             entity.ToTable("Asiento");
 
@@ -77,6 +77,9 @@ public partial class TecairDbContext : DbContext
                 .HasMaxLength(10)
                 .HasColumnName("Avion_Matricula");
             entity.Property(e => e.EstadoId).HasColumnName("Estado_Id");
+            entity.Property(e => e.NVuelo)
+                .ValueGeneratedNever()
+                .HasColumnName("N_Vuelo");
 
             entity.HasOne(d => d.AvionMatriculaNavigation).WithMany(p => p.Asientos)
                 .HasForeignKey(d => d.AvionMatricula)
@@ -87,6 +90,11 @@ public partial class TecairDbContext : DbContext
                 .HasForeignKey(d => d.EstadoId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Asiento_fk1");
+
+            entity.HasOne(d => d.Vuelo).WithMany(p => p.Asientos)
+                .HasForeignKey(d => d.NVuelo)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("Asiento_fk2");
         });
 
         modelBuilder.Entity<Avion>(entity =>
