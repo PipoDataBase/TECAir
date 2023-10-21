@@ -20,36 +20,36 @@ const DB_TECAir = 'TECAirDB';
 
 
 export class DatabaseService {
-private sqlite: SQLiteConnection = new SQLiteConnection( CapacitorSQLite );
-private db!: SQLiteDBConnection;
-private profile: WritableSignal<Profile[]> = signal<Profile[]>([]);
-private aeropuertos: WritableSignal<Aeropuerto[]> = signal<Aeropuerto[]>([]);
-private estudiantes: WritableSignal<Student[]> = signal<Student[]>([]);
-private offlineChanges: WritableSignal<OfflineChange[]> = signal<OfflineChange[]>([]);
+  private sqlite: SQLiteConnection = new SQLiteConnection(CapacitorSQLite);
+  private db!: SQLiteDBConnection;
+  private profile: WritableSignal<Profile[]> = signal<Profile[]>([]);
+  private aeropuertos: WritableSignal<Aeropuerto[]> = signal<Aeropuerto[]>([]);
+  private estudiantes: WritableSignal<Student[]> = signal<Student[]>([]);
+  private offlineChanges: WritableSignal<OfflineChange[]> = signal<OfflineChange[]>([]);
 
-addClientRequest: Profile = {
-  correo:  '',
-  telefono: 0,
-  nombre: '',
-  apellido1: '',
-  apellido2: '' 
-};
+  addClientRequest: Profile = {
+    correo: '',
+    telefono: 0,
+    nombre: '',
+    apellido1: '',
+    apellido2: ''
+  };
 
   constructor(private http: HttpClient, private profileService: ProfileService) { }
 
   baseApiUrl: string = environment.baseApiUrl;
 
-async InitializeDB(){
+  async InitializeDB() {
 
-  this.db = await this.sqlite.createConnection(
-    DB_TECAir,
-    false,
-    'no-encryption',
-    1,
-    false
-  );
+    this.db = await this.sqlite.createConnection(
+      DB_TECAir,
+      false,
+      'no-encryption',
+      1,
+      false
+    );
 
-  await this.db.open();
+    await this.db.open();
 
     const schemaCliente = `CREATE TABLE IF NOT EXISTS Cliente (
                                 correo TEXT PRIMARY KEY NOT NULL, 
@@ -97,27 +97,27 @@ async InitializeDB(){
     this.loadEstudiantes();
     this.loadOfflineChanges();
 
-}
+  }
 
-//CLIENT
-  async loadClientsProfile(){
+  //CLIENT
+  async loadClientsProfile() {
     const Profiles = await this.db.query('SELECT * FROM Cliente;');
     this.profile.set(Profiles.values || [])
     return true
   }
 
 
-  getClientes(){
+  getClientes() {
     return this.profile;
   }
-  
+
 
 
   async getCliente(Correo: string) {
     var result = await this.db.query(`SELECT * FROM Cliente WHERE Correo='${Correo}';`);
     if (result && result.values && result.values.length > 0) {
       var client = result.values[0];
-      this.addClientRequest.correo=client.correo;
+      this.addClientRequest.correo = client.correo;
       this.addClientRequest.telefono = client.telefono;
       this.addClientRequest.nombre = "client.nombre";
       this.addClientRequest.apellido1 = "client.apellido1";
@@ -142,107 +142,107 @@ async InitializeDB(){
 
     return result;
 
-}
+  }
 
- async updateClientePorCorreo(Correo: string, Telefono: number){
+  async updateClientePorCorreo(Correo: string, Telefono: number) {
 
-  const query = `UPDATE Cliente SET Telefono=${Telefono} WHERE Correo=${Correo}`;
-  const result = this.db.query(query);
+    const query = `UPDATE Cliente SET Telefono=${Telefono} WHERE Correo=${Correo}`;
+    const result = this.db.query(query);
 
-  this.loadClientsProfile();
+    this.loadClientsProfile();
 
-  return result;
+    return result;
 
- }
-
-
- async deleteCliente(Correo: string){
-
-  
-
-  const query = `DELETE FROM Cliente WHERE Correo=${Correo}`;
-  const result = this.db.query(query);
-
-  this.loadClientsProfile();
-
-  return result;
-
- }
-
-// AEROPUERTO
-
-async loadAeropuertos(){
-  const Airports = await this.db.query('SELECT * FROM Aeropuerto;');
-  this.aeropuertos.set(Airports.values || []);
-  return true;
-}
+  }
 
 
-getAeropuertos(){
-  return this.aeropuertos;
-}
+  async deleteCliente(Correo: string) {
 
-async addAeropuertos(aeropuertos: { id: string; nombre: string; ubicacion: string}[]) {
 
-  const insertPromises = aeropuertos.map(aeropuerto =>
-    this.db.query(`
+
+    const query = `DELETE FROM Cliente WHERE Correo=${Correo}`;
+    const result = this.db.query(query);
+
+    this.loadClientsProfile();
+
+    return result;
+
+  }
+
+  // AEROPUERTO
+
+  async loadAeropuertos() {
+    const Airports = await this.db.query('SELECT * FROM Aeropuerto;');
+    this.aeropuertos.set(Airports.values || []);
+    return true;
+  }
+
+
+  getAeropuertos() {
+    return this.aeropuertos;
+  }
+
+  async addAeropuertos(aeropuertos: { id: string; nombre: string; ubicacion: string }[]) {
+
+    const insertPromises = aeropuertos.map(aeropuerto =>
+      this.db.query(`
       INSERT INTO Aeropuerto (Id, Nombre, Ubicacion) VALUES ('${aeropuerto.id}', '${aeropuerto.nombre}', '${aeropuerto.ubicacion}')
     `));
 
-  const insertResults = await Promise.all(insertPromises);
+    const insertResults = await Promise.all(insertPromises);
 
-  console.log(`posts created successfully!`);
-  this.loadAeropuertos();
+    console.log(`posts created successfully!`);
+    this.loadAeropuertos();
 
-}
-
-
-// ESTUDIANTE
+  }
 
 
-async loadEstudiantes(){
-  const Students = await this.db.query('SELECT * FROM Cliente;');
-  this.estudiantes.set(Students.values || []);
-  return true;
-}
+  // ESTUDIANTE
 
 
-getEstudiantes(){
-  return this.estudiantes;
-}
+  async loadEstudiantes() {
+    const Students = await this.db.query('SELECT * FROM Cliente;');
+    this.estudiantes.set(Students.values || []);
+    return true;
+  }
 
-// OfflineChanges
 
-async loadOfflineChanges(){
-  const OfflineChanges = await this.db.query('SELECT * FROM OfflineChange;');
-  this.offlineChanges.set(OfflineChanges.values || []);
-  return true;
-}
+  getEstudiantes() {
+    return this.estudiantes;
+  }
 
-getOfflineChanges(){
-  return this.offlineChanges;
-}
+  // OfflineChanges
 
-async addOfflineChange(TableName: string, ChangeId: string) {
+  async loadOfflineChanges() {
+    const OfflineChanges = await this.db.query('SELECT * FROM OfflineChange;');
+    this.offlineChanges.set(OfflineChanges.values || []);
+    return true;
+  }
 
-  const result1 = await this.db.query('SELECT COUNT(*) as count FROM OfflineChange;');
-  var nChange: number;
-  if (result1 && result1.values && result1.values.length > 0) {
-    nChange = result1.values[0].count;
-    console.log("nChange: ", nChange);
-    const query = `INSERT INTO OfflineChange (nChange, TableName, ChangeId) VALUES ('${nChange}','${TableName}','${ChangeId}')`;
-    const result = await this.db.query(query);
-  } 
-  this.loadOfflineChanges();
-}
+  getOfflineChanges() {
+    return this.offlineChanges;
+  }
 
-async deleteOfflineChanges(){
+  async addOfflineChange(TableName: string, ChangeId: string) {
 
-  const query = `DELETE FROM OfflineChange`;
-  const result = this.db.query(query);
-  this.loadOfflineChanges();
-  return result;
-}
+    const result1 = await this.db.query('SELECT COUNT(*) as count FROM OfflineChange;');
+    var nChange: number;
+    if (result1 && result1.values && result1.values.length > 0) {
+      nChange = result1.values[0].count;
+      console.log("nChange: ", nChange);
+      const query = `INSERT INTO OfflineChange (nChange, TableName, ChangeId) VALUES ('${nChange}','${TableName}','${ChangeId}')`;
+      const result = await this.db.query(query);
+    }
+    this.loadOfflineChanges();
+  }
+
+  async deleteOfflineChanges() {
+
+    const query = `DELETE FROM OfflineChange`;
+    const result = this.db.query(query);
+    this.loadOfflineChanges();
+    return result;
+  }
 
 
 }

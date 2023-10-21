@@ -11,11 +11,9 @@ import { PromocionesService } from 'src/app/services/promociones.service';
 import { SharedService } from 'src/app/services/shared.service';
 import { DatabaseService } from 'src/app/services/database.service';
 import { Profile } from 'src/app/models/profile.module';
-import { ThisReceiver } from '@angular/compiler';
-import { Network, ConnectionStatus } from '@capacitor/network';
+import { Network } from '@capacitor/network';
 import { Capacitor } from '@capacitor/core';
 import { OfflineChange } from 'src/app/models/offlineChange.module';
-import { ProfileService } from 'src/app/services/profile.service';
 
 import { BookFlightComponent } from '../book-flight/book-flight.component';
 
@@ -33,7 +31,7 @@ export class HomeComponent {
   Clientes = this.database.getClientes(); // SQLite
   newClienteCorreo = ''; // SQLite
   newClienteTelefono = 0; // SQLite
-  isOnline:boolean = false; // SQLite
+  isOnline: boolean = false; // SQLite
 
 
   images = [
@@ -62,30 +60,30 @@ export class HomeComponent {
   airportOptions1: Observable<Aeropuerto[]> | undefined;
   airportOptions2: Observable<Aeropuerto[]> | undefined;
 
-  constructor(private renderer: Renderer2, private _formBuilder: FormBuilder, private router: Router, private aeropuertosService: AeropuertosService, private promocionesService: PromocionesService, public sharedService: SharedService, private database: DatabaseService, private profileService: ProfileService) {
+  constructor(private renderer: Renderer2, private _formBuilder: FormBuilder, private router: Router, private aeropuertosService: AeropuertosService, private promocionesService: PromocionesService, public sharedService: SharedService, private database: DatabaseService) {
     this.isMobile = window.innerWidth <= 767;
     window.addEventListener('resize', () => {
       this.isMobile = window.innerWidth <= 767;
     });
-    
+
   }
 
-  async uploadOfflineChange(offlineChange: OfflineChange){
+  async uploadOfflineChange(offlineChange: OfflineChange) {
     console.log("UPLOADER");
     if (offlineChange.tableName == "Cliente") {
       this.database.getCliente(offlineChange.changeId);
     }
-}
+  }
 
 
   // Updload to the API the changes done in offline mode
-  handleOfflineChanges(){
+  handleOfflineChanges() {
     console.log("HANDLER Offline");
     if (this.isAndroid()) {
       var offlineChanges: OfflineChange[] = [];
       var changesTemp = this.database.getOfflineChanges();
       offlineChanges = changesTemp();
-      this.uploadOfflineChange(offlineChanges[(offlineChanges.length-1)]); //COMENTAR
+      this.uploadOfflineChange(offlineChanges[(offlineChanges.length - 1)]); //COMENTAR
       /*
       while ( 0 < offlineChanges.length ) {
         this.uploadOfflineChange(offlineChanges[(offlineChanges.length-1)]);
@@ -97,53 +95,53 @@ export class HomeComponent {
 
 
   // Create a Cliente in SQLite database
-  async createCliente(){
+  async createCliente() {
     await this.database.addCliente(this.newClienteCorreo, this.newClienteTelefono);
     this.getClientesArray();
     if (!this.isOnline && this.isAndroid()) {
       await this.database.addOfflineChange('Cliente', this.newClienteCorreo);
     }
-    this.newClienteCorreo ='';
+    this.newClienteCorreo = '';
     this.newClienteTelefono = 0;
   }
 
   // sets the variable correo with the string in the input panel (for SQLite)
-  setCorreo(correo: string){
+  setCorreo(correo: string) {
     this.newClienteCorreo = correo;
   }
   // sets the variable telefono with the string in the input panel (for SQLite)
-  setTelefono(telefono: string){
+  setTelefono(telefono: string) {
     var NumTelefono = Number(telefono);
     this.newClienteTelefono = NumTelefono;
   }
 
   // Gets the clientes from sqlite database and update the showing list in html
-  getClientesArray(){
+  getClientesArray() {
     var clientesTemp = this.database.getClientes();
     this.ClientesArray = clientesTemp();
   }
 
   // loads the aeropuertos from sqlite
-  getSQLiteAeropuertos(){
+  getSQLiteAeropuertos() {
     var aeropuertosTemp = this.database.getAeropuertos();
     this.aeropuertos = aeropuertosTemp();
   }
 
   // Create several aeropuertos en SQLite con los datos del api
-  async addAeros(){
+  async addAeros() {
     await this.database.addAeropuertos(this.aeropuertos); // Prueba
   }
 
   // Chooses the protocol according with the device where is running the program
-  deviceProtocol(){
+  deviceProtocol() {
 
     if (this.isAndroid() && this.isOnline) {
       this.addAeros();
       this.handleOfflineChanges();
-    } 
+    }
     else if (this.isAndroid() && !this.isOnline) {
-      this.getClientesArray(); 
-      this.getSQLiteAeropuertos(); 
+      this.getClientesArray();
+      this.getSQLiteAeropuertos();
       this.offlineAutofill();
     }
     // There are no specific protocols for web because it only matters if it is connected to internet or not
@@ -151,12 +149,12 @@ export class HomeComponent {
   }
 
   // verifies if the application is running on a mobile device
-  isAndroid(){
+  isAndroid() {
     return (Capacitor.getPlatform() === 'android');
   }
 
 
-  offlineAutofill(){
+  offlineAutofill() {
     this.airportOptions1 = this.airportForm.get('originAirportGroup')!.valueChanges.pipe(
       startWith(''),
       map(value => this.sharedService._filterAirports(this.aeropuertos, value || '')),
@@ -179,8 +177,8 @@ export class HomeComponent {
 
 
   // excecutes procedure for an onnline web or mobile app
-  onnlineInit(){
-    
+  onlineInit() {
+
     this.aeropuertosService.getAeropuertos().subscribe({
       next: (aeropuertos) => {
         this.aeropuertos = aeropuertos;
@@ -207,33 +205,33 @@ export class HomeComponent {
       error: (response) => {
         console.log(response);
       }
-    })    
+    })
 
   }
 
   // Is called when the program is initialized and when the internet connection is connected or disconected
   // If isOnline, loads api data
   async checkNetworkStatus() {
-    
+
     const status = await Network.getStatus();
-  
+
     if (status.connected) {
       console.log('Connected to the internet');
       this.isOnline = true;
-      this.onnlineInit(); // Loads data from API
+      this.onlineInit(); // Loads data from API
     }
-     else {
+    else {
       console.log('No internet connection');
       this.isOnline = false;
     }
-    
+
   }
 
   // Initializes an observer that checks if the internet connection have changed (connected or disconected)
   // Calls for functions to act depending on the connection change and the device running (mobile or web)
-  initNetworkObserver(){
-    
-      Network.addListener('networkStatusChange', status => {
+  initNetworkObserver() {
+
+    Network.addListener('networkStatusChange', status => {
       console.log('Network status changed', status);
       this.checkNetworkStatus();
       this.deviceProtocol();
@@ -292,7 +290,7 @@ export class HomeComponent {
     const selectedDate = this.airportForm.get('departureDate')?.value;
     const selectedSeatsCuantity = this.airportForm.get('passengers')?.value;
 
-    if (searchedOrigin && searchedDestiny && selectedDate && selectedSeatsCuantity){
+    if (searchedOrigin && searchedDestiny && selectedDate && selectedSeatsCuantity) {
       this.sharedService.searchedOrigin = this.sharedService.getCode(searchedOrigin);
       this.sharedService.searchedDestiny = this.sharedService.getCode(searchedDestiny);
       this.sharedService.selectedDate = selectedDate;

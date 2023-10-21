@@ -28,10 +28,7 @@ import { AppComponent } from './app.component';
 import { TecairlinesComponent } from './components/tecairlines/tecairlines.component';
 import { HomeComponent } from './components/home/home.component';
 import { PromotionsComponent } from './components/promotions/promotions.component';
-import { BookFlightComponent } from './components/book-flight/book-flight.component';
 import { ProfileComponent } from './components/profile/profile.component';
-import { SignUpComponent } from './components/sign-up/sign-up.component';
-import { LoginComponent } from './components/login/login.component';
 import { PDFComponent } from './components/pdf/pdf.component';
 
 
@@ -42,8 +39,6 @@ import { PDFComponent } from './components/pdf/pdf.component';
     HomeComponent,
     ProfileComponent,
     PromotionsComponent,
-    SignUpComponent,
-    LoginComponent,
     PDFComponent
   ],
   imports: [

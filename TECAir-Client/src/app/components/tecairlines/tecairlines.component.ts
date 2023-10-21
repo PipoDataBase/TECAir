@@ -3,7 +3,6 @@ import { Renderer2 } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoginComponent } from '../login/login.component';
 import { MatDialog } from '@angular/material/dialog';
-import { LoginComponent } from '../login/login.component';
 
 @Component({
   selector: 'app-tecairlines',

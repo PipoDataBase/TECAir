@@ -1,29 +1,4 @@
 <div style="position: relative; display: inline-block;">
-
-    <div>
-        <mat-form-field appearance="outline" >
-            <mat-label>Correo Electronico</mat-label>
-            <input matInput placeholder="Correo" #boxCor (keyup)="setCorreo(boxCor.value)">
-            <mat-icon matSuffix>alternate_email</mat-icon>
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-            <mat-label>Numero de Telefono</mat-label>
-            <input matInput placeholder="Telefono" #boxTel (keyup)="setTelefono(boxTel.value)">
-            <mat-icon matSuffix>call</mat-icon>
-        </mat-form-field>
-        <mat-button (click)="createCliente()">Create!</mat-button>
-    </div>
-
-    <div *ngFor=" let cliente of ClientesArray">
-        <label>{{cliente.correo}}</label>
-        <label>{{cliente.telefono}}</label>
-    </div>
-
-    <div *ngFor=" let aeropuerto of aeropuertos">
-        <label>{{aeropuerto.ubicacion}}</label>
-        <label>{{aeropuerto.id}}</label>
-    </div>
-
     <div>
         <button mat-icon-button class="back" (click)="changeImage(-1)">
             <mat-icon>arrow_back_ios</mat-icon>
