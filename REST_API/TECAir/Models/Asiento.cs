@@ -13,9 +13,9 @@ public partial class Asiento
 
     public int EstadoId { get; set; }
 
-    public virtual Vuelo Vuelo { get; set; } = null!;
+    public virtual Vuelo? Vuelo { get; set; } = null!;
 
-    public virtual Avion AvionMatriculaNavigation { get; set; } = null!;
+    public virtual Avion? AvionMatriculaNavigation { get; set; } = null!;
 
-    public virtual Estado Estado { get; set; } = null!;
+    public virtual Estado? Estado { get; set; } = null!;
 }

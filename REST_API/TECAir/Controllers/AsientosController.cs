@@ -49,6 +49,24 @@ namespace TECAir.Controllers
             return asiento;
         }
 
+        // GET: api/Asientos/5
+        [HttpGet("{id}-{nVuelo}-{avionMatricula}")]
+        public async Task<ActionResult<Asiento>> GetAsiento(string id, int nVuelo, string avionMatricula)
+        {
+            if (_context.Asientos == null)
+            {
+                return NotFound();
+            }
+            var asiento = await _context.Asientos.FindAsync(id, nVuelo, avionMatricula);
+
+            if (asiento == null)
+            {
+                return NotFound();
+            }
+
+            return asiento;
+        }
+
         // PUT: api/Asientos/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
@@ -68,6 +86,37 @@ namespace TECAir.Controllers
             catch (DbUpdateConcurrencyException)
             {
                 if (!AsientoExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
+
+        // PUT: api/Asientos/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut("{id}-{nVuelo}-{avionMatricula}")]
+        public async Task<IActionResult> PutAsiento(string id, int nVuelo, string avionMatricula, Asiento asiento)
+        {
+            if (id != asiento.Id || nVuelo != asiento.NVuelo ||  avionMatricula != asiento.AvionMatricula)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(asiento).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!AsientoExists(id, nVuelo, avionMatricula))
                 {
                     return NotFound();
                 }
@@ -132,6 +181,11 @@ namespace TECAir.Controllers
         private bool AsientoExists(string id)
         {
             return (_context.Asientos?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
+
+        private bool AsientoExists(string id, int nVuelo, string avionMatricula)
+        {
+            return (_context.Asientos?.Any(e => e.Id == id && e.NVuelo == nVuelo && e.AvionMatricula == avionMatricula)).GetValueOrDefault();
         }
     }
 }

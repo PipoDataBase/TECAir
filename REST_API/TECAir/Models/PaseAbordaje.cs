@@ -15,9 +15,9 @@ public partial class PaseAbordaje
 
     public int ViajeId { get; set; }
 
-    public virtual Cliente CorreoClienteNavigation { get; set; } = null!;
+    public virtual Cliente? CorreoClienteNavigation { get; set; } = null!;
 
     public virtual ICollection<Maleta> Maleta { get; set; } = new List<Maleta>();
 
-    public virtual Viaje Viaje { get; set; } = null!;
+    public virtual Viaje? Viaje { get; set; } = null!;
 }

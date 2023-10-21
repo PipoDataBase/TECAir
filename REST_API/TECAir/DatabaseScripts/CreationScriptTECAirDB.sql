@@ -79,7 +79,7 @@ CREATE TABLE "Universidad" (
 CREATE TABLE "Maleta" (
 	"N_Maleta" integer NOT NULL,
 	"Abordaje_Id" integer NOT NULL,
-	"Peso" numeric(3,2) NOT NULL,
+	"Peso" numeric(6,2) NOT NULL,
 	"Color" varchar(10) NOT NULL,
 	CONSTRAINT "Maleta_pk" PRIMARY KEY ("N_Maleta")
 ) WITH (
