@@ -35,18 +35,25 @@ namespace TECAir.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Cliente>> GetCliente(string id)
         {
-          if (_context.Clientes == null)
-          {
-              return NotFound();
-          }
-            var cliente = await _context.Clientes.FindAsync(id);
+            var cliente = await _context.Clientes
+                    .Where(c => c.Correo == id)
+                    .Select(c => new
+                    {
+                        c.Correo,
+                        c.Telefono,
+                        c.Nombre,
+                        c.Apellido1,
+                        c.Apellido2,
+                        c.Estudiantes
+                    })
+                    .FirstOrDefaultAsync();
 
             if (cliente == null)
             {
                 return NotFound();
             }
 
-            return cliente;
+            return Ok(cliente);
         }
 
         // PUT: api/Clientes/5
@@ -85,16 +92,20 @@ namespace TECAir.Controllers
         [HttpPost]
         public async Task<ActionResult<Cliente>> PostCliente(Cliente cliente)
         {
-          if (_context.Clientes == null)
-          {
-              return Problem("Entity set 'TecairDbContext.Clientes'  is null.");
-          }
-            _context.Clientes.Add(cliente);
+            if (_context.Clientes == null)
+            {
+                return Problem("Entity set 'TecairDbContext.Clientes'  is null.");
+            }
+
             try
             {
+                // Agregar el cliente a la base de datos
+                _context.Clientes.Add(cliente);
                 await _context.SaveChangesAsync();
+
+                return Ok(1);
             }
-            catch (DbUpdateException)
+            catch
             {
                 if (ClienteExists(cliente.Correo))
                 {
@@ -105,8 +116,6 @@ namespace TECAir.Controllers
                     throw;
                 }
             }
-
-            return CreatedAtAction("GetCliente", new { id = cliente.Correo }, cliente);
         }
 
         // DELETE: api/Clientes/5

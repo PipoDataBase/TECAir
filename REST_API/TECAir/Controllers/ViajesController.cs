@@ -38,7 +38,107 @@ namespace TECAir.Controllers
                     })
                     .ToListAsync();
 
-            return Ok(viajes);
+            List<Viaje> viajesTR = new List<Viaje>();
+
+            foreach (var viaje in viajes)
+            {
+                Viaje viajeTR = new Viaje();
+                viajeTR.Id = viaje.Id;
+                viajeTR.EmpleadoUsuario = viaje.EmpleadoUsuario;
+                viajeTR.ViajeVuelos = viaje.ViajeVuelos;
+
+                if (viaje.ViajeVuelos.Count == 1)
+                {
+                    var vuelo = await _context.Vuelos
+                        .Where(v => v.NVuelo == viaje.ViajeVuelos.First().NVuelo)
+                        .Select(v => new
+                        {
+                            v.FechaSalida,
+                            v.FechaLlegada,
+                            v.Estado,
+                            v.Precio,
+                            v.VueloAeropuertos
+                        })
+                        .FirstOrDefaultAsync();
+
+                    if (vuelo != null)
+                    {
+                        if (vuelo.VueloAeropuertos.First().Tipo == "Origen") viajeTR.Origen = vuelo.VueloAeropuertos.First().AeropuertoId;
+                        if (vuelo.VueloAeropuertos.Last().Tipo == "Origen") viajeTR.Origen = vuelo.VueloAeropuertos.Last().AeropuertoId;
+                        if (vuelo.VueloAeropuertos.First().Tipo == "Destino") viajeTR.Destino = vuelo.VueloAeropuertos.First().AeropuertoId;
+                        if (vuelo.VueloAeropuertos.Last().Tipo == "Destino") viajeTR.Destino = vuelo.VueloAeropuertos.Last().AeropuertoId;
+                        viajeTR.FechaSalida = vuelo.FechaSalida;
+                        viajeTR.FechaLlegada = vuelo.FechaLlegada;
+                        viajeTR.Precio = vuelo.Precio;
+                    }
+                }
+                else
+                {
+                    var primero = new ViajeVuelo();
+                    var ultimo = new ViajeVuelo();
+
+                    foreach (var viajeVuelo in viaje.ViajeVuelos)
+                    {
+                        if (viajeVuelo.Escala == 1) primero = viajeVuelo;
+                        if (viajeVuelo.Escala == viaje.ViajeVuelos.Count) ultimo = viajeVuelo;
+                    }
+
+                    var primerVuelo = await _context.Vuelos
+                        .Where(v => v.NVuelo == primero.NVuelo)
+                        .Select(v => new
+                        {
+                            v.FechaSalida,
+                            v.FechaLlegada,
+                            v.Estado,
+                            v.Precio,
+                            v.VueloAeropuertos
+                        })
+                        .FirstOrDefaultAsync();
+
+                    var ultimoVuelo = await _context.Vuelos
+                        .Where(v => v.NVuelo == ultimo.NVuelo)
+                        .Select(v => new
+                        {
+                            v.FechaSalida,
+                            v.FechaLlegada,
+                            v.Estado,
+                            v.Precio,
+                            v.VueloAeropuertos
+                        })
+                        .FirstOrDefaultAsync();
+
+                    if (primerVuelo != null && ultimoVuelo != null)
+                    {
+                        if (primerVuelo.VueloAeropuertos.First().Tipo == "Origen") viajeTR.Origen = primerVuelo.VueloAeropuertos.First().AeropuertoId;
+                        if (primerVuelo.VueloAeropuertos.Last().Tipo == "Origen") viajeTR.Origen = primerVuelo.VueloAeropuertos.Last().AeropuertoId;
+                        if (ultimoVuelo.VueloAeropuertos.First().Tipo == "Destino") viajeTR.Destino = ultimoVuelo.VueloAeropuertos.First().AeropuertoId;
+                        if (ultimoVuelo.VueloAeropuertos.Last().Tipo == "Destino") viajeTR.Destino = ultimoVuelo.VueloAeropuertos.Last().AeropuertoId;
+                        viajeTR.FechaSalida = primerVuelo.FechaSalida;
+                        viajeTR.FechaLlegada = ultimoVuelo.FechaLlegada;
+
+                        decimal Precio = 0;
+                        foreach (var viajeVuelo in viaje.ViajeVuelos)
+                        {
+                            var vuelo = await _context.Vuelos
+                            .Where(v => v.NVuelo == viajeVuelo.NVuelo)
+                            .Select(v => new
+                            {
+                                v.Precio
+                            })
+                            .FirstOrDefaultAsync();
+
+                            if (vuelo != null)
+                            {
+                                Precio += vuelo.Precio;
+                            }
+                        }
+                        viajeTR.Precio = Precio;
+                    }
+                }
+                viajesTR.Add(viajeTR);
+            }
+
+            return Ok(viajesTR);
         }
 
         // GET: api/Viajes/5

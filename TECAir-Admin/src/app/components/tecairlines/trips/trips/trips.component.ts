@@ -51,11 +51,6 @@ export class TripsComponent {
     this.router.navigate(["tecair-admin", this.username, "add-trip"]);
   }
 
-  // go to edit-trip view
-  editTrip(id: number): void {
-    this.router.navigate(["tecair-admin", this.username, "edit-trip", id]);
-  }
-
   // delete selected trip
   deleteTrip(id: number): void {
     Swal.fire({

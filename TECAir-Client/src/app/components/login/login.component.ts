@@ -1,50 +1,67 @@
 import { Component } from '@angular/core';
-import { MatDialog, MatDialogModule} from '@angular/material/dialog';
+import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { Profile } from 'src/app/models/profile.module';
-import { FormBuilder } from '@angular/forms';
-import { Router } from '@angular/router';
-import { ProfileService } from 'src/app/services/profile.service';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { SignUpComponent } from '../sign-up/sign-up.component';
-
+import { SharedService } from 'src/app/services/shared.service';
+import { ClientesService } from 'src/app/services/clientes.service';
+import { FormsModule } from '@angular/forms';
+import { NgIf } from '@angular/common';
+import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.css'],
+  standalone: true,
+  imports: [MatDialogModule, MatButtonModule, MatIconModule, MatInputModule, MatToolbarModule, FormsModule, NgIf]
 })
 export class LoginComponent {
+  email: string = '';
+  loginFailed: boolean = false;
 
-  loggedInClient: Profile = {
-    correo:  '',
-    telefono: 0,
-    nombre: '',
-    apellido1: '',
-    apellido2: '' 
-  };
+  constructor(public dialogRef: MatDialogRef<LoginComponent>, public matDialog: MatDialog, private router: Router, private sharedService: SharedService, private clientesService: ClientesService) { }
 
-
-  constructor(private matDialog:MatDialog, private profileService: ProfileService){}
-
-    
-  openLogInDialog() {
-    this.matDialog.open(LoginComponent);
-  }
-
-  logInClient(){
-
-    var client = this.profileService.getClient(this.loggedInClient.correo).subscribe({
-      next: (response) => {
-        console.log(response);
-      }
+  // go to sign-up view
+  signUp(): void {
+    this.dialogRef.close();
+    const dialogRef = this.matDialog.open(SignUpComponent, {
     });
-    console.log(client);
+
+    dialogRef.afterClosed().subscribe(result => {
+    });
   }
 
-  goSignUp(){
-    this.matDialog.open(SignUpComponent);
+  // close this view
+  close(): void {
+    this.dialogRef.close();
   }
 
+  // login client
+  login(): void {
+    // validate email
+    if (!this.sharedService.validateEmail(this.email)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Formato de correo incorrecto'
+      })
+      return;
+    }
+
+    // get client from database
+    this.clientesService.getCliente(this.email).subscribe({
+      next: (cliente) => {
+        const result = [cliente.nombre[0] + cliente.apellido1[0], this.email];
+        this.dialogRef.close(result);
+        this.router.navigate(["tecair", "profile", this.email]);
+      },
+      error: (response) => {
+        this.loginFailed = true;
+      }
+    })
+  }
 }

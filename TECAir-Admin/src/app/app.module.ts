@@ -13,6 +13,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatNativeDateModule } from '@angular/material/core';
+import { MatDialogModule } from '@angular/material/dialog';
 
 // FormsModule
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -36,7 +37,10 @@ import { EditPromotionsComponent } from './components/tecairlines/promotions/edi
 import { EditFlightComponent } from './components/tecairlines/flights/edit-flight/edit-flight.component';
 import { TripsComponent } from './components/tecairlines/trips/trips/trips.component';
 import { AddTripComponent } from './components/tecairlines/trips/add-trip/add-trip.component';
-import { EditTripComponent } from './components/tecairlines/trips/edit-trip/edit-trip.component';
+import { ReservationsComponent } from './components/tecairlines/reservations/reservations/reservations.component';
+import { BookFlightComponent } from './components/tecairlines/reservations/book-flight/book-flight.component';
+import { ViewPromotionsComponent } from './components/tecairlines/reservations/view-promotions/view-promotions.component';
+import { ProfileComponent } from './components/tecairlines/reservations/profile/profile.component';
 import { CheckBoardingpassBaggagesComponent } from './components/tecairlines/check-boardingpass-baggages/check-boardingpass-baggages.component';
 import { environment } from './environments/environment.development';
 
@@ -48,13 +52,16 @@ import { environment } from './environments/environment.development';
     TecairlinesComponent,
     TripsComponent,
     AddTripComponent,
-    EditTripComponent,
     FlightsComponent,
     AddFlightComponent,
     EditFlightComponent,
     PromotionsComponent,
     AddPromotionsComponent,
     EditPromotionsComponent,
+    ReservationsComponent,
+    BookFlightComponent,
+    ViewPromotionsComponent,
+    ProfileComponent,
     CheckBoardingpassBaggagesComponent
 
   ],
@@ -67,6 +74,7 @@ import { environment } from './environments/environment.development';
     MatInputModule,
     MatFormFieldModule,
     MatNativeDateModule,
+    MatDialogModule,
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,

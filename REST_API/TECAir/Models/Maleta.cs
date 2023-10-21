@@ -13,5 +13,5 @@ public partial class Maleta
 
     public string Color { get; set; } = null!;
 
-    public virtual PaseAbordaje Abordaje { get; set; } = null!;
+    public virtual PaseAbordaje? Abordaje { get; set; } = null!;
 }

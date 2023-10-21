@@ -28,4 +28,6 @@ public partial class Vuelo
     public virtual ICollection<VueloAeropuerto> VueloAeropuertos { get; set; } = new List<VueloAeropuerto>();
 
     public virtual ICollection<Viaje> Viajes { get; set; } = new List<Viaje>();
+
+    public virtual ICollection<Asiento> Asientos { get; set; } = new List<Asiento>();
 }

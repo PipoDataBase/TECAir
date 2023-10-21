@@ -17,6 +17,10 @@ export class PromocionesService {
     return this.http.get<Promocion[]>(this.baseApiUrl + '/api/Promociones');
   }
 
+  getNPromociones(n: number): Observable<Promocion[]> {
+    return this.http.get<Promocion[]>(this.baseApiUrl + '/api/Promociones/N/' + n);
+  }
+
   getPromocion(id: string): Observable<Promocion2> {
     return this.http.get<Promocion2>(this.baseApiUrl + '/api/Promociones/' + id);
   }

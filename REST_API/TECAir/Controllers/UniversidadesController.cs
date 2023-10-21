@@ -24,10 +24,10 @@ namespace TECAir.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Universidad>>> GetUniversidads()
         {
-          if (_context.Universidads == null)
-          {
-              return NotFound();
-          }
+            if (_context.Universidads == null)
+            {
+                return NotFound();
+            }
             return await _context.Universidads.ToListAsync();
         }
 
@@ -35,18 +35,18 @@ namespace TECAir.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Universidad>> GetUniversidad(int id)
         {
-          if (_context.Universidads == null)
-          {
-              return NotFound();
-          }
-            var universidad = await _context.Universidads.FindAsync(id);
+            if (_context.Universidads == null)
+            {
+                return NotFound();
+            }
 
+            var universidad = await _context.Universidads.FindAsync(id);
             if (universidad == null)
             {
                 return NotFound();
             }
 
-            return universidad;
+            return Ok(universidad);
         }
 
         // PUT: api/Universidades/5

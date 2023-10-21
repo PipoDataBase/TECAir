@@ -101,8 +101,17 @@ td, th {
 
 .baggages-register-container {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     width: 100%;
+    height: fit-content;
+    align-items: center;
+    justify-content: center;
+}
+
+.baggages-register-form {
+    display: flex;
+    flex-direction: row;
+    width: 50%;
     height: fit-content;
     align-items: center;
     justify-content: center;
@@ -110,11 +119,12 @@ td, th {
 
 .expected-price-information {
     font-size: large;
+    margin-top: 1.25%;
     margin-bottom: 1.25%;
 }
 
 .baggage-amount-input {
-    width: 25%;
+    width: 100%;
     margin-top: 1.25%;
-    margin-right: 0.5%;
+    margin-right: 2%;
 }

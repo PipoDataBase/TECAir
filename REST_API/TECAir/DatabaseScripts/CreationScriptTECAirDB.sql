@@ -29,7 +29,7 @@ CREATE TABLE "Vuelo" (
 
 
 CREATE TABLE "Cliente" (
-	"Correo" varchar(20) NOT NULL,
+	"Correo" varchar(40) NOT NULL,
 	"Telefono" integer NOT NULL,
 	"Nombre" varchar(20) NOT NULL,
 	"Apellido1" varchar(20) NOT NULL,
@@ -42,7 +42,7 @@ CREATE TABLE "Cliente" (
 
 CREATE TABLE "Pase_Abordaje" (
 	"Id" integer NOT NULL,
-	"Correo_Cliente" varchar(20) NOT NULL,
+	"Correo_Cliente" varchar(40) NOT NULL,
 	"Check_In" BOOLEAN NOT NULL,
 	"Puerta" varchar(10) NOT NULL,
 	"Viaje_Id" integer NOT NULL,
@@ -55,7 +55,7 @@ CREATE TABLE "Pase_Abordaje" (
 
 CREATE TABLE "Estudiante" (
 	"Carnet" integer NOT NULL,
-	"Correo" varchar(20) NOT NULL,
+	"Correo" varchar(40) NOT NULL,
 	"Universidad_Id" integer NOT NULL,
 	"Millas" numeric(6,2) NOT NULL DEFAULT '0',
 	CONSTRAINT "Estudiante_pk" PRIMARY KEY ("Carnet")
@@ -79,7 +79,7 @@ CREATE TABLE "Universidad" (
 CREATE TABLE "Maleta" (
 	"N_Maleta" integer NOT NULL,
 	"Abordaje_Id" integer NOT NULL,
-	"Peso" numeric(3,2) NOT NULL,
+	"Peso" numeric(6,2) NOT NULL,
 	"Color" varchar(10) NOT NULL,
 	CONSTRAINT "Maleta_pk" PRIMARY KEY ("N_Maleta")
 ) WITH (
@@ -137,9 +137,10 @@ CREATE TABLE "Promocion" (
 
 CREATE TABLE "Asiento" (
 	"id" varchar(5) NOT NULL,
+	"N_Vuelo" integer NOT NULL,
 	"Avion_Matricula" varchar(10) NOT NULL,
 	"Estado_Id" integer NOT NULL,
-	CONSTRAINT "Asiento_pk" PRIMARY KEY ("id")
+	CONSTRAINT "Asiento_pk" PRIMARY KEY ("id", "N_Vuelo", "Avion_Matricula")
 ) WITH (
   OIDS=FALSE
 );
@@ -187,7 +188,7 @@ CREATE TABLE "Viaje_Vuelo" (
 
 
 CREATE TABLE "Cliente_Viaje" (
-	"Correo_Cliente" varchar(20) NOT NULL,
+	"Correo_Cliente" varchar(40) NOT NULL,
 	"Viaje_Id" integer NOT NULL,
 	CONSTRAINT "Cliente_Viaje_pk" PRIMARY KEY ("Correo_Cliente","Viaje_Id")
 ) WITH (
@@ -216,6 +217,7 @@ ALTER TABLE "Vuelo" ADD CONSTRAINT "Vuelo_fk1" FOREIGN KEY ("Avion_Matricula") R
 
 ALTER TABLE "Asiento" ADD CONSTRAINT "Asiento_fk0" FOREIGN KEY ("Avion_Matricula") REFERENCES "Avion"("Matricula");
 ALTER TABLE "Asiento" ADD CONSTRAINT "Asiento_fk1" FOREIGN KEY ("Estado_Id") REFERENCES "Estados"("id");
+ALTER TABLE "Asiento" ADD CONSTRAINT "Asiento_fk2" FOREIGN KEY ("N_Vuelo") REFERENCES "Vuelo"("N_Vuelo");
 
 
 ALTER TABLE "Precio_Maleta" ADD CONSTRAINT "Precio_Maleta_fk0" FOREIGN KEY ("Empleado_Usuario") REFERENCES "Empleado"("Usuario");
@@ -236,3 +238,21 @@ ALTER TABLE "Vuelo" ALTER COLUMN "Fecha_Llegada" TYPE timestamp with time zone;
 
 ALTER TABLE "Viaje" ALTER COLUMN "Fecha_Salida" TYPE timestamp with time zone;
 ALTER TABLE "Viaje" ALTER COLUMN "Fecha_Llegada" TYPE timestamp with time zone;
+
+CREATE OR REPLACE PROCEDURE sp_crear_asiento_vuelo(n_vuelo INT, avion_matricula VARCHAR)
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    letra CHAR;
+    numero INT;
+    asiento_id VARCHAR;
+BEGIN
+    FOR letra IN SELECT unnest(string_to_array('A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z', ',')) LOOP
+        FOR numero IN 1..6 LOOP
+            asiento_id := letra || numero;
+            INSERT INTO "Asiento" ("id", "N_Vuelo", "Avion_Matricula", "Estado_Id")
+            VALUES (asiento_id, n_vuelo, avion_matricula, 1);
+        END LOOP;
+    END LOOP;
+END;
+$$;
