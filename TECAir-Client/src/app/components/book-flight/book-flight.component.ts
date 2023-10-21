@@ -13,7 +13,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import Swal from 'sweetalert2';
 import {MatTooltipModule} from '@angular/material/tooltip';
 
-import { Router } from '@angular/router';
+import { Data, Router } from '@angular/router';
 
 import { Viaje } from 'src/app/models/viaje.module';
 import { Vuelo } from 'src/app/models/vuelo.module';
@@ -30,6 +30,8 @@ import { AsientosService } from 'src/app/services/asientos.service';
 import { PaseAbordajeService } from 'src/app/services/pase-abordaje.service';
 
 import { SharedService } from 'src/app/services/shared.service';
+import { DatabaseService } from 'src/app/services/database.service';
+import { Network } from '@capacitor/network';
 
 @Component({
   selector: 'app-book-flight',
@@ -159,6 +161,11 @@ export class BookFlightComponent{
   public getViajes(): Viaje[] {
     return this.viajes;
   }
+
+  public getViajesOffline(): Viaje[] {
+    return this.viajes;
+  }
+
   public setViajes(value: Viaje[]) {
     this.viajes = value;
   }
@@ -188,7 +195,7 @@ export class BookFlightComponent{
   }
  
   // Component constructor
-  constructor(private _formBuilder: FormBuilder, private router: Router, private vuelosService: VuelosService, private viajesService: ViajesService, private viajesVuelosService: ViajesVuelosService, private vuelosAeropuertosService: VuelosAeropuertosService, private asientosService: AsientosService, private paseAbordajeService: PaseAbordajeService, private sharedService: SharedService) {
+  constructor(private _formBuilder: FormBuilder, private router: Router, private vuelosService: VuelosService, private viajesService: ViajesService, private viajesVuelosService: ViajesVuelosService, private vuelosAeropuertosService: VuelosAeropuertosService, private asientosService: AsientosService, private paseAbordajeService: PaseAbordajeService, private sharedService: SharedService, private databaseService: DatabaseService) {
     this.selectedTravelId = 0;
     this.ticketsCuantity = this.sharedService.selectedSeatsCuantity;
     this.passengerName = '';
@@ -223,7 +230,7 @@ export class BookFlightComponent{
     this.viajesService.getViajes().subscribe({
       next: (viajes) => {
         this.viajes = viajes;
-
+        this.databaseService.addViaje(this.viajes);
         for(let i = 0; i < viajes.length ; i++){
           this.showStepovers.push(false);
         }
@@ -234,6 +241,19 @@ export class BookFlightComponent{
         console.log(response);
       }
     })
+
+    
+  }
+
+
+  loadTravelsSQLite(): void {
+    this.viajes = [];
+    
+    var viajestemp = this.databaseService.getViajes()
+    this.viajes = viajestemp()
+        this.viajes = this.sharedService._filterTravelsByOriginDestiny(this.viajes, this.sharedService.searchedOrigin, this.sharedService.searchedDestiny, this.sharedService.formatDate2(this.sharedService.selectedDate.toString()));
+     
+
   }
 
   loadFlights(): void {
@@ -248,7 +268,7 @@ export class BookFlightComponent{
     this.vuelosService.getVuelos().subscribe({
       next: (vuelos) => {
         vuelosTmp = vuelos;
-
+        this.databaseService.addVuelo(vuelosTmp);
         // Load TravelFlights from DB
         this.viajesVuelosService.getViajesVuelos().subscribe({
           next: (viajesVuelos) => {
@@ -296,10 +316,19 @@ export class BookFlightComponent{
     
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+
+
+    const status = await Network.getStatus();
+    if(status.connected){
     this.loadTravels();
     this.loadFlights();
     this.loadTravelFlights();
+    }else{
+      this.loadTravelsSQLite;
+    }
+
+    
   }
   
   // Linear Mat-Stepper conditions

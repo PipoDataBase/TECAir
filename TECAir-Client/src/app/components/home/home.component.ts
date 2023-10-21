@@ -143,6 +143,8 @@ export class HomeComponent {
       this.getClientesArray();
       this.getSQLiteAeropuertos();
       this.offlineAutofill();
+      var promocionesTemp = this.database.getPromotions();
+      this.promociones = promocionesTemp();
     }
     // There are no specific protocols for web because it only matters if it is connected to internet or not
 
@@ -164,10 +166,23 @@ export class HomeComponent {
       startWith(''),
       map(value => this.sharedService._filterAirports(this.aeropuertos, value || '')),
     );
+    
+    this.promocionesService.getPromociones().subscribe({
+      next: (promocionesArr) => {
+        this.promociones = promocionesArr
+        this.database.addPromotions(this.promociones)
+      },
+      error: (response) => {
+        console.log(response);
+      }
+
+    })
+
 
     this.promocionesService.getNPromociones(4).subscribe({
       next: (promociones) => {
-        this.promociones = promociones;
+       // this.promociones = promociones;
+        
       },
       error: (response) => {
         console.log(response);
@@ -223,6 +238,7 @@ export class HomeComponent {
     else {
       console.log('No internet connection');
       this.isOnline = false;
+      
     }
 
   }

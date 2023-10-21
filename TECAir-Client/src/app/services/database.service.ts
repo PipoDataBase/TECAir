@@ -2,7 +2,7 @@ import { Injectable, WritableSignal, signal } from '@angular/core';
 import { CapacitorSQLite, SQLiteConnection, SQLiteDBConnection } from '@capacitor-community/sqlite';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../environments/environment.development';
-import { Observable } from 'rxjs';
+import { Observable, single } from 'rxjs';
 import { Profile } from '../models/profile.module';
 import { Aeropuerto } from '../models/aeropuerto.module';
 import { Student } from '../models/student.module';
@@ -10,6 +10,8 @@ import { Viaje } from '../models/viaje.module';
 import { Vuelo } from '../models/vuelo.module';
 import { OfflineChange } from '../models/offlineChange.module';
 import { ProfileService } from './profile.service';
+import { Promocion } from '../models/promocion.module';
+import { PromotionsComponent } from '../components/promotions/promotions.component';
 
 
 const DB_TECAir = 'TECAirDB';
@@ -26,6 +28,9 @@ export class DatabaseService {
   private aeropuertos: WritableSignal<Aeropuerto[]> = signal<Aeropuerto[]>([]);
   private estudiantes: WritableSignal<Student[]> = signal<Student[]>([]);
   private offlineChanges: WritableSignal<OfflineChange[]> = signal<OfflineChange[]>([]);
+  private travels: WritableSignal<Viaje[]> = signal<Viaje[]>([]);
+  private flights: WritableSignal<Vuelo[]> = signal<Vuelo[]> ([]);
+  private promotions: WritableSignal<Promocion[]> = signal<Promocion[]>([]);
 
   addClientRequest: Profile = {
     correo: '',
@@ -68,12 +73,12 @@ export class DatabaseService {
                                   millas NUMBER NOT NULL DEFAULT 0);`;
     const schemaViaje = `CREATE TABLE IF NOT EXISTS Viaje (
                               id NUMBER PRIMARY KEY NOT NULL, 
-                              origen TEXT NOT NULL, 
-                              destino TEXT NOT NULL, 
                               fechaSalida TEXT NOT NULL, 
                               fechaLlegada TEXT NOT NULL, 
+                              origen TEXT NOT NULL, 
+                              destino TEXT NOT NULL, 
                               precio NUMBER NOT NULL);`;
-    const schemaVuelo = `CREATE TABLE IF NOT EXISTS Viaje (
+    const schemaVuelo = `CREATE TABLE IF NOT EXISTS Vuelo (
                               nVuelo NUMBER PRIMARY KEY NOT NULL, 
                               avionMatricula TEXT NOT NULL, 
                               fechaSalida TEXT NOT NULL, 
@@ -84,6 +89,12 @@ export class DatabaseService {
                                       nChange NUMBER PRIMARY KEY NOT NULL, 
                                       tableName TEXT NOT NULL, 
                                       changeId TEXT NOT NULL);`;
+    const schemaPromociones = `CREATE TABLE IF NOT EXISTS Promocion (
+                              Viajeid NUMBER PRIMARY KEY NOT NULL, 
+                              precio NUMBER NOT NULL,
+                              fechaInicio TEXT NOT NULL, 
+                              fechaVencimiento TEXT NOT NULL, 
+                              imagenPath TEXT NOT NULL);`;
 
     await this.db.execute(schemaCliente);
     await this.db.execute(schemaAeropuerto);
@@ -91,11 +102,15 @@ export class DatabaseService {
     await this.db.execute(schemaViaje);
     await this.db.execute(schemaVuelo);
     await this.db.execute(schemaOfflineChange);
+    await this.db.execute(schemaPromociones);
 
     this.loadClientsProfile();
     this.loadAeropuertos();
     this.loadEstudiantes();
     this.loadOfflineChanges();
+    //this.loadViaje();
+    //this.loadvuelos();
+    this.loadPromotions();
 
   }
 
@@ -245,4 +260,104 @@ export class DatabaseService {
   }
 
 
+  //adds the Travels from the API to the SQLite DB
+
+  async addViaje(viajes:{id: number, fechaSalida: string, fechaLlegada: string, origen: string, destino: string, precio: number}[]) {
+
+
+    const insertPromises = viajes.map(Viaje =>
+      this.db.query(`INSERT INTO Viaje (id, fechaSalida, fechaLlegada, origen, destino, precio) 
+      VALUES ('${Viaje.id}','${Viaje.fechaSalida}','${Viaje.fechaLlegada}','${Viaje.origen}','${Viaje.destino}','${Viaje.precio}')`));
+
+    const insertResults = await Promise.all(insertPromises);
+
+
+    //const result = await this.db.query(query);
+
+    this.loadViaje();
+    console.log('Travel post done')
+    //return result;
+
+  }
+
+
+
+  async loadViaje(){
+    const Travels = await this.db.query('SELECT * FROM Viaje;');
+    this.travels.set(Travels.values || []);
+    return true;
+  }
+
+  getViajes(){
+    return this.travels
+  }
+  
+
+  //adds the flights from the API to the SQLite DB
+
+  async addVuelo(vuelos:{nVuelo: number,avionMatricula: string, fechaSalida: string, fechaLlegada: string,  estado: boolean, precio: number}[]) {
+
+
+    const insertPromises = vuelos.map(Vuelo =>
+      this.db.query(`INSERT INTO Vuelo (nVuelo, avionMatricula, fechaSalida, fechaLlegada, estado, precio) 
+      VALUES ('${Vuelo.nVuelo}','${Vuelo.avionMatricula}','${Vuelo.fechaSalida}','${Vuelo.fechaLlegada}','${Vuelo.estado}','${Vuelo.precio}')`));
+
+    const insertResults = await Promise.all(insertPromises);
+
+
+    //const result = await this.db.query(query);
+
+    this.loadvuelos();
+    console.log('Flight post done')
+    //return result;
+
+  }
+
+
+
+  async loadvuelos(){
+    const Flights = await this.db.query('SELECT * FROM Vuelo;');
+    this.travels.set(Flights.values || []);
+    return true;
+  }
+
+  getVuelos(){
+    return this.travels
+  }
+  
+  //adds the promotions from the API to the SQLite DB
+
+
+  async addPromotions(promociones: {viajeId: number,precio: number, fechaInicio: string, fechaVencimiento: string,  imagenPath: string, viaje:Viaje }[]) {
+
+
+
+    const insertPromises = promociones.map(Promocion =>
+      this.db.query(`INSERT INTO Promocion (viajeId, precio, fechaInicio, fechaVencimiento, imagenPath) 
+      VALUES ('${Promocion.viajeId}','${Promocion.precio}','${Promocion.fechaInicio}','${Promocion.fechaVencimiento}','${Promocion.imagenPath}')`));
+
+    const insertResults = await Promise.all(insertPromises);
+
+
+    //const result = await this.db.query(query);
+
+    this.loadPromotions();
+    console.log('Flight post done')
+    //return result;
+
+  }
+
+
+
+  async loadPromotions(){
+    const Promotions = await this.db.query('SELECT * FROM Promocion;');
+    this.promotions.set(Promotions.values || []);
+    return true;
+  }
+
+  getPromotions(){
+    return this.promotions
+  }
 }
+
+
