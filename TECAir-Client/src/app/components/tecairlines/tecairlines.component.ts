@@ -38,8 +38,4 @@ export class TecairlinesComponent {
       this.router.navigate(["tecair", "profile", this.email]);
     }
   }
-
-  test(): void {
-    console.log("Probar boton");
-  }
 }

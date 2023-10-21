@@ -55,7 +55,7 @@ export class LoginComponent {
     // get client from database
     this.clientesService.getCliente(this.email).subscribe({
       next: (cliente) => {
-        const result = [cliente.nombre[0] + cliente.apellido1[0], this.email];
+        const result = [cliente.nombre + ' ' + cliente.apellido1, this.email];
         this.dialogRef.close(result);
         this.router.navigate(["tecair", "profile", this.email]);
       },
