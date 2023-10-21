@@ -11,6 +11,8 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class TecairlinesComponent {
   isMobile: boolean;
+  logged: string = 'MyTECAir';
+  email: string = '';
 
   constructor(private renderer: Renderer2, private router: Router, private matDialog:MatDialog) {
     this.isMobile = window.innerWidth <= 767;
@@ -24,7 +26,17 @@ export class TecairlinesComponent {
   }
 
   openLoginDialog() {
-    this.matDialog.open(LoginComponent);
+    if (this.logged == 'MyTECAir') {
+      const dialogRef = this.matDialog.open(LoginComponent);
+
+      dialogRef.afterClosed().subscribe(result => {
+        this.logged = result[0];
+        this.email = result[1];
+      });
+    }
+    else {
+      this.router.navigate(["tecair", "profile", this.email]);
+    }
   }
 
   test(): void {

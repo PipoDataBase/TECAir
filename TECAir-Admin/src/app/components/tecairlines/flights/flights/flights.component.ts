@@ -71,16 +71,21 @@ export class FlightsComponent {
         this.vuelosService.deleteVuelo(id).subscribe({
           next: (response) => {
             this.updateFlights();
+            Swal.fire(
+              '¡Eliminado!',
+              'El vuelo ha sido eliminado.',
+              'success'
+            )
           },
           error: (error) => {
             console.log(error);
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: 'El vuelo seleccionado pertenece a un viaje y no puede ser eliminado.'
+            })
           }
         })
-        Swal.fire(
-          '¡Eliminado!',
-          'El vuelo ha sido eliminado.',
-          'success'
-        )
       }
     })
   }

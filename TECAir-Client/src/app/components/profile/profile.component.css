@@ -1,96 +1,23 @@
-.profile-Container{
+.container {
     display: flex;
     flex-direction: column;
-    -ms-flex-align: stretch;
-    min-width: 100vh;
-    min-height: 100vh;
-    height: 90%;
-    width: 90%;
-    padding: 50px;
     align-items: center;
-    justify-items: center;
-    background-color: rgb(223, 230, 237);
-    background-image: url('../../../assets/profileBG.jpg');
-}
-
-.buttonStyle{
-    display: flex;
-    flex-direction: column;
-    -ms-flex-align: stretch;
-    min-width: 100vh;
-    min-height: 100vh;
-    height: 90%;
-    width: 90%;
-    padding: 50px;
-    align-items: center;
-    justify-items: center;
-}
-
-.buttonBorder{
-    background-color: antiquewhite;
-    border: 2px solid #3F51B5 ;
-}
-
-.matcard-Container{
-    display: flex;
-    flex-direction: column;
-    -ms-flex-align: stretch;
-    min-width: 100vh;
-    height: 80%;
-    width: 70%;
-    padding: 50px;
-    align-items: center;
-    justify-items: center;
-}
-
-.brmedium {
-    margin-bottom: 1em;
-}
-
-.matCards {
-    align-items: center;
-    justify-items: center;
-    display: flex;
-    flex-direction: column;
-    min-width: 100vh;
-    min-height: 100vh;
-    width: 90%;
-    height: 100%;
-    border: 2px solid #3F51B5 ;
-    
-}
-
-.subMatCards {
-   
-    position: relative;
-    display: flex;
-    flex-direction: column;
-
-    min-width: 10vh;
-    min-height: max-content;
-
     justify-content: center;
-
-    width: 70%;
-    height: max-content;
-
-    border: 2px solid #3F51B5 ;
+    max-width: 600px;
+    height: 90%;
+    text-align: center;
 }
 
-.matCardContent{
-    align-items: center;
-    justify-items: center;
-    display: flex;
-    flex-direction: row;
-
-    width: 80%;
+.custom-card-content {
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 10px;
 }
 
-.paragrafBold{
-    background-color: #3f51b572;
-    font-weight: bold;
+.custom-back {
+    background-color: #e13a2d;
 }
 
-.paragrafInfo{
-    background-color: rgba(239, 238, 238, 0.503);
+.custom-save {
+    background-color: #3F51B5;
 }

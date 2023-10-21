@@ -4,7 +4,6 @@ import { LoginComponent } from './components/login/login/login.component';
 import { TecairlinesComponent } from './components/tecairlines/tecairlines/tecairlines.component';
 import { TripsComponent } from './components/tecairlines/trips/trips/trips.component';
 import { AddTripComponent } from './components/tecairlines/trips/add-trip/add-trip.component';
-import { EditTripComponent } from './components/tecairlines/trips/edit-trip/edit-trip.component';
 import { FlightsComponent } from './components/tecairlines/flights/flights/flights.component';
 import { AddFlightComponent } from './components/tecairlines/flights/add-flight/add-flight.component';
 import { EditFlightComponent } from './components/tecairlines/flights/edit-flight/edit-flight.component';
@@ -27,7 +26,6 @@ const routes: Routes = [
       { path: '', pathMatch: 'full', redirectTo: 'trips' },
       { path: 'trips', component: TripsComponent },
       { path: 'add-trip', component: AddTripComponent },
-      { path: 'edit-trip/:id', component: EditTripComponent },
       { path: 'flights', component: FlightsComponent },
       { path: 'add-flight', component: AddFlightComponent },
       { path: 'edit-flight/:id', component: EditFlightComponent },

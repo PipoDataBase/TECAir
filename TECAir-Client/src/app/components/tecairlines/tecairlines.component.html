@@ -6,13 +6,13 @@
         <span class="separator"></span>
   
         <ng-container *ngIf="!isMobile">
-          <a mat-button (click)="openLoginDialog()">MyTECAir<mat-icon>account_circle</mat-icon></a>
+          <a mat-button (click)="openLoginDialog()">{{ logged }}<mat-icon>account_circle</mat-icon></a>
         </ng-container>
   
         <span class="spacer"></span>
   
         <ng-container *ngIf="!isMobile">
-          <a mat-button>Ofertas de vuelos</a>
+          <a mat-button routerLink="promotions">Ofertas de vuelos</a>
         </ng-container>
         <span class="separator"></span>
   

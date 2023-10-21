@@ -191,10 +191,18 @@ namespace TECAir.Controllers
             {
                 return NotFound();
             }
+
             var vuelo = await _context.Vuelos.FindAsync(id);
             if (vuelo == null)
             {
                 return NotFound();
+            }
+
+            // Verificar si el vuelo pertenece a algún viaje
+            var existeViaje = await _context.ViajeVuelos.AnyAsync(vv => vv.NVuelo == vuelo.NVuelo);
+            if (existeViaje)
+            {
+                return BadRequest($"El vuelo {vuelo.NVuelo} pertenece a un viaje y no puede ser eliminado.");
             }
 
             // Obtener los asientos asociados al vuelo

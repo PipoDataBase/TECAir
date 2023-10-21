@@ -1,162 +1,115 @@
-<div class="profile-Container" style="position: relative;">
-    <div class="profile-Button">
-        <mat-button-toggle-group class="buttonBorder" name="fontStyle" aria-label="Font Style">
-            <mat-button-toggle (change)="isEdit = false">Ver Información</mat-button-toggle>
-            <mat-button-toggle (change)="isEdit = true">Editar Información</mat-button-toggle>
-        </mat-button-toggle-group>
-    </div>
+<div class="container">
+    <mat-card-content class="custom-card-content" style="padding: 5%;">
+        <mat-form-field style="width: 100%;">
+            <mat-label>Correo</mat-label>
+            <input matInput placeholder="pedroperico@tecair.com" type="email" readonly [(ngModel)]="cliente.correo"
+                name="correo">
+            <mat-icon matSuffix>email</mat-icon>
+        </mat-form-field>
 
-    <div class="buttonStyle" *ngIf="!isEdit">
-        <mat-card class="subMatCards">
-            <mat-card-header>
-                <mat-card-title>Perfil</mat-card-title>
-            </mat-card-header>
+        <div *ngIf="!isMobile">
+            <mat-form-field style="width: 32%;">
+                <mat-label>Nombre</mat-label>
+                <input matInput placeholder="Pedro" type="text" required [(ngModel)]="cliente.nombre" name="nombre">
+                <mat-icon matSuffix>person</mat-icon>
+            </mat-form-field>
 
-            <mat-card-content>
-                <p class="paragrafBold">Correo: </p>
-                <p class="paragrafInfo">{{ cliente.correo }}</p>
-                <span class="brmedium"> </span>
+            <mat-form-field style="width: 32%; margin-left: 2%; margin-right: 2%;">
+                <mat-label>Primer apellido</mat-label>
+                <input matInput placeholder="Perico" type="text" required [(ngModel)]="cliente.apellido1"
+                    name="apellido1">
+                <mat-icon matSuffix>person</mat-icon>
+            </mat-form-field>
 
-                <p class="paragrafBold">Nombre: </p>
-                <p class="paragrafInfo">{{ cliente.nombre }} {{ cliente.apellido1 }} {{ cliente.apellido2 }}</p>
-                <span class="brmedium"> </span>
+            <mat-form-field style="width: 32%;">
+                <mat-label>Segundo apellido</mat-label>
+                <input matInput placeholder="Perico" type="text" [(ngModel)]="cliente.apellido2" name="apellido2">
+                <mat-icon matSuffix>person</mat-icon>
+            </mat-form-field>
+        </div>
 
-                <p class="paragrafBold">Teléfono: </p>
-                <p class="paragrafInfo">{{ cliente.telefono }} </p>
-            </mat-card-content>
-        </mat-card>
+        <div *ngIf="isMobile">
+            <mat-form-field style="width: 100%;">
+                <mat-label>Nombre</mat-label>
+                <input matInput placeholder="Pedro" type="text" required [(ngModel)]="cliente.nombre" name="nombre">
+                <mat-icon matSuffix>person</mat-icon>
+            </mat-form-field>
 
-        <mat-card *ngIf="student" class="subMatCards">
-            <mat-card-header>
-                <mat-card-title>Datos de Estudiante</mat-card-title>
-            </mat-card-header>
+            <mat-form-field style="width: 100%;">
+                <mat-label>Primer apellido</mat-label>
+                <input matInput placeholder="Perico" type="text" required [(ngModel)]="cliente.apellido1"
+                    name="apellido1">
+                <mat-icon matSuffix>person</mat-icon>
+            </mat-form-field>
 
-            <mat-card-content>
-                <p class="paragrafBold">Millas: </p>
-                <span class="brmedium"> </span>
-                <p class="paragrafInfo"> {{ cliente.estudiantes[0].millas }} </p>
+            <mat-form-field style="width: 100%;">
+                <mat-label>Segundo apellido</mat-label>
+                <input matInput placeholder="Perico" type="text" [(ngModel)]="cliente.apellido2" name="apellido2">
+                <mat-icon matSuffix>person</mat-icon>
+            </mat-form-field>
+        </div>
 
-                <p class="paragrafBold">Universidad: </p>
-                <span class="brmedium"> </span>
-                <p class="paragrafInfo">{{ universidad.nombre }} / {{ universidad.ubicacion }}</p>
+        <div *ngIf="!isMobile && student">
+            <mat-form-field style="width: 49%; margin-right: 1%;">
+                <mat-label>Teléfono</mat-label>
+                <input matInput type="tel" maxlength="8" placeholder="77737426" required [(ngModel)]="cliente.telefono"
+                    name="telefono">
+                <mat-icon matSuffix>phone</mat-icon>
+            </mat-form-field>
 
-                <p class="paragrafBold">Carnet: </p>
-                <span class="brmedium"> </span>
-                <p class="paragrafInfo">{{ cliente.estudiantes[0].carnet }}</p>
-            </mat-card-content>
-        </mat-card>
+            <mat-form-field *ngIf="student" style="width: 49%; margin-left: 1%;">
+                <mat-label>Carnet</mat-label>
+                <input matInput placeholder="2023067500" readonly [(ngModel)]="cliente.estudiantes[0].carnet"
+                    name="carnet">
+                <mat-icon matSuffix>featured_play_list</mat-icon>
+            </mat-form-field>
+        </div>
 
-        <mat-card class="subMatCards">
-            <mat-card-header>
-                <mat-card-title>Vuelos Reservados</mat-card-title>
-            </mat-card-header>
+        <div *ngIf="isMobile && student">
+            <mat-form-field style="width: 100%;">
+                <mat-label>Teléfono</mat-label>
+                <input matInput type="tel" maxlength="8" placeholder="77737426" required [(ngModel)]="cliente.telefono"
+                    name="telefono">
+                <mat-icon matSuffix>phone</mat-icon>
+            </mat-form-field>
 
-            <mat-card-content>
-            </mat-card-content>
-        </mat-card>
-    </div>
+            <mat-form-field *ngIf="student" style="width: 100%;">
+                <mat-label>Carnet</mat-label>
+                <input matInput type="number" placeholder="2023067500" readonly
+                    [(ngModel)]="cliente.estudiantes[0].carnet" name="carnet">
+                <mat-icon matSuffix>featured_play_list</mat-icon>
+            </mat-form-field>
+        </div>
 
-    <div class="buttonStyle" *ngIf="isEdit">
-        <mat-card class="subMatCards">
-            <mat-card-header>
-                <mat-card-title>Perfil</mat-card-title>
-            </mat-card-header>
+        <div *ngIf="!student">
+            <mat-form-field style="width: 100%;">
+                <mat-label>Teléfono</mat-label>
+                <input matInput type="tel" maxlength="8" placeholder="77737426" required [(ngModel)]="cliente.telefono"
+                    name="telefono">
+                <mat-icon matSuffix>phone</mat-icon>
+            </mat-form-field>
+        </div>
 
-            <mat-card-content>
-                <mat-form-field style="width: 100%;">
-                    <mat-label>Correo</mat-label>
-                    <input matInput placeholder="pedroperico@tecair.com" type="email" readonly
-                        [(ngModel)]="cliente.correo" name="correo">
-                    <mat-icon matSuffix>email</mat-icon>
-                </mat-form-field>
+        <div *ngIf="student">
+            <mat-form-field style="width: 100%;">
+                <mat-label>Universidad</mat-label>
+                <input matInput type="text" placeholder="Tecnológico de Costa Rica" readonly
+                    [(ngModel)]="universidad.nombre" name="ubicacion">
+                <mat-icon matSuffix>school</mat-icon>
+            </mat-form-field>
 
-                <div *ngIf="!isMobile">
-                    <mat-form-field style="width: 32%;">
-                        <mat-label>Nombre</mat-label>
-                        <input matInput placeholder="Pedro" type="text" required [(ngModel)]="cliente.nombre"
-                            name="nombre">
-                        <mat-icon matSuffix>person</mat-icon>
-                    </mat-form-field>
+            <mat-form-field style="width: 100%;">
+                <mat-label>Millas</mat-label>
+                <input matInput type="number" placeholder="12.0" readonly [(ngModel)]="cliente.estudiantes[0].millas"
+                    name="millas">
+                <mat-icon matSuffix>airplanemode_active</mat-icon>
+            </mat-form-field>
+        </div>
 
-                    <mat-form-field style="width: 32%; margin-left: 2%; margin-right: 2%;">
-                        <mat-label>Primer apellido</mat-label>
-                        <input matInput placeholder="Perico" type="text" required [(ngModel)]="cliente.apellido1"
-                            name="apellido1">
-                        <mat-icon matSuffix>person</mat-icon>
-                    </mat-form-field>
-
-                    <mat-form-field style="width: 32%;">
-                        <mat-label>Segundo apellido</mat-label>
-                        <input matInput placeholder="Perico" type="text" [(ngModel)]="cliente.apellido2"
-                            name="apellido2">
-                        <mat-icon matSuffix>person</mat-icon>
-                    </mat-form-field>
-                </div>
-
-                <div *ngIf="isMobile">
-                    <mat-form-field style="width: 100%;">
-                        <mat-label>Nombre</mat-label>
-                        <input matInput placeholder="Pedro" type="text" required [(ngModel)]="cliente.nombre"
-                            name="nombre">
-                        <mat-icon matSuffix>person</mat-icon>
-                    </mat-form-field>
-
-                    <mat-form-field style="width: 100%;">
-                        <mat-label>Primer apellido</mat-label>
-                        <input matInput placeholder="Perico" type="text" required [(ngModel)]="cliente.apellido1"
-                            name="apellido1">
-                        <mat-icon matSuffix>person</mat-icon>
-                    </mat-form-field>
-
-                    <mat-form-field style="width: 100%;">
-                        <mat-label>Segundo apellido</mat-label>
-                        <input matInput placeholder="Perico" type="text" [(ngModel)]="cliente.apellido2"
-                            name="apellido2">
-                        <mat-icon matSuffix>person</mat-icon>
-                    </mat-form-field>
-                </div>
-
-                <div *ngIf="!isMobile" class="column">
-                    <mat-form-field style="width: 49%; margin-right: 1%;">
-                        <mat-label>Teléfono</mat-label>
-                        <input matInput type="tel" maxlength="8" placeholder="77737426" required
-                            [(ngModel)]="cliente.telefono" name="telefono">
-                        <mat-icon matSuffix>phone</mat-icon>
-                    </mat-form-field>
-
-                    <mat-form-field *ngIf="student" style="width: 49%; margin-left: 1%;">
-                        <mat-label>Carnet</mat-label>
-                        <input matInput placeholder="2023067500" readonly [(ngModel)]="cliente.estudiantes[0].carnet"
-                            name="carnet">
-                        <mat-icon matSuffix>featured_play_list</mat-icon>
-                    </mat-form-field>
-                </div>
-
-                <div *ngIf="isMobile" class="column">
-                    <mat-form-field style="width: 100%;">
-                        <mat-label>Teléfono</mat-label>
-                        <input matInput type="tel" maxlength="8" placeholder="77737426" required
-                            [(ngModel)]="cliente.telefono" name="telefono">
-                        <mat-icon matSuffix>phone</mat-icon>
-                    </mat-form-field>
-
-                    <mat-form-field *ngIf="student" style="width: 100%;">
-                        <mat-label>Carnet</mat-label>
-                        <input matInput placeholder="2023067500" readonly [(ngModel)]="cliente.estudiantes[0].carnet"
-                            name="carnet">
-                        <mat-icon matSuffix>featured_play_list</mat-icon>
-                    </mat-form-field>
-                </div>
-
-                <div *ngIf="student">
-                    <mat-form-field style="width: 100%;">
-                        <mat-label>Universidad</mat-label>
-                        <input matInput placeholder="Tecnológico de Costa Rica" readonly [(ngModel)]="universidad.nombre"
-                            name="nombre">
-                        <mat-icon matSuffix>school</mat-icon>
-                    </mat-form-field>
-                </div>
-            </mat-card-content>
-        </mat-card>
-    </div>
+        <div class="d-flex justify-content-end">
+            <button mat-flat-button color="primary" class="custom-back" (click)="close()">Salir</button>
+            <span class="mx-1"></span>
+            <button mat-flat-button color="primary" class="custom-save">Guardar</button>
+        </div>
+    </mat-card-content>
 </div>
