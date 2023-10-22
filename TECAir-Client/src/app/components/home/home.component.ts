@@ -25,11 +25,12 @@ export class HomeComponent {
   isMobile: boolean;
   panelOpenState = false;
   aeropuertos: Aeropuerto[] = [];
-
+/*
   ClientesArray: Profile[] = []; // SQLite
   Clientes = this.database.getClientes(); // SQLite
   newClienteCorreo = ''; // SQLite
   newClienteTelefono = 0; // SQLite
+*/
   isOnline: boolean = false; // SQLite
 
 
@@ -92,7 +93,7 @@ export class HomeComponent {
     }
   }
 
-
+/*
   // Create a Cliente in SQLite database
   async createCliente() {
     await this.database.addCliente(this.newClienteCorreo, this.newClienteTelefono);
@@ -103,23 +104,26 @@ export class HomeComponent {
     this.newClienteCorreo = '';
     this.newClienteTelefono = 0;
   }
-
+*/
+  /*
   // sets the variable correo with the string in the input panel (for SQLite)
   setCorreo(correo: string) {
     this.newClienteCorreo = correo;
   }
+
   // sets the variable telefono with the string in the input panel (for SQLite)
   setTelefono(telefono: string) {
     var NumTelefono = Number(telefono);
     this.newClienteTelefono = NumTelefono;
   }
-
+*/
+/*
   // Gets the clientes from sqlite database and update the showing list in html
   getClientesArray() {
     var clientesTemp = this.database.getClientes();
     this.ClientesArray = clientesTemp();
   }
-
+*/
   // loads the aeropuertos from sqlite
   async getSQLiteAeropuertos() {
     var aeropuertosTemp = await this.database.getAeropuertos();
@@ -135,11 +139,12 @@ export class HomeComponent {
   deviceProtocol() {
 
     if (this.isAndroid() && this.isOnline) {
-      this.addAeros();
+      //this.addAeros();
       this.handleOfflineChanges();
+      this.database.onlineUpdate();
     }
     else if (this.isAndroid() && !this.isOnline) {
-      this.getClientesArray();
+      // this.getClientesArray();
       this.getSQLiteAeropuertos();
       this.offlineAutofill();
     }
@@ -222,6 +227,9 @@ export class HomeComponent {
       console.log('Connected to the internet');
       this.isOnline = true;
       this.onlineInit(); // Loads data from API
+      if (this.isAndroid()) {
+        await this.database.onlineUpdate(); // La actualización online solo funciona si se llama desde aquí wtf
+      }
     }
     else {
       console.log('No internet connection');

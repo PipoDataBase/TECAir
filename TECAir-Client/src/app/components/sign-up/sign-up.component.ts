@@ -18,14 +18,15 @@ import { Universidad } from '../../models/universidad.module';
 import { SharedService } from 'src/app/services/shared.service';
 import { EstudiantesService } from 'src/app/services/estudiantes.service';
 import Swal from 'sweetalert2';
+import { DatabaseService } from 'src/app/services/database.service';
+import { Network } from '@capacitor/network';
+import { Capacitor } from '@capacitor/core';
 
 @Component({
   selector: 'app-sign-up',
   templateUrl: './sign-up.component.html',
   styleUrls: ['./sign-up.component.css'],
-  standalone: true,
-  imports: [MatDialogModule, MatButtonModule, MatSelectModule, MatIconModule, MatInputModule, MatToolbarModule, MatCheckboxModule, FormsModule, NgIf, NgFor],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  standalone: false,
 })
 export class SignUpComponent {
   isMobile: boolean;
@@ -46,14 +47,22 @@ export class SignUpComponent {
     millas: 0,
   }
 
-  constructor(public dialogRef: MatDialogRef<SignUpComponent>, private matDialog: MatDialog, private clientesService: ClientesService, private estudiantesService: EstudiantesService, private universidadesService: UniversidadesService, private sharedService: SharedService) {
+  isOnline: boolean = false; // SQLite
+
+
+  constructor(public dialogRef: MatDialogRef<SignUpComponent>, private matDialog: MatDialog, private clientesService: ClientesService, private estudiantesService: EstudiantesService, private universidadesService: UniversidadesService, private sharedService: SharedService, private database: DatabaseService) {
     this.isMobile = window.innerWidth <= 767;
     window.addEventListener('resize', () => {
       this.isMobile = window.innerWidth <= 767;
     });
   }
 
-  ngOnInit() {
+  async offlineUniversidades(){
+    var universidadesTemp = await this.database.getUniversidades();
+    this.universidades = universidadesTemp();
+  }
+
+  onlineUniversidades(){
     this.universidadesService.getUniversidades().subscribe({
       next: (universidades) => {
         this.universidades = universidades;
@@ -62,6 +71,42 @@ export class SignUpComponent {
         console.log(response);
       }
     })
+  }
+
+  // Chooses the protocol according with the device where is running the program
+  deviceProtocol() {
+
+    if (this.isAndroid() && this.isOnline) {
+      this.onlineUniversidades();
+    }
+    else if (this.isAndroid() && !this.isOnline) {
+      this.offlineUniversidades();
+    }
+  }
+
+  // If isOnline, loads api data
+  async checkNetworkStatus() {
+
+    const status = await Network.getStatus();
+
+    if (status.connected) {
+      console.log('Connected to the internet');
+      this.isOnline = true;
+      this.onlineUniversidades(); // Loads data from API
+    }
+    else {
+      console.log('No internet connection');
+      this.isOnline = false;
+      if (this.isAndroid()) {
+        await this.offlineUniversidades(); // await?
+      }
+    }
+  }
+
+  ngOnInit() {
+    this.deviceProtocol();
+    this.checkNetworkStatus();
+    
   }
 
   // go to login view
@@ -140,22 +185,7 @@ export class SignUpComponent {
     }
 
     // add client to database
-    this.clientesService.postCliente(this.cliente).subscribe({
-      next: (response) => {
-        if (this.student) {
-          this.estudiantesService.postEstudiante(this.estudiante).subscribe({
-            next: (response) => {
-            },
-            error: (response) => {
-              console.log(response);
-            }
-          })
-        }
-      },
-      error: (response) => {
-        console.log(response);
-      }
-    })
+    this.addClient();
 
     this.dialogRef.close();
     const dialogRef = this.matDialog.open(LoginComponent, {
@@ -164,4 +194,46 @@ export class SignUpComponent {
     dialogRef.afterClosed().subscribe(result => {
     });
   }
+
+  // add a client to postgresql if isOnline, or to sqlite if it is android and offline
+  async addClient(){
+
+    if (this.isOnline) {
+
+      this.clientesService.postCliente(this.cliente).subscribe({
+        next: (response) => {
+          if (this.student) {
+            this.estudiantesService.postEstudiante(this.estudiante).subscribe({
+              next: (response) => {
+              },
+              error: (response) => {
+                console.log(response);
+              }
+            })
+          }
+        },
+        error: (response) => {
+          console.log(response);
+        }
+      })
+    } 
+    else if (this.isAndroid() && !this.isOnline) {
+      await this.database.addCliente(this.cliente);
+      await this.database.addOfflineChange('Cliente', this.cliente.correo);
+      if (this.student) {
+        await this.database.addEstudiante(this.estudiante);
+        await this.database.addOfflineChange('Estudiante', this.estudiante.carnet.toString());
+      }
+    }
+  }
+
+
+ // verifies if the application is running on a mobile device
+ isAndroid() {
+  return (Capacitor.getPlatform() === 'android');
+}
+
+
+
+
 }

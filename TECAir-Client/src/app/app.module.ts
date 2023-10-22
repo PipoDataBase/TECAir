@@ -16,6 +16,8 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
+import { NgIf } from '@angular/common';
+import { NgFor } from '@angular/common';
 
 // FormsModule
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -30,6 +32,7 @@ import { HomeComponent } from './components/home/home.component';
 import { PromotionsComponent } from './components/promotions/promotions.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { PDFComponent } from './components/pdf/pdf.component';
+import { SignUpComponent } from './components/sign-up/sign-up.component';
 
 
 @NgModule({
@@ -39,7 +42,8 @@ import { PDFComponent } from './components/pdf/pdf.component';
     HomeComponent,
     ProfileComponent,
     PromotionsComponent,
-    PDFComponent
+    PDFComponent,
+    SignUpComponent
   ],
   imports: [
     BrowserModule,
@@ -55,7 +59,9 @@ import { PDFComponent } from './components/pdf/pdf.component';
     ReactiveFormsModule,
     MatIconModule,
     MatDialogModule,
-    MatButtonModule
+    MatButtonModule,
+    NgFor,
+    NgIf
   ],
   providers: [
     DatePipe

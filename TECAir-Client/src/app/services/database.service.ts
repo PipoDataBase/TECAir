@@ -5,13 +5,17 @@ import { environment } from '../environments/environment.development';
 import { Observable, single } from 'rxjs';
 import { Profile } from '../models/profile.module';
 import { Aeropuerto } from '../models/aeropuerto.module';
-import { Student } from '../models/student.module';
 import { Viaje } from '../models/viaje.module';
 import { Vuelo } from '../models/vuelo.module';
 import { OfflineChange } from '../models/offlineChange.module';
 import { ProfileService } from './profile.service';
 import { Promocion } from '../models/promocion.module';
 import { PromotionsComponent } from '../components/promotions/promotions.component';
+import { Universidad } from '../models/universidad.module';
+import { UniversidadesService } from './universidades.service';
+import { AeropuertosService } from './aeropuertos.service';
+import { Estudiante } from '../models/estudiante.module';
+import { EstudiantesService } from './estudiantes.service';
 
 
 const DB_TECAir = 'TECAirDB';
@@ -26,11 +30,12 @@ export class DatabaseService {
   private db!: SQLiteDBConnection;
   private profile: WritableSignal<Profile[]> = signal<Profile[]>([]);
   private aeropuertos: WritableSignal<Aeropuerto[]> = signal<Aeropuerto[]>([]);
-  private estudiantes: WritableSignal<Student[]> = signal<Student[]>([]);
+  private estudiantes: WritableSignal<Estudiante[]> = signal<Estudiante[]>([]);
   private offlineChanges: WritableSignal<OfflineChange[]> = signal<OfflineChange[]>([]);
   private travels: WritableSignal<Viaje[]> = signal<Viaje[]>([]);
   private flights: WritableSignal<Vuelo[]> = signal<Vuelo[]> ([]);
   private promotions: WritableSignal<Promocion[]> = signal<Promocion[]>([]);
+  private universidades: WritableSignal<Universidad[]> = signal<Universidad[]>([]);
 
   addClientRequest: Profile = {
     correo: '',
@@ -40,7 +45,7 @@ export class DatabaseService {
     apellido2: ''
   };
 
-  constructor(private http: HttpClient, private profileService: ProfileService) {}
+  constructor(private http: HttpClient, private profileService: ProfileService, private universidadesService: UniversidadesService, private aeropuertosService: AeropuertosService, private estudianteService: EstudiantesService) {}
 
   baseApiUrl: string = environment.baseApiUrl;
 
@@ -67,17 +72,18 @@ export class DatabaseService {
                                   nombre TEXT NOT NULL,
                                   ubicacion TEXT NOT NULL);`;
     const schemaEstudiante = `CREATE TABLE IF NOT EXISTS Estudiante (
-                                  carnet TEXT PRIMARY KEY NOT NULL, 
+                                  carnet NUMBER PRIMARY KEY NOT NULL, 
                                   correo TEXT NOT NULL, 
-                                  universidadId NOT NULL, 
+                                  universidadId NUMBER NOT NULL, 
                                   millas NUMBER NOT NULL DEFAULT 0);`;
     const schemaViaje = `CREATE TABLE IF NOT EXISTS Viaje (
-                              id NUMBER PRIMARY KEY NOT NULL, 
-                              fechaSalida TEXT NOT NULL, 
-                              fechaLlegada TEXT NOT NULL, 
-                              origen TEXT NOT NULL, 
-                              destino TEXT NOT NULL, 
-                              precio NUMBER NOT NULL);`;
+                              id NUMBER PRIMARY KEY NOT NULL,
+                              empleadoUsuario TEXT, 
+                              origen TEXT, 
+                              destino TEXT, 
+                              fechaSalida TEXT, 
+                              fechaLlegada TEXT, 
+                              precio NUMBER);`;
     const schemaVuelo = `CREATE TABLE IF NOT EXISTS Vuelo (
                               nVuelo NUMBER PRIMARY KEY NOT NULL, 
                               avionMatricula TEXT NOT NULL, 
@@ -95,6 +101,10 @@ export class DatabaseService {
                               fechaInicio TEXT NOT NULL, 
                               fechaVencimiento TEXT NOT NULL, 
                               imagenPath TEXT NOT NULL);`;
+    const schemaUniversidades = `CREATE TABLE IF NOT EXISTS Universidad (
+                              id NUMBER PRIMARY KEY NOT NULL, 
+                              nombre TEXT NOT NULL,
+                              ubicacion TEXT);`;                              
 
     await this.db.execute(schemaCliente);
     await this.db.execute(schemaAeropuerto);
@@ -103,14 +113,14 @@ export class DatabaseService {
     await this.db.execute(schemaVuelo);
     await this.db.execute(schemaOfflineChange);
     await this.db.execute(schemaPromociones);
+    await this.db.execute(schemaUniversidades);
 
     await this.loadClientsProfile();
     await this.loadAeropuertos();
-    await this.loadEstudiantes();
+    //await this.loadEstudiantes();
     await this.loadOfflineChanges();
-    //this.loadViaje();
-    //this.loadvuelos();
     this.loadPromotions();
+    await this.loadUniversidades();
   }
 
   //CLIENT
@@ -126,16 +136,16 @@ export class DatabaseService {
   }
 
 
-
+  // Search for the client in offline and upload it to onnline
   async getCliente(Correo: string) {
     var result = await this.db.query(`SELECT * FROM Cliente WHERE Correo='${Correo}';`);
     if (result && result.values && result.values.length > 0) {
       var client = result.values[0];
       this.addClientRequest.correo = client.correo;
       this.addClientRequest.telefono = client.telefono;
-      this.addClientRequest.nombre = "client.nombre";
-      this.addClientRequest.apellido1 = "client.apellido1";
-      this.addClientRequest.apellido2 = "client.apellido2";
+      this.addClientRequest.nombre = client.nombre;
+      this.addClientRequest.apellido1 = client.apellido1;
+      this.addClientRequest.apellido2 = client.apellido2;
       this.profileService.addClient(this.addClientRequest).subscribe({
         next: (response) => {
           console.log("Error getCliente database.service: ", this.addClientRequest);
@@ -147,9 +157,23 @@ export class DatabaseService {
     }
   }
 
-  async addCliente(Correo: string, Telefono: number) {
+  async addClientes(profile: { correo: string; telefono: number; nombre: string; apellido1: string; apellido2: string }[]) {
 
-    const query = `INSERT INTO Cliente (Correo, Telefono) VALUES ('${Correo}','${Telefono}')`;
+    const insertPromises = profile.map(cliente =>
+      this.db.query(`
+      INSERT INTO Cliente (Correo, Telefono, Nombre, Apellido1, Apellido2) VALUES ('${cliente.correo}', '${cliente.telefono}', '${cliente.nombre}', '${cliente.apellido1}', '${cliente.apellido2}')
+    `));
+
+    const insertResults = await Promise.all(insertPromises);
+
+    console.log(`posts clientes created successfully!`);
+    this.loadClientsProfile();
+
+  }
+
+  async addCliente(profile: { correo: string; telefono: number; nombre: string; apellido1: string; apellido2: string }) {
+
+    const query = `INSERT INTO Cliente (Correo, Telefono, Nombre, Apellido1, Apellido2) VALUES ('${profile.correo}','${profile.telefono}','${profile.nombre}','${profile.apellido1}','${profile.apellido2}')`;
     const result = await this.db.query(query);
 
     this.loadClientsProfile();
@@ -211,20 +235,6 @@ export class DatabaseService {
 
   }
 
-
-  // ESTUDIANTE
-
-
-  async loadEstudiantes() {
-    const Students = await this.db.query('SELECT * FROM Cliente;');
-    this.estudiantes.set(Students.values || []);
-    return true;
-  }
-
-
-  getEstudiantes() {
-    return this.estudiantes;
-  }
 
   // OfflineChanges
 
@@ -358,6 +368,151 @@ export class DatabaseService {
   getPromotions(){
     return this.promotions
   }
+
+  // UNIVERSIDAD
+
+  async loadUniversidades() {
+    const Universidades = await this.db.query('SELECT * FROM Universidad;');
+    this.universidades.set(Universidades.values || []);
+    return true;
+  }
+
+
+  async getUniversidades() {
+    await this.loadAeropuertos();
+    return this.universidades;
+  }
+
+  async addUniversidades(universidades: { id: number; nombre: string; ubicacion: string }[]) {
+
+    const insertPromises = universidades.map(universidad =>
+      this.db.query(`
+      INSERT INTO Universidad (Id, Nombre, Ubicacion) VALUES ('${universidad.id}', '${universidad.nombre}', '${universidad.ubicacion}')
+    `));
+
+    const insertResults = await Promise.all(insertPromises);
+
+    console.log(`Universidades posts created successfully!`);
+    this.loadUniversidades();
+
+  }
+
+
+
+//   ****************      Estudiante      *******************
+
+// Loads students from slqite
+async loadEstudiantes() {
+  const Estudiantes = await this.db.query('SELECT * FROM Estudiante;');
+  this.estudiantes.set(Estudiantes.values || [])
+  return true
+}
+
+// get all students from local
+getEstudiantes() {
+  return this.estudiantes;
 }
 
 
+// Search for the student in offline database and upload it to onnline database
+async syncEstudent(carnet: number) {
+  var result = await this.db.query(`SELECT * FROM Estudiante WHERE Carnet='${carnet}';`);
+  if (result && result.values && result.values.length > 0) {
+    var estudiante = result.values[0];
+    var newEstudiante: Estudiante = {
+      carnet: 0,
+      correo: '',
+      universidadId: 0,
+      millas: 0
+    };
+    newEstudiante.carnet = estudiante.carnet;
+    newEstudiante.correo = estudiante.correo;
+    newEstudiante.universidadId = estudiante.universidadId;
+    newEstudiante.millas = estudiante.millas;
+    this.estudianteService.postEstudiante(newEstudiante).subscribe({
+      next: (response) => {
+        console.log("Error syncEstudent database.service: ", this.addClientRequest);
+      }
+    });
+    return result;
+  } else {
+    console.log("No record found with the given ID in syncEstudent with carnet :", carnet);
+    return null; // No record found with the given ID
+  }
+}
+
+// add an array of studiantes to slqlite
+async addEstudiantes(estudiantes: { carnet: number; correo: string; universidadId: number; millas: number}[]) {
+
+  const insertPromises = estudiantes.map(estudiante =>
+    this.db.query(`
+    INSERT INTO Estudiante (Carnet, Correo, UniversidadId, Millas) VALUES ('${estudiante.carnet}', '${estudiante.correo}', '${estudiante.universidadId}', '${estudiante.millas}')
+  `));
+
+  const insertResults = await Promise.all(insertPromises);
+
+  console.log(`posts estudiantes created successfully!`);
+  await this.loadEstudiantes();
+
+}
+
+// add a estudiante to SQLite
+async addEstudiante(estudiante: { carnet: number; correo: string; universidadId: number; millas: number }) {
+
+  const query = `INSERT INTO Estudiante (Carnet, Correo, UniversidadId, Millas) VALUES ('${estudiante.carnet}','${estudiante.correo}','${estudiante.universidadId}','${estudiante.millas}')`;
+  const result = await this.db.query(query);
+
+  await this.loadEstudiantes();
+
+  return result;
+
+}
+
+
+
+  // ***** Update ALL the offline database (SQLite) with the data from online database (postgresql)  *****
+  async onlineUpdate(){
+
+    // Update Aeropuertos
+    this.aeropuertosService.getAeropuertos().subscribe({
+      next: (aeropuertos) => {
+        this.addAeropuertos(aeropuertos);
+      },
+      error: (response) => {
+        console.log(response);
+      }
+    });
+
+    // Update Clientes
+    this.profileService.getClients().subscribe({
+      next: (clientes) => {
+        this.addClientes(clientes);
+      },
+      error: (response) => {
+        console.log(response);
+      }
+    });
+
+    // Update Estudiantes
+    this.estudianteService.getEstudiantes().subscribe({
+      next: (estudiantes) => {
+        this.addEstudiantes(estudiantes);
+      },
+      error: (response) => {
+        console.log(response);
+      }
+    });
+
+    // Update universidades
+    this.universidadesService.getUniversidades().subscribe({
+      next: (universidades) => {
+        this.addUniversidades(universidades);
+      },
+      error: (response) => {
+        console.log(response);
+      }
+    });
+  }
+
+
+}

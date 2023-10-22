@@ -15,4 +15,8 @@ export class EstudiantesService {
   postEstudiante(estudiante: Estudiante): Observable<Estudiante> {
     return this.http.post<Estudiante>(this.baseApiUrl + '/api/Estudiantes', estudiante);
   }
+
+  getEstudiantes(): Observable<Estudiante[]> {
+    return this.http.get<Estudiante[]>(this.baseApiUrl + '/api/Estudiantes/');
+  }
 }
