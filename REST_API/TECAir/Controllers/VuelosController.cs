@@ -173,7 +173,22 @@ namespace TECAir.Controllers
                 _context.Vuelos.Add(vuelo);
                 await _context.SaveChangesAsync();
 
-                _context.Database.ExecuteSqlRaw("CALL sp_crear_asiento_vuelo({0}, {1})", vuelo.NVuelo, vuelo.AvionMatricula);
+                for (char letra = 'A'; letra <= 'Z'; letra++)
+                {
+                    for (int numero = 1; numero <= 6; numero++)
+                    {
+                        string asiento_id = letra.ToString() + numero;
+                        Asiento nuevoAsiento = new Asiento
+                        {
+                            Id = asiento_id,
+                            NVuelo = vuelo.NVuelo,
+                            AvionMatricula = vuelo.AvionMatricula,
+                            EstadoId = 1
+                        };
+                        _context.Asientos.Add(nuevoAsiento);
+                    }
+                }
+                await _context.SaveChangesAsync();
 
                 return Ok(vuelo.NVuelo);
             }
