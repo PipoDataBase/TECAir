@@ -34,7 +34,6 @@ export class ViewPromotionsComponent {
       }
     })
 
-
     this.aeropuertosService.getAeropuertos().subscribe({
       next: (aeropuertos) => {
         this.aeropuertos = aeropuertos;
@@ -55,8 +54,12 @@ export class ViewPromotionsComponent {
   }
 
   onCardClick(promotion: any): void {
-    // Falta routing a promocion especifica / book-flight
-    console.log(promotion);
+    this.sharedService.searchedOrigin = promotion.viaje.origen;
+    this.sharedService.searchedDestiny = promotion.viaje.destino;
+    this.sharedService.selectedDate = promotion.viaje.fechaSalida;
+    this.sharedService.selectedSeatsCuantity = 1;
+
+    this.router.navigate(["tecair-admin", this.username, "book-flight"]);
   }
 
   back(): void {

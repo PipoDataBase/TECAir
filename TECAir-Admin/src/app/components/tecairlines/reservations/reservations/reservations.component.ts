@@ -8,6 +8,7 @@ import { Promocion } from 'src/app/models/promocion.module';
 import { AeropuertosService } from 'src/app/services/aeropuertos.service';
 import { PromocionesService } from 'src/app/services/promociones.service';
 import { SharedService } from 'src/app/services/shared.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-reservations',
@@ -124,30 +125,76 @@ export class ReservationsComponent {
   }
 
   searchFlights(): void {
-    console.log(this.airportForm.get('originAirportGroup')?.value);
-    console.log(this.airportForm.get('destinationAirportGroup')?.value);
-    console.log(this.airportForm.get('departureDate')?.value);
-    console.log(this.airportForm.get('passengers')?.value);
-
     const searchedOrigin = this.airportForm.get('originAirportGroup')?.value;
-    const searchedDestiny = this.airportForm.get('destinationAirportGroup')?.value;
-    const selectedDate = this.airportForm.get('departureDate')?.value;
-    const selectedSeatsCuantity = this.airportForm.get('passengers')?.value;
+    if (searchedOrigin == '') {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'No ha seleccionado el origen del vuelo'
+      })
+      return;
+    }
 
-    if (searchedOrigin && searchedDestiny && selectedDate && selectedSeatsCuantity){
+    const searchedDestiny = this.airportForm.get('destinationAirportGroup')?.value;
+    if (searchedDestiny == '') {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'No ha seleccionado el destino del vuelo'
+      })
+      return;
+    }
+
+    const selectedDate = this.airportForm.get('departureDate')?.value;
+    if (selectedDate == '') {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'No ha seleccionado la fecha de salida'
+      })
+      return;
+    }
+
+    const selectedSeatsCuantity = this.airportForm.get('passengers')?.value;
+    if (selectedSeatsCuantity) {
+      if (selectedSeatsCuantity <= 0 || selectedSeatsCuantity >= 10) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Número de pasajeros incorrecto. Seleccione [1 - 9]'
+        })
+        return;
+      }
+    }
+    
+    if (searchedOrigin && searchedDestiny) {
+      if (this.sharedService.getCode(searchedOrigin) == '' || this.sharedService.getCode(searchedDestiny) == '') {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Código IATA incorrecto'
+        })
+        return;
+      }
+    }
+    
+    if (searchedOrigin && searchedDestiny && selectedDate && selectedSeatsCuantity) {
       this.sharedService.searchedOrigin = this.sharedService.getCode(searchedOrigin);
       this.sharedService.searchedDestiny = this.sharedService.getCode(searchedDestiny);
       this.sharedService.selectedDate = selectedDate;
       this.sharedService.selectedSeatsCuantity = selectedSeatsCuantity;
     }
-
     
     this.router.navigate(["tecair-admin", this.username, "book-flight"]);
   }
 
   onCardClick(promotion: any): void {
-    // Falta routing a promocion especifica / book-flight
-    console.log(promotion);
+    this.sharedService.searchedOrigin = promotion.viaje.origen;
+    this.sharedService.searchedDestiny = promotion.viaje.destino;
+    this.sharedService.selectedDate = promotion.viaje.fechaSalida;
+    this.sharedService.selectedSeatsCuantity = 1;
+
+    this.router.navigate(["tecair-admin", this.username, "book-flight"]);
   }
 
   more_promotions() {

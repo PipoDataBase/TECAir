@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { Renderer2 } from '@angular/core';
-import { Data, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { Aeropuerto } from 'src/app/models/aeropuerto.module';
 import { Promocion } from 'src/app/models/promocion.module';
 import { AeropuertosService } from 'src/app/services/aeropuertos.service';
@@ -29,17 +28,38 @@ export class PromotionsComponent {
 
   ngOnInit() {
     this.deviceProtocol();
+
+    this.aeropuertosService.getAeropuertos().subscribe({
+      next: (aeropuertos) => {
+        this.aeropuertos = aeropuertos;
+      },
+      error: (response) => {
+        console.log(response);
+      }
+    })
+
+    this.promocionesService.getPromociones().subscribe({
+      next: (promociones) => {
+        this.promociones = promociones;
+      },
+      error: (response) => {
+        console.log(response);
+      }
+    })
   }
 
   onCardClick(promotion: any): void {
-    // Falta routing a promocion especifica / book-flight
-    console.log(promotion);
+    this.sharedService.searchedOrigin = promotion.viaje.origen;
+    this.sharedService.searchedDestiny = promotion.viaje.destino;
+    this.sharedService.selectedDate = promotion.viaje.fechaSalida;
+    this.sharedService.selectedSeatsCuantity = 1;
+
+    this.router.navigate(["tecair", "book-flight"]);
   }
 
   back(): void {
     this.router.navigate(["tecair", "home"]);
   }
-
 
   // Chooses the protocol according with the device where is running the program
   async deviceProtocol() {
@@ -54,7 +74,7 @@ export class PromotionsComponent {
           console.log(response);
         }
       })
-  
+
       this.promocionesService.getPromociones().subscribe({
         next: (promociones) => {
           this.promociones = promociones;
@@ -71,12 +91,10 @@ export class PromotionsComponent {
       this.promociones = promocionesTemp();
     }
     // There are no specific protocols for web because it only matters if it is connected to internet or not
-
   }
 
   // verifies if the application is running on a mobile device
   isAndroid() {
     return (Capacitor.getPlatform() === 'android');
   }
-
 }
