@@ -333,8 +333,6 @@ export class BookFlightComponent{
     }else{
       this.loadTravelsSQLite;
     }
-
-    
   }
   
   // Linear Mat-Stepper conditions

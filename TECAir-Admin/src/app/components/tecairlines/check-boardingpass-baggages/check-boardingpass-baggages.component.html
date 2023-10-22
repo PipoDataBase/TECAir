@@ -50,10 +50,18 @@
                 <ng-container matColumnDef="checkInButton">
                     <th mat-header-cell *matHeaderCellDef> Realizar Check-In</th>
                     <td mat-cell *matCellDef="let element">
-                        <button mat-fab extended class="check-in-boarding-pass-button" color="primary" (click)="chechInBoardingPass(getFoundBoardingPass().id, getFoundBoardingPass().correoCliente, getFoundBoardingPass().puerta, getFoundBoardingPass().viajeId)"  [disabled]="getFoundBoardingPass().checkIn">
+
+                        <button mat-fab extended class="check-in-boarding-pass-button" color="primary" (click)="chechInBoardingPass(getFoundBoardingPass().id, getFoundBoardingPass().correoCliente, getFoundBoardingPass().puerta, getFoundBoardingPass().viajeId)"  [disabled]="getFoundBoardingPass().checkIn" *ngIf="getFlightCheckInAvailable()">
                             <mat-icon>check</mat-icon>
                             {{ getCheckInButtonLabel() }}
                         </button>
+                        <div  matTooltip="Vuelo cerrado, no es posible realizar el Check-In" *ngIf="!getFlightCheckInAvailable()">
+                          <button mat-fab extended class="check-in-boarding-pass-button" color="primary" (click)="chechInBoardingPass(getFoundBoardingPass().id, getFoundBoardingPass().correoCliente, getFoundBoardingPass().puerta, getFoundBoardingPass().viajeId)"  [disabled]="true">
+                            <mat-icon>check</mat-icon>
+                            {{ getCheckInButtonLabel() }}
+                          </button>
+                        </div>
+                        
                     </td>
                   </ng-container>
               
@@ -102,10 +110,6 @@
             </button>
         </div>
 
-        <mat-label class="expected-price-information">
-            Precio estimado: ${{ getExpectedPriceByBaggages() }}
-        </mat-label>
-
         <div class="boarding-pass-information-table-container">
             <table mat-table [dataSource]="dataSource" class="boardingPassInformationTable">
             
@@ -128,10 +132,26 @@
                   <th mat-header-cell *matHeaderCellDef> Color </th>
                   <td mat-cell *matCellDef="let element"> {{ element.color }} </td>
                 </ng-container>
+
+                <ng-container matColumnDef="deleteBaggageButton">
+                  <th mat-header-cell *matHeaderCellDef> Acciones </th>
+                  <td mat-cell *matCellDef="let element">
+
+                    <button mat-mini-fab class="baggages-delete-button" matTooltip="Eliminar maleta" color="primary" (click)="deleteBaggage(element.nMaleta, element.abordajeId)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                    
+                </td>
+                </ng-container>
               
                 <tr mat-header-row *matHeaderRowDef="displayedBaggagesColumns"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedBaggagesColumns;"></tr>
             </table>
         </div>
+
+        <mat-label class="expected-price-information">
+          Precio estimado: ${{ getExpectedPriceByBaggages() }}
+        </mat-label>
+
     </div>
 </div>

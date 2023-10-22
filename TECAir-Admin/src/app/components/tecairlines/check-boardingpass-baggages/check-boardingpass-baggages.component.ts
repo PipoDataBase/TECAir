@@ -8,6 +8,8 @@ import { Maleta } from 'src/app/models/maleta.module';
 
 import { PaseAbordajeService } from 'src/app/services/pase-abordaje.service';
 import { MaletasService } from 'src/app/services/maletas.service';
+import { VuelosService } from 'src/app/services/vuelos.service';
+import { ViajesVuelosService } from 'src/app/services/viajes-vuelos.service';
 import { MatTableDataSource } from '@angular/material/table';
 
 interface boardingPassData {
@@ -31,6 +33,8 @@ export class CheckBoardingpassBaggagesComponent {
   private foundBoardingPassData: boardingPassData[];
   private foundBaggagesData: Maleta[] = [];
 
+  private flightCheckInAvailable: boolean;
+
   dataSource = new MatTableDataSource(this.foundBaggagesData)
   
   private baggagesAmount: number;
@@ -40,14 +44,16 @@ export class CheckBoardingpassBaggagesComponent {
   private expectedPriceByBaggages: number;
 
   displayedBoardingPassColumns: string[] = ['boardingPassNumber', 'travelNumber', 'clientEmail', 'boardingGate', 'checkedIn', 'checkInButton'];
-  displayedBaggagesColumns: string[] = ['baggageId', 'boardingPassId', 'baggageWeight', 'baggageColor'];
+  displayedBaggagesColumns: string[] = ['baggageId', 'boardingPassId', 'baggageWeight', 'baggageColor', 'deleteBaggageButton'];
 
-  constructor(private _formBuilder: FormBuilder, private paseAbordajeService: PaseAbordajeService, private maletasService: MaletasService){
+  constructor(private _formBuilder: FormBuilder, private paseAbordajeService: PaseAbordajeService, private maletasService: MaletasService, private vuelosService: VuelosService, private viajesVuelosService: ViajesVuelosService){
     this.checkedInHTML = '';
     this.foundBoardingPass = {id: 0, correoCliente: '', puerta: '', checkIn: false, viajeId: 0};
     this.foundBoardingPassData =[];
     this.foundBaggagesData = [];
     this.checkInButtonLabel = 'Check-In';
+
+    this.flightCheckInAvailable = false;
 
     this.expectedPriceByBaggages = 0;
     this.baggagesAmount = 0;
@@ -82,6 +88,13 @@ export class CheckBoardingpassBaggagesComponent {
     this.checkInButtonLabel = value;
   }
 
+  public getFlightCheckInAvailable(): boolean {
+    return this.flightCheckInAvailable;
+  }
+  public setFlightCheckInAvailable(value: boolean) {
+    this.flightCheckInAvailable = value;
+  }
+
   public getExpectedPriceByBaggages(): number {
     return this.expectedPriceByBaggages;
   }
@@ -112,6 +125,8 @@ export class CheckBoardingpassBaggagesComponent {
   });
 
   updateBaggagesData(boardingPassNumber: number){
+    this.foundBaggagesData = [];
+
     this.maletasService.getMaletas().subscribe({
       next: (maletas) => {
         for(let i = 0; i < maletas.length; i++){
@@ -136,12 +151,32 @@ export class CheckBoardingpassBaggagesComponent {
     
     this.paseAbordajeService.getPaseAbordaje(searchedBoardingPassNumber).subscribe({
       next: (boardingPass) => {
+
         this.foundBoardingPass = boardingPass;
 
         if(this.foundBoardingPass.checkIn){
           this.checkedInHTML = 'Si';
           this.checkInButtonLabel = 'Checked-In';
+
+          this.foundBaggagesData = [];
+
           this.updateBaggagesData(searchedBoardingPassNumber)
+
+          this.baggagesAmount = 0;
+          this.maletasService.getMaletas().subscribe({
+            next: (maletas) => {
+              for(let i = 0; i < maletas.length; i++){
+                if(maletas[i].abordajeId == boardingPass.id){
+                  this.baggagesAmount += 1;
+                  this.calculateExpectedPrice(this.baggagesAmount);
+                }
+              }
+            },
+            error: (response) => {
+              console.log(response);
+            }
+          })
+
         } else {
           this.checkedInHTML = 'No';
           this.checkInButtonLabel = 'Check-In';
@@ -152,6 +187,33 @@ export class CheckBoardingpassBaggagesComponent {
           clientEmail: this.foundBoardingPass.correoCliente,
           boardingGate: this.foundBoardingPass.puerta,
           checkedIn: this.checkedInHTML}]
+
+        this.viajesVuelosService.getViajesVuelos().subscribe({
+          next: (viajesVuelos) => {
+
+            viajesVuelos.sort((a, b) => a.escala - b.escala)
+
+            var travelFirstFlightId: number = 0;
+            for(let i = 0; i < viajesVuelos.length; i++){
+              if(viajesVuelos[i].viajeId == boardingPass.viajeId && viajesVuelos[i].escala == 1){
+                travelFirstFlightId = viajesVuelos[i].nVuelo;
+              }
+            }
+
+            this.vuelosService.getVuelo(String(travelFirstFlightId)).subscribe({
+              next: (vuelo) => {
+                console.log("Estado: ", vuelo.estado)
+                this.flightCheckInAvailable = vuelo.estado;
+              },
+              error: (response) => {
+                console.log(response);
+              }
+            })
+          },
+          error: (response) => {
+            console.log(response);
+          }
+        })
       },
       error: (response) => {
         console.log(response);
@@ -180,6 +242,9 @@ export class CheckBoardingpassBaggagesComponent {
         this.checkInButtonLabel = 'Checked-In';
 
         this.updateBaggagesData(boardingPassToCheckId)
+        
+        this.baggagesAmount = 0
+        this.calculateExpectedPrice(this.baggagesAmount);
       },
       error: (response) => {
         console.log(response);
@@ -187,8 +252,8 @@ export class CheckBoardingpassBaggagesComponent {
     })
   }
 
-  calculateExpectedPrice(event: any){
-    this.baggagesAmount = parseInt(event.target.value);
+  calculateExpectedPrice(baggagesCuantity: number){
+    this.baggagesAmount = baggagesCuantity;
     var baggagesAmountTemp: number = this.baggagesAmount;
 
     this.expectedPriceByBaggages = 0;
@@ -205,35 +270,74 @@ export class CheckBoardingpassBaggagesComponent {
   }
 
   registerBaggageAmount(boardingPassId: number, selectedBaggageColor: string){
-    var maletasTmp: Maleta[] = [];
+    if(selectedBaggageColor != "None"){
+      if(Number(this.baggagesRegistrationForm.get('baggageWeightInput')?.value) != 0){
+        var maletasTmp: Maleta[] = [];
 
-    this.maletasService.getMaletas().subscribe({
-      next: (maletas) => {
-        maletasTmp = maletas;
+        this.maletasService.getMaletas().subscribe({
+          next: (maletas) => {
+            maletasTmp = maletas;
 
-        maletasTmp.sort((a, b) => a.nMaleta - b.nMaleta);
+            maletasTmp.sort((a, b) => a.nMaleta - b.nMaleta);
 
-        var newBaggageId: number = 1;
-        if(maletasTmp.length > 0){
-          newBaggageId = (maletasTmp[maletasTmp.length-1].nMaleta)+1
-        }
-        var newBaggageWight = Number(this.baggagesRegistrationForm.get('baggageWeightInput')?.value);
-        var newBaggage: Maleta = {nMaleta: newBaggageId, abordajeId: boardingPassId, peso: newBaggageWight, color: selectedBaggageColor};
-        
-        this.maletasService.postMaleta(newBaggage).subscribe({
-          next: (response) => {
-            Swal.fire({
-              position: 'center',
-              icon: 'success',
-              title: 'Maleta agregada correctamente!',
-              showConfirmButton: false,
-              timer: 1500
+            var newBaggageId: number = 1;
+            if(maletasTmp.length > 0){
+              newBaggageId = (maletasTmp[maletasTmp.length-1].nMaleta)+1
+            }
+            var newBaggageWight = Number(this.baggagesRegistrationForm.get('baggageWeightInput')?.value);
+            var newBaggage: Maleta = {nMaleta: newBaggageId, abordajeId: boardingPassId, peso: newBaggageWight, color: selectedBaggageColor};
+            
+            this.maletasService.postMaleta(newBaggage).subscribe({
+              next: (response) => {
+                Swal.fire({
+                  position: 'center',
+                  icon: 'success',
+                  title: 'Maleta agregada correctamente!',
+                  showConfirmButton: false,
+                  timer: 1500
+                })
+                this.updateBaggagesData(boardingPassId)
+
+                this.calculateExpectedPrice(this.baggagesAmount + 1);
+              },
+              error: (response) => {
+                console.log(response);
+              }
             })
-            this.updateBaggagesData(newBaggageId)
           },
           error: (response) => {
             console.log(response);
           }
+        })
+      }else{
+        Swal.fire({
+          icon: 'error',
+          title: 'Ups...',
+          text: 'Por favor, digite un peso de maleta válido'
+        })
+      }
+    }else{
+      Swal.fire({
+        icon: 'error',
+        title: 'Ups...',
+        text: 'Por favor, seleccione un color de maleta válido'
+      })
+    }
+  }
+
+  deleteBaggage(baggageNumber: number, boardingPassId: number){
+    this.maletasService.deleteMaleta(baggageNumber).subscribe({
+      next: (response) => {
+        this.updateBaggagesData(boardingPassId);
+
+        this.baggagesAmount -= 1;
+        this.calculateExpectedPrice(this.baggagesAmount);
+
+        Swal.fire({
+          icon: 'success',
+          title: 'Maleta eliminada correctamente!',
+          showConfirmButton: false,
+          timer: 1500
         })
       },
       error: (response) => {

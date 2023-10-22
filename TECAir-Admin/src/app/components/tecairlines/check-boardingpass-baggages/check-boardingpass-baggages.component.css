@@ -85,6 +85,12 @@ td, th {
     background-color: #36B552;
 }
 
+.baggages-delete-button {
+    justify-content: center;
+    align-items: center;
+    background-color: #d84237;
+}
+
 .baggages-main-container {
     display: flex;
     flex-direction: column;
@@ -119,7 +125,7 @@ td, th {
 
 .expected-price-information {
     font-size: large;
-    margin-top: 1.25%;
+    margin-top: 5%;
     margin-bottom: 1.25%;
 }
 
