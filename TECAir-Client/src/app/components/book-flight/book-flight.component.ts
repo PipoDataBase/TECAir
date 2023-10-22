@@ -34,6 +34,7 @@ import { ClientesService } from 'src/app/services/clientes.service';
 import { SharedService } from 'src/app/services/shared.service';
 import { DatabaseService } from 'src/app/services/database.service';
 import { Network } from '@capacitor/network';
+//import { PDFComponent } from '../pdf/pdf.component';
 
 @Component({
   selector: 'app-book-flight',
@@ -618,6 +619,17 @@ export class BookFlightComponent{
                       }).then(() => {
                         this.router.navigate(["tecair"]);
                       });
+                      
+
+                      const elementoEncontrado = vuelos.find(vuelo => vuelo.nVuelo === selectedTravelFirstFlight);
+
+                        if (elementoEncontrado) {
+                          this.sharedService.createBookingPDF(this.paseAbordaje, this.passengerName, this.passengerLastName1.toString(), this.passengerLastName2, this.passengerTelephone, this.selectedseatsId, elementoEncontrado.fechaSalida);
+
+                            //console.log(elementoEncontrado);
+                        } 
+
+                      
                     }
                   },
                   error: (response) => {
