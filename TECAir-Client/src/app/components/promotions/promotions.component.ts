@@ -42,7 +42,7 @@ export class PromotionsComponent {
 
 
   // Chooses the protocol according with the device where is running the program
-  deviceProtocol() {
+  async deviceProtocol() {
 
     if (this.isAndroid() && this.isOnline) {
 
@@ -65,7 +65,7 @@ export class PromotionsComponent {
       })
     }
     else if (this.isAndroid() && !this.isOnline) {
-      var aeropuertosTemp = this.databaseService.getAeropuertos();
+      var aeropuertosTemp = await this.databaseService.getAeropuertos();
       this.aeropuertos = aeropuertosTemp();
       var promocionesTemp = this.databaseService.getPromotions();
       this.promociones = promocionesTemp();

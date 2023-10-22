@@ -40,7 +40,7 @@ export class DatabaseService {
     apellido2: ''
   };
 
-  constructor(private http: HttpClient, private profileService: ProfileService) { }
+  constructor(private http: HttpClient, private profileService: ProfileService) {}
 
   baseApiUrl: string = environment.baseApiUrl;
 
@@ -104,14 +104,13 @@ export class DatabaseService {
     await this.db.execute(schemaOfflineChange);
     await this.db.execute(schemaPromociones);
 
-    this.loadClientsProfile();
-    this.loadAeropuertos();
-    this.loadEstudiantes();
-    this.loadOfflineChanges();
+    await this.loadClientsProfile();
+    await this.loadAeropuertos();
+    await this.loadEstudiantes();
+    await this.loadOfflineChanges();
     //this.loadViaje();
     //this.loadvuelos();
     this.loadPromotions();
-
   }
 
   //CLIENT
@@ -193,7 +192,8 @@ export class DatabaseService {
   }
 
 
-  getAeropuertos() {
+  async getAeropuertos() {
+    await this.loadAeropuertos();
     return this.aeropuertos;
   }
 

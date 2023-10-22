@@ -122,8 +122,8 @@ export class HomeComponent {
   }
 
   // loads the aeropuertos from sqlite
-  getSQLiteAeropuertos() {
-    var aeropuertosTemp = this.database.getAeropuertos();
+  async getSQLiteAeropuertos() {
+    var aeropuertosTemp = await this.database.getAeropuertos();
     this.aeropuertos = aeropuertosTemp();
   }
 
@@ -154,11 +154,11 @@ export class HomeComponent {
   }
 
 
-  offlineAutofill() {
+  async offlineAutofill() {
 
-    var aeropuertosTemp = this.database.getAeropuertos();
+    var aeropuertosTemp = await this.database.getAeropuertos();
     this.aeropuertos = aeropuertosTemp();
-    
+
     this.airportOptions1 = this.airportForm.get('originAirportGroup')!.valueChanges.pipe(
       startWith(''),
       map(value => this.sharedService._filterAirports(this.aeropuertos, value || '')),
@@ -227,6 +227,9 @@ export class HomeComponent {
     else {
       console.log('No internet connection');
       this.isOnline = false;
+      if (this.isAndroid()) {
+        this.offlineAutofill(); 
+      }
     }
 
   }
@@ -247,8 +250,8 @@ export class HomeComponent {
   ngOnInit() {
 
     this.initNetworkObserver();
-    this.checkNetworkStatus();
     this.deviceProtocol();
+    this.checkNetworkStatus();
 
   }
 
