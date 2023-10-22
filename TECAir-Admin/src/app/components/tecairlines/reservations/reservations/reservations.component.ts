@@ -132,14 +132,17 @@ export class ReservationsComponent {
     const searchedOrigin = this.airportForm.get('originAirportGroup')?.value;
     const searchedDestiny = this.airportForm.get('destinationAirportGroup')?.value;
     const selectedDate = this.airportForm.get('departureDate')?.value;
+    const selectedSeatsCuantity = this.airportForm.get('passengers')?.value;
 
-    if (searchedOrigin && searchedDestiny && selectedDate){
+    if (searchedOrigin && searchedDestiny && selectedDate && selectedSeatsCuantity){
       this.sharedService.searchedOrigin = this.sharedService.getCode(searchedOrigin);
       this.sharedService.searchedDestiny = this.sharedService.getCode(searchedDestiny);
       this.sharedService.selectedDate = selectedDate;
+      this.sharedService.selectedSeatsCuantity = selectedSeatsCuantity;
     }
 
-    //this.router.navigate(["tecair", "book-flight"]);
+    
+    this.router.navigate(["tecair-admin", this.username, "book-flight"]);
   }
 
   onCardClick(promotion: any): void {

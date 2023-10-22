@@ -1,0 +1,434 @@
+mat-stepper {
+    width: 100%;
+    margin: 1%;
+    pointer-events: none;
+}
+
+mat-icon {
+    width: 55px;
+    color: #BFBFBF;
+}
+
+.plane-seats-grid mat-icon {
+    width: fit-content;
+    height: fit-content;
+    color: #404040;
+    font-size: 100%;
+}
+
+.plane-seats-grid-M mat-icon {
+    width: fit-content;
+    height: fit-content;
+    color: #404040;
+    font-size: 100%;
+}
+
+mat-card {
+    border-radius: 20px;
+    padding: 0%;
+    padding-top: 0%;
+    padding-bottom: 0%;
+    height: fit-content;
+}
+
+mat-card-content {
+    margin: 0%;
+    padding: 0%;
+    padding-top: 0%;
+    padding-bottom: 0%;
+    height: fit-content;
+}
+
+h2 {
+    margin: 0%;
+    text-align: center;
+}
+
+h3 {
+    margin: 0%;
+}
+
+h5 {
+    margin: 0%;
+}
+
+.main-div{
+    display:flex;
+    min-height: 100vh;
+    width: 100hv;
+    background-color: #E6E6E6;
+    justify-content: center;
+}
+
+.stepper-container {
+    display: flex;
+    height: fit-content;
+    width: 100%;
+    background-color: #FFFFFF;
+    justify-content: center;
+    margin-top: 2.5%;
+    margin-bottom: 2.5%;
+    margin-left: 5%;
+    margin-right: 5%;
+    border-radius: 20px;
+}
+
+.no-flights-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100hv;
+    min-width: 100vh;
+    align-items: center;
+    justify-content: center;
+}
+
+.no-flights-icon {
+    font-size: 50px;
+    height: fit-content;
+    width: fit-content;
+    margin: 1%;
+}
+
+.flights-list {
+    display: flex;
+    flex-direction: column;
+    height: fit-content;
+    width: 100%;
+    justify-content: center;
+    gap: 1%;
+    pointer-events: all;
+}
+
+.flight-card {
+    height: fit-content;
+    width: 100%;
+    margin: 1%;
+}
+
+.flight-information {
+    display: flex;
+    flex-direction: row;
+    height: fit-content;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    gap: 5%;
+}
+
+.flight-dep-land-information {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: fit-content;
+    justify-content: center;
+    align-items: center;
+}
+
+.flight-duration-information {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    gap: 25%;
+}
+
+.flight-price-information {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 50%;
+    justify-content: center;
+    align-items: center;
+}
+
+.select-flight-button-container {
+    display: flex;
+    height: fit-content;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.horizontal-line {
+    width: 100%;
+    height: 0.25px;
+    background-color: #BFBFBF;
+}
+
+.horizontal-line-travel-stepovers {
+    width: 95%;
+    height: 0.25px;
+    background-color: #BFBFBF;
+    margin-bottom: 2%;
+    margin-top: 2%;
+}
+
+.horizontal-line-travels {
+    width: 95%;
+    height: 0.25px;
+    background-color: #BFBFBF;
+    margin-bottom: 2%;
+    margin-top: 2%;
+}
+
+.vertical-line {
+    width: 50px;
+    height: 100%;
+    background-color: #BFBFBF;
+}
+
+.diagram-line-icon-line {
+    display: flex;
+    flex-direction: row;
+    height: fit-content;
+    width: 100%;
+    align-items: center;
+    gap: 2.5%;
+}
+
+.custom-material-button {
+    display: inline-block;
+    padding: 2.5%;
+    border: none;
+    border-radius: 20px;
+    background-color: #FFFFFF;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%;
+  }
+
+  .custom-material-button:hover {
+    background-color: #FFFFFF;
+  }
+  
+  .custom-material-button:active {
+    background-color: #FFFFFF;
+  }
+
+
+
+
+.personal-information-main-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    padding: 2.5%;
+    align-items: center;
+    justify-content: center;
+    pointer-events: all;
+}
+
+.personal-information-payment-inputs-container{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    gap: 5%;
+    align-items: center;
+    justify-content: center;
+    margin-right: 2.5%;
+    pointer-events: all;
+}
+
+.personal-information-payment-label {
+    width: 90%;
+    margin-top: 1%;
+    margin-bottom: 1%;
+}
+
+.personal-information-payment-form-field {
+    width: 90%;
+}
+
+.personal-information-form-field-container {
+    display: flex;
+    flex-direction: row;
+    height: fit-content;
+    width: 100%;
+    margin-right: 2.5%;
+    align-items: center;
+    justify-content: center;
+    gap: 5%;
+    pointer-events: all;
+}
+
+.seats-selection-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: fit-content;
+    align-items: center;
+    justify-content: center;
+    margin-top: 5%;
+    margin-bottom: 5%;
+    pointer-events: all;
+}
+
+.seats-selection {
+    display: flex;
+    width: 100%;
+    height: fit-content;
+    align-items: center;
+    justify-content: center;
+    pointer-events: all;
+    margin-top: 5%;
+}
+
+.aircraft-image{
+    width: 100%;
+}
+
+.plane-seats-grid {
+    width: 25%;
+    min-width: 25%;
+    height: fit-content;
+    display: grid;
+    position: absolute;
+    grid-template-columns: repeat(6, 1fr);
+    grid-gap: 1vw;
+}
+
+.seat-button-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 50%;
+}
+
+.seat-button-container button {
+    width: 3vw;
+    height: 3vw;
+    align-items: center;
+    justify-content: center;
+    padding: 0%;
+}
+
+.seat-button-container button mat-icon {
+    font-size: 1.6vw;
+    margin: 0%;
+}
+
+.seat-button-container button h6 {
+    font-size: 0.6vw;
+    margin-top: -10px;
+    margin-bottom: 0%;
+}
+
+.seats-selection-container-M {
+    display: flex;
+    width: 100%;
+    height: fit-content;
+    align-items: flex-start;
+    justify-content: center;
+    pointer-events: all;
+    margin-top: 5%;
+    margin-bottom: 5%;
+}
+
+.plane-seats-grid-M {
+    width: 40%;
+    height: 100%;
+    min-width: 40%;
+    display: grid;
+    position: absolute;
+    grid-template-columns: repeat(6, 1fr);
+    grid-gap: 0.5vw;
+    align-items: center;
+    justify-content: center;
+}
+
+.seat-button-container-M {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10%;
+}
+
+.seat-button-container-M button {
+    width: 6vw;
+    height: 6vw;
+    align-items: center;
+    justify-content: center;
+    padding: 0%;
+}
+
+.seat-button-container-M button mat-icon {
+    font-size: 3vw;
+    margin: 0%;
+}
+
+.seat-button-container-M button h6 {
+    font-size: 1.5vw;
+    margin-top: -10px;
+    margin-bottom: 0%;
+}
+
+.selected-seats-id-label-contanier {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    gap: 1%;
+}
+
+.left-seast-lablel-M {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+}
+
+.stepovers-container {
+    display: flex;
+    flex-direction: column;
+    height: fit-content;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+.stepovers-container button mat-icon {
+    width: fit-content
+}
+
+.stepovers-list {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    height: fit-content;
+    align-items: center;
+    justify-content: center;
+}
+
+.stepover {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: fit-content;
+    align-items: center;
+    justify-content: center;
+}
+
+mat-expansion-panel-header {
+    height: max-content;
+}
+
+.selected-seat{
+    color: #3F51B4 !important;
+}
+
+.busy-seat{
+    color: #808080 !important;
+}
+
+.custom-div1 {
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+}

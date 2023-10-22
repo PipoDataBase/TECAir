@@ -1,1 +1,420 @@
-<p>book-flight works!</p>
+<div class="main-div">
+    <div class="stepper-container">
+        <mat-stepper linear #stepper *ngIf="!getisMobile()">
+            <mat-step>
+              <form>
+                <ng-template matStepLabel>Seleccion de vuelo</ng-template>
+
+                <! Contenido que se muestra si no hay vuelos disponibles >
+                <div class="no-flights-container" *ngIf="getViajes().length === 0">
+                    <mat-icon class="no-flights-icon">sentiment_very_dissatisfied</mat-icon>
+                    <h3>¡Ups! Lo sentimos, no encontramos ningún vuelo para la fecha o ruta que seleccionaste</h3>
+                </div>
+                
+                <div class="flights-list">
+                    <mat-card class="flight-card" *ngFor="let travel of getViajes(); let i = index">
+                        <mat-card-content>
+
+                          <button class="custom-material-button" matStepperNext (click)="selectFlight(travel.id)">
+                            <div class="flight-information">
+                                <div class="flight-dep-land-information">
+                                    <h2> {{ travel.origen }} </h2>
+                                    <h3> {{ travel.fechaSalida }} </h3>
+                                </div>
+                                <div class="flight-duration-information">
+                                    <h5> {{ travel.id }} </h5>
+                                    <div class="diagram-line-icon-line">
+                                        <div class="horizontal-line"></div>
+                                        <mat-icon>flight_takeoff</mat-icon>
+                                        <div class="horizontal-line"></div>
+                                    </div>
+                                </div>
+                                <div class="flight-dep-land-information">
+                                    <h2> {{ travel.destino }} </h2>
+                                    <h3> {{ travel.fechaLlegada }} </h3>
+                                </div>
+                                <div class="vertical-line"></div>
+                                <div class="flight-price-information">
+                                    <h2> {{ travel.precio }} </h2>
+                                </div>
+                            </div>
+                          </button>
+                          
+                          <div class="stepovers-container">
+
+                            <div class="horizontal-line-travel-stepovers" *ngIf="getShowStepovers()[i]"></div>
+
+                            <h2 *ngIf="getShowStepovers()[i]">Escalas del vuelo</h2>
+
+                            <div class="stepovers-list" *ngFor="let travelFlight of getViajes_vuelos()">
+                              <div class="stepovers-list" *ngFor="let flight of getVuelos(); let j = index">
+                                <div class="stepover" *ngIf="travelFlight.viajeId == travel.id && travelFlight.nVuelo == flight.nVuelo && getShowStepovers()[i]">
+                                  <div class="flight-dep-land-information">
+                                    <div *ngFor="let flight_airport of getVuelos_aeropuertos(); let k = index">
+                                      <h2 *ngIf="flight.nVuelo == flight_airport.vueloNumero && flight_airport.tipo === 'Origen'"> {{ flight_airport.aeropuertoId }} </h2>
+                                    </div>
+                                    <h3> {{ flight.fechaSalida }} </h3>
+                                  </div>
+                                  <div class="flight-duration-information">
+                                      <h5> {{ flight.nVuelo }} </h5>
+                                      <div class="diagram-line-icon-line">
+                                          <div class="horizontal-line"></div>
+                                          <mat-icon>flight_takeoff</mat-icon>
+                                          <div class="horizontal-line"></div>
+                                      </div>
+                                      <h6> {{ flight.avionMatricula }} </h6>
+                                  </div>
+                                  <div class="flight-dep-land-information">
+                                    <div *ngFor="let flight_airport of getVuelos_aeropuertos(); let k = index">
+                                      <h2 *ngIf="flight.nVuelo == flight_airport.vueloNumero && flight_airport.tipo === 'Destino'"> {{ flight_airport.aeropuertoId }} </h2>
+                                    </div>
+                                      <h3> {{ flight.fechaLlegada }} </h3>
+                                  </div>
+                                  <div class="vertical-line"></div>
+                                  <div class="flight-price-information">
+                                      <h2> {{ flight.precio }} </h2>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                            <button mat-icon-button matTooltip="Mostrar escalas" *ngIf="!getShowStepovers()[i]" (click)="showHideStepOvers(i)">
+                              <mat-icon>keyboard_arrow_down</mat-icon>
+                            </button>
+                            <button mat-icon-button matTooltip="Ocultar escalas" *ngIf="getShowStepovers()[i]" (click)="showHideStepOvers(i)">
+                              <mat-icon>keyboard_arrow_up</mat-icon>
+                            </button>
+
+                          </div>
+
+                        </mat-card-content>
+                    </mat-card>
+
+                </div>
+              </form>
+            </mat-step>
+
+            <mat-step [stepControl]="travelInformationStepD">
+              <form [formGroup]="travelInformationStepD">
+                <ng-template matStepLabel>Información personal</ng-template>
+                <div class="personal-information-main-container">
+                  <div class="personal-information-payment-inputs-container">
+
+                    <div class="personal-information-form-field-container">
+                      <mat-form-field class="personal-information-payment-form-field">
+                        <mat-label>Nombre</mat-label>
+                        <input matInput placeholder="Pedro" formControlName="passengerNameInputD" required>
+                      </mat-form-field>
+  
+                      <mat-form-field class="personal-information-payment-form-field">
+                        <mat-label>Primer apellido</mat-label>
+                        <input matInput placeholder="Perico" formControlName="passengerLastName1InputD" required>
+                      </mat-form-field>
+  
+                      <mat-form-field class="personal-information-payment-form-field">
+                        <mat-label>Segundo apellido</mat-label>
+                        <input matInput placeholder="Perico" formControlName="passengerLastName2InputD">
+                      </mat-form-field>
+                    </div>
+
+                    <div class="personal-information-form-field-container">
+                      <mat-form-field class="personal-information-payment-form-field">
+                        <mat-label>Correo</mat-label>
+                        <input matInput type="email" placeholder="pedroperico@tecair.com" formControlName="passengerEmailInputD" required>
+                      </mat-form-field>
+  
+                      <mat-form-field class="personal-information-payment-form-field">
+                        <mat-label>Telefono</mat-label>
+                        <span matPrefix> (+506) &nbsp;</span>
+                        <input matInput type="tel" maxlength="8" placeholder="77737426" formControlName="passengerTelephoneInputD" required>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+              </form>
+
+              <div class="seats-selection-container">
+                <div class="selected-seats-id-label-contanier">
+                  <h2>Asientos seleccionados:</h2>
+                  <h2 *ngFor="let selectedseatId of getselectedseatsId()"> {{ selectedseatId }} </h2>
+                </div>
+                <h2>Asientos restantes: {{getleftTickets()}} </h2>
+                <div class="seats-selection">
+                  <img class="aircraft-image" src="../../../assets/aircraftShadow.png">
+                  <div class="plane-seats-grid">
+                    <div class="seat-button-container" *ngFor="let seat of getAsientos(); let i = index">
+
+                      <button mat-icon-button (click)="selectSeat(seat.id)" *ngIf="seat.estadoId == 1">
+                        <mat-icon>event_seat</mat-icon>
+                        <h6> {{seat.id}} </h6>
+                      </button>
+
+                      <button mat-icon-button  class="selected-seat" (click)="selectSeat(seat.id)" *ngIf="seat.estadoId != 1 && seat.estadoId != 2">
+                        <mat-icon class="selected-seat">event_seat</mat-icon>
+                        <h6> {{seat.id}} </h6>
+                      </button>
+
+                      <button mat-icon-button class="busy-seat" (click)="selectSeat(seat.id)" *ngIf="seat.estadoId == 2" disabled>
+                        <mat-icon class="busy-seat">event_seat</mat-icon>
+                        <h6> {{seat.id}} </h6>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="personal-information-form-field-container">
+                <button mat-flat-button color="primary" matStepperPrevious>Regresar</button>
+                <button mat-flat-button color="primary" matStepperNext (click)="updatePersonalInformationD()" *ngIf="getleftTickets() != 0" disabled>Siguiente</button>
+                <button mat-flat-button color="primary" matStepperNext (click)="updatePersonalInformationD()" *ngIf="getleftTickets() == 0">Siguiente</button>
+              </div>
+              
+            </mat-step>
+
+            <mat-step [stepControl]="paymentInformationStepD">
+              <ng-template matStepLabel>Facturación</ng-template>
+              <form [formGroup]="paymentInformationStepD">
+                <div class="personal-information-main-container">
+                  <div class="personal-information-payment-inputs-container">
+                  
+                    <div class="personal-information-form-field-container">
+                      <mat-form-field class="personal-information-payment-form-field">
+                        <mat-label>Numero de tarjeta</mat-label>
+                        <input matInput type="tel" minlength="16" maxlength="16" placeholder="1111222233334444" formControlName="passengerCreditCardNumberInputD" required>
+                      </mat-form-field>
+                    </div>
+  
+                    <div class="personal-information-form-field-container">
+                      <mat-form-field class="personal-information-payment-form-field">
+                        <mat-label>Fecha de vencimiento</mat-label>
+                        <input matInput placeholder="MM/AAAA" formControlName="passengerCardExpirationdateInputD" required>
+                      </mat-form-field>
+
+                      <mat-form-field class="personal-information-payment-form-field">
+                        <mat-label>CVV</mat-label>
+                        <input matInput type="tel" minlength="3" maxlength="3" placeholder="123" formControlName="passengerCardCVVInputD" required>
+                      </mat-form-field>
+                    </div>
+
+                    <div class="personal-information-form-field-container">
+                      <button mat-flat-button color="primary" matStepperPrevious>Regresar</button>
+                      <button mat-flat-button color="primary" (click)="reserveFlight()">Reservar</button>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </mat-step>
+        </mat-stepper>
+
+
+
+
+        <mat-stepper linear #stepper *ngIf="getisMobile()">
+          <mat-step>
+            <form>
+              <ng-template matStepLabel>
+                <mat-icon>flight_takeoff</mat-icon>
+              </ng-template>
+
+              <! Contenido que se muestra si no hay vuelos disponibles >
+              <div class="no-flights-container" *ngIf="getViajes().length === 0">
+                  <mat-icon class="no-flights-icon">sentiment_very_dissatisfied</mat-icon>
+                  <h3>¡Ups! Lo sentimos, no encontramos ningún vuelo para la fecha o ruta que seleccionaste</h3>
+              </div>
+              
+              <div class="flights-list">
+                  <mat-card class="flight-card" *ngFor="let travel of getViajes(); let i = index">
+                      <mat-card-content>
+                        <button class="custom-material-button" matStepperNext (click)="selectFlight(travel.id)">
+                          <div class="flight-information">
+                              <div class="flight-dep-land-information">
+                                  <h2> {{ travel.origen }} </h2>
+                                  <h5> {{ travel.fechaSalida }} </h5>
+                              </div>
+                              <div class="flight-duration-information">
+                                  <h5> {{ travel.id }} </h5>
+                                  <div class="diagram-line-icon-line">
+                                      <div class="horizontal-line"></div>
+                                      <mat-icon>flight_takeoff</mat-icon>
+                                      <div class="horizontal-line"></div>
+                                  </div>
+                              </div>
+                              <div class="flight-dep-land-information">
+                                  <h2> {{ travel.destino }} </h2>
+                                  <h5> {{ travel.fechaLlegada }} </h5>
+                              </div>
+                              <div class="vertical-line"></div>
+                              <div class="flight-price-information">
+                                  <h2> {{ travel.precio }} </h2>
+                              </div>
+                          </div>
+                        </button>
+
+                        <div class="stepovers-container">
+
+                          <div class="horizontal-line-travel-stepovers" *ngIf="getShowStepovers()[i]"></div>
+
+                          <h2 *ngIf="getShowStepovers()[i]">Escalas del vuelo</h2>
+
+                          <div class="stepovers-list" *ngFor="let travelFlight of getViajes_vuelos()">
+                            <div class="stepovers-list" *ngFor="let flight of getVuelos(); let j = index">
+                              <div class="stepover" *ngIf="travelFlight.viajeId == travel.id && travelFlight.nVuelo == flight.nVuelo && getShowStepovers()[i]">
+                                <div class="flight-dep-land-information">
+                                  <div *ngFor="let flight_airport of getVuelos_aeropuertos(); let k = index">
+                                    <h2 *ngIf="flight.nVuelo == flight_airport.vueloNumero && flight_airport.tipo === 'Origen'"> {{ flight_airport.aeropuertoId }} </h2>
+                                  </div>
+                                  <h5> {{ flight.fechaSalida }} </h5>
+                                </div>
+                                <div class="flight-duration-information">
+                                    <h5> {{ flight.nVuelo }} </h5>
+                                    <div class="diagram-line-icon-line">
+                                        <div class="horizontal-line"></div>
+                                        <mat-icon>flight_takeoff</mat-icon>
+                                        <div class="horizontal-line"></div>
+                                    </div>
+                                    <h6> {{ flight.avionMatricula }} </h6>
+                                </div>
+                                <div class="flight-dep-land-information">
+                                  <div *ngFor="let flight_airport of getVuelos_aeropuertos(); let k = index">
+                                    <h2 *ngIf="flight.nVuelo == flight_airport.vueloNumero && flight_airport.tipo === 'Destino'"> {{ flight_airport.aeropuertoId }} </h2>
+                                  </div>
+                                    <h5> {{ flight.fechaLlegada }} </h5>
+                                </div>
+                                <div class="vertical-line"></div>
+                                <div class="flight-price-information">
+                                    <h2> {{ flight.precio }} </h2>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <button mat-icon-button matTooltip="Mostrar escalas" *ngIf="!getShowStepovers()[i]" (click)="showHideStepOvers(i)">
+                            <mat-icon>keyboard_arrow_down</mat-icon>
+                          </button>
+                          <button mat-icon-button matTooltip="Ocultar escalas" *ngIf="getShowStepovers()[i]" (click)="showHideStepOvers(i)">
+                            <mat-icon>keyboard_arrow_up</mat-icon>
+                          </button>
+
+                        </div>
+
+                      </mat-card-content>
+                  </mat-card>
+              </div>
+            </form>
+          </mat-step>
+
+          <mat-step [stepControl]="travelInformationStepM">
+            <form [formGroup]="travelInformationStepM">
+              <ng-template matStepLabel>
+                <mat-icon>person</mat-icon>
+              </ng-template>
+              <div class="personal-information-main-container">
+                <div class="personal-information-payment-inputs-container">
+
+                  <mat-form-field class="personal-information-payment-form-field">
+                    <mat-label>Nombre</mat-label>
+                    <input matInput placeholder="Pedro" formControlName="passengerNameInputM" required>
+                  </mat-form-field>
+
+                  <mat-form-field class="personal-information-payment-form-field">
+                    <mat-label>Primer apellido</mat-label>
+                    <input matInput placeholder="Perico" formControlName="passengerLastName1InputM" required>
+                  </mat-form-field>
+
+                  <mat-form-field class="personal-information-payment-form-field">
+                    <mat-label>Segundo apellido</mat-label>
+                    <input matInput placeholder="Perico" formControlName="passengerLastName2InputM">
+                  </mat-form-field>
+
+                  <mat-form-field class="personal-information-payment-form-field">
+                    <mat-label>Correo</mat-label>
+                    <input matInput type="email" placeholder="pedroperico@tecair.com" formControlName="passengerEmailInputM" required>
+                  </mat-form-field>
+
+                  <mat-form-field class="personal-information-payment-form-field">
+                    <mat-label>Teléfono</mat-label>
+                    <span matPrefix> (+506) &nbsp;</span>
+                    <input matInput type="tel" maxlength="8" placeholder="77737426" formControlName="passengerTelephoneInputM" required>
+                  </mat-form-field>
+                </div>
+              </div>
+            </form>
+
+            <div class="selected-seats-id-label-contanier">
+              <h4>Asientos seleccionados:</h4>
+              <h4 *ngFor="let selectedseatId of getselectedseatsId()"> {{ selectedseatId }} </h4>
+            </div>
+
+            <div class="selected-seats-id-label-contanier">
+              <h4 class="left-seast-lablel-M">Asientos restantes: {{getleftTickets()}} </h4>
+            </div>
+
+            <div class="seats-selection-container">
+              <div class="seats-selection">
+                <img class="aircraft-image" src="../../../assets/aircraftShadow.png">
+                <div class="plane-seats-grid">
+                  <div class="seat-button-container" *ngFor="let seat of getAsientos(); let i = index">
+
+                    <button mat-icon-button (click)="selectSeat(seat.id)" *ngIf="seat.estadoId == 1">
+                      <mat-icon>event_seat</mat-icon>
+                      <h6> {{seat.id}} </h6>
+                    </button>
+
+                    <button mat-icon-button  class="selected-seat" (click)="selectSeat(seat.id)" *ngIf="seat.estadoId != 1 && seat.estadoId != 2">
+                      <mat-icon class="selected-seat">event_seat</mat-icon>
+                      <h6> {{seat.id}} </h6>
+                    </button>
+
+                    <button mat-icon-button class="busy-seat" (click)="selectSeat(seat.id)" *ngIf="seat.estadoId == 2" disabled>
+                      <mat-icon class="busy-seat">event_seat</mat-icon>
+                      <h6> {{seat.id}} </h6>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="personal-information-form-field-container">
+              <button mat-flat-button color="primary" matStepperPrevious>Regresar</button>
+              <button mat-flat-button color="primary" matStepperNext (click)="updatePersonalInformationD()" *ngIf="getleftTickets() != 0" disabled>Siguiente</button>
+                <button mat-flat-button color="primary" matStepperNext (click)="updatePersonalInformationD()" *ngIf="getleftTickets() == 0">Siguiente</button>
+            </div>
+
+          </mat-step>
+
+          <mat-step [stepControl]="paymentInformationStepM">
+            <ng-template matStepLabel>
+              <mat-icon>payment</mat-icon>
+            </ng-template>
+            <form [formGroup]="paymentInformationStepM">
+              <div class="personal-information-main-container">
+                <div class="personal-information-payment-inputs-container">
+               
+                  <mat-form-field class="personal-information-payment-form-field">
+                    <mat-label>Numero de tarjeta</mat-label>
+                    <input matInput type="tel" minlength="16" maxlength="16" placeholder="1111222233334444" formControlName="passengerCreditCardNumberInputM" required>
+                  </mat-form-field>
+
+                  <mat-form-field class="personal-information-payment-form-field">
+                    <mat-label>Fecha de vencimiento</mat-label>
+                    <input matInput placeholder="MM/AAAA" formControlName="passengerCardExpirationdateInputM" required>
+                  </mat-form-field>
+
+                  <mat-form-field class="personal-information-payment-form-field">
+                    <mat-label>CVV</mat-label>
+                    <input matInput type="tel" minlength="3" maxlength="3" placeholder="123" formControlName="passengerCardCVVInputM" required>
+                  </mat-form-field>
+
+                  <div class="personal-information-form-field-container">
+                    <button mat-flat-button color="primary" matStepperPrevious>Regresar</button>
+                    <button mat-flat-button color="primary" (click)="reserveFlight()">Reservar</button>
+                  </div>
+          
+                </div>
+              </div>
+            </form>
+          </mat-step>
+      </mat-stepper>
+    </div>
+</div>
+

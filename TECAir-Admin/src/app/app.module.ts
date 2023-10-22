@@ -59,7 +59,6 @@ import { environment } from './environments/environment.development';
     AddPromotionsComponent,
     EditPromotionsComponent,
     ReservationsComponent,
-    BookFlightComponent,
     ViewPromotionsComponent,
     ProfileComponent,
     CheckBoardingpassBaggagesComponent
