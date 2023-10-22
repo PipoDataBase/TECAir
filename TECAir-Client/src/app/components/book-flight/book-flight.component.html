@@ -22,13 +22,12 @@
                                     <h3> {{ travel.fechaSalida }} </h3>
                                 </div>
                                 <div class="flight-duration-information">
-                                    <h3> Duracion </h3>
+                                    <h5> {{ travel.id }} </h5>
                                     <div class="diagram-line-icon-line">
                                         <div class="horizontal-line"></div>
                                         <mat-icon>flight_takeoff</mat-icon>
                                         <div class="horizontal-line"></div>
                                     </div>
-                                    <h6> {{ travel.id }} </h6>
                                 </div>
                                 <div class="flight-dep-land-information">
                                     <h2> {{ travel.destino }} </h2>
@@ -57,13 +56,13 @@
                                     <h3> {{ flight.fechaSalida }} </h3>
                                   </div>
                                   <div class="flight-duration-information">
-                                      <h3> Duracion </h3>
+                                      <h5> {{ flight.nVuelo }} </h5>
                                       <div class="diagram-line-icon-line">
                                           <div class="horizontal-line"></div>
                                           <mat-icon>flight_takeoff</mat-icon>
                                           <div class="horizontal-line"></div>
                                       </div>
-                                      <h6> {{ flight.nVuelo }} </h6>
+                                      <h6> {{ flight.avionMatricula }} </h6>
                                   </div>
                                   <div class="flight-dep-land-information">
                                     <div *ngFor="let flight_airport of getVuelos_aeropuertos(); let k = index">
@@ -188,10 +187,7 @@
                     <div class="personal-information-form-field-container">
                       <mat-form-field class="personal-information-payment-form-field">
                         <mat-label>Fecha de vencimiento</mat-label>
-                        <input matInput placeholder="01/01/2024" [matDatepicker]="picker" formControlName="passengerCardExpirationdateInputD" required>
-                        <mat-hint>MM/DD/YYYY</mat-hint>
-                        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-                        <mat-datepicker #picker></mat-datepicker>
+                        <input matInput placeholder="MM/AAAA" formControlName="passengerCardExpirationdateInputD" required>
                       </mat-form-field>
 
                       <mat-form-field class="personal-information-payment-form-field">
@@ -236,13 +232,12 @@
                                   <h5> {{ travel.fechaSalida }} </h5>
                               </div>
                               <div class="flight-duration-information">
-                                  <h3> Duration </h3>
+                                  <h5> {{ travel.id }} </h5>
                                   <div class="diagram-line-icon-line">
                                       <div class="horizontal-line"></div>
                                       <mat-icon>flight_takeoff</mat-icon>
                                       <div class="horizontal-line"></div>
                                   </div>
-                                  <h6> {{ travel.id }} </h6>
                               </div>
                               <div class="flight-dep-land-information">
                                   <h2> {{ travel.destino }} </h2>
@@ -271,13 +266,13 @@
                                   <h5> {{ flight.fechaSalida }} </h5>
                                 </div>
                                 <div class="flight-duration-information">
-                                    <h3> Duracion </h3>
+                                    <h5> {{ flight.nVuelo }} </h5>
                                     <div class="diagram-line-icon-line">
                                         <div class="horizontal-line"></div>
                                         <mat-icon>flight_takeoff</mat-icon>
                                         <div class="horizontal-line"></div>
                                     </div>
-                                    <h6> {{ flight.nVuelo }} </h6>
+                                    <h6> {{ flight.avionMatricula }} </h6>
                                 </div>
                                 <div class="flight-dep-land-information">
                                   <div *ngFor="let flight_airport of getVuelos_aeropuertos(); let k = index">
@@ -402,10 +397,7 @@
 
                   <mat-form-field class="personal-information-payment-form-field">
                     <mat-label>Fecha de vencimiento</mat-label>
-                    <input matInput placeholder="01/01/2024" [matDatepicker]="picker" formControlName="passengerCardExpirationdateInputM" required>
-                    <mat-hint>MM/DD/YYYY</mat-hint>
-                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-                    <mat-datepicker #picker></mat-datepicker>
+                    <input matInput placeholder="MM/AAAA" formControlName="passengerCardExpirationdateInputM" required>
                   </mat-form-field>
 
                   <mat-form-field class="personal-information-payment-form-field">

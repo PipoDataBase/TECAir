@@ -21,6 +21,7 @@ import { ViajeVuelo } from 'src/app/models/viaje-vuelo.module'
 import { VueloAeropuerto } from 'src/app/models/vuelo-aeropuerto.module';
 import { Asiento } from 'src/app/models/asiento.module';
 import { PaseAbordaje } from 'src/app/models/pase-abordaje.module';
+import { Cliente } from 'src/app/models/cliente.module';
 
 import { ViajesService } from 'src/app/services/viajes.service';
 import { VuelosService } from 'src/app/services/vuelos.service';
@@ -28,6 +29,7 @@ import { ViajesVuelosService } from 'src/app/services/viajes-vuelos.service';
 import { VuelosAeropuertosService } from 'src/app/services/vuelos-aeropuertos.service';
 import { AsientosService } from 'src/app/services/asientos.service';
 import { PaseAbordajeService } from 'src/app/services/pase-abordaje.service';
+import { ClientesService } from 'src/app/services/clientes.service';
 
 import { SharedService } from 'src/app/services/shared.service';
 import { DatabaseService } from 'src/app/services/database.service';
@@ -195,7 +197,7 @@ export class BookFlightComponent{
   }
  
   // Component constructor
-  constructor(private _formBuilder: FormBuilder, private router: Router, private vuelosService: VuelosService, private viajesService: ViajesService, private viajesVuelosService: ViajesVuelosService, private vuelosAeropuertosService: VuelosAeropuertosService, private asientosService: AsientosService, private paseAbordajeService: PaseAbordajeService, private sharedService: SharedService, private databaseService: DatabaseService) {
+  constructor(private _formBuilder: FormBuilder, private router: Router, private vuelosService: VuelosService, private viajesService: ViajesService, private viajesVuelosService: ViajesVuelosService, private vuelosAeropuertosService: VuelosAeropuertosService, private asientosService: AsientosService, private paseAbordajeService: PaseAbordajeService, private clientesService: ClientesService, private sharedService: SharedService, private databaseService: DatabaseService) {
     this.selectedTravelId = 0;
     this.ticketsCuantity = this.sharedService.selectedSeatsCuantity;
     this.passengerName = '';
@@ -317,13 +319,17 @@ export class BookFlightComponent{
   }
 
   async ngOnInit(): Promise<void> {
-
-
     const status = await Network.getStatus();
+
+    this.viajes = [];
+    this.vuelos = [];
+    this.viajes_vuelos = [];
+    this.vuelos_aeropuertos = [];
+
     if(status.connected){
-    this.loadTravels();
-    this.loadFlights();
-    this.loadTravelFlights();
+      this.loadTravels();
+      this.loadFlights();
+      this.loadTravelFlights();
     }else{
       this.loadTravelsSQLite;
     }
@@ -338,12 +344,16 @@ export class BookFlightComponent{
     passengerNameInputD: ['', Validators.required],
     passengerLastName1InputD: ['', Validators.required],
     passengerLastName2InputD: ['', Validators.required],
-    passengerEmailInputD: ['', Validators.required],
-    passengerTelephoneInputD: ['', Validators.required],
+    passengerEmailInputD: new FormControl('', [Validators.required, Validators.pattern(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)]),
+    passengerTelephoneInputD: new FormControl('', [Validators.required, Validators.pattern(/^\d{8}$/)]),
   });
+
   paymentInformationStepD = this._formBuilder.group({
     passengerCreditCardNumberInputD: ['', Validators.required],
-    passengerCardExpirationdateInputD: ['', Validators.required],
+    passengerCardExpirationdateInputD: [
+      '',
+      [Validators.required, Validators.pattern(/^(0[1-9]|1[0-2])\/(20[2-9]\d|[3-9]\d{3,})$/)],
+    ],
     passengerCardCVVInputD: ['', Validators.required],
   });
 
@@ -352,16 +362,19 @@ export class BookFlightComponent{
     passengerNameInputM: ['', Validators.required],
     passengerLastName1InputM: ['', Validators.required],
     passengerLastName2InputM: ['', Validators.required],
-    passengerEmailInputM: ['', Validators.required],
-    passengerTelephoneInputM: ['', Validators.required],
+    passengerEmailInputM: new FormControl('', [Validators.required, Validators.pattern(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)]),
+    passengerTelephoneInputM: new FormControl('', [Validators.required, Validators.pattern(/^\d{8}$/)]),
   });
   paymentInformationStepM = this._formBuilder.group({
     passengerCreditCardNumberInputM: ['', Validators.required],
-    passengerCardExpirationdateInputM: ['', Validators.required],
+    passengerCardExpirationdateInputM: [
+      '',
+      [Validators.required, Validators.pattern(/^(0[1-9]|1[0-2])\/(20[2-9]\d|[3-9]\d{3,})$/)],
+    ],
     passengerCardCVVInputM: ['', Validators.required],
   });
 
-  emailFormControl = new FormControl('', [Validators.required, Validators.email]);
+  emailFormControl = new FormControl('', [Validators.required, Validators.pattern(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)]);
 
   // Function for select flight button (first step of stepper)
   selectFlight(selectedTravelId: number){
@@ -403,15 +416,13 @@ export class BookFlightComponent{
               next: (asientos) => {
                 asientosTmp = asientos;
 
-                console.log("Asientos temp: ", asientosTmp)
-
                 for(let k = 0; k < asientosTmp.length; k++){
                   if(asientosTmp[k].avionMatricula == this.selectedAircraftId  && asientosTmp[k].nVuelo == selectedTravelFirstFlight){
                     this.asientos.push(asientosTmp[k])
                   }
                 }
-            
-                console.log("Asientos: ", this.asientos)
+
+                this.asientos.sort((a, b) => a.id.localeCompare(b.id))
 
               },
               error: (response) => {
@@ -436,7 +447,29 @@ export class BookFlightComponent{
     this.passengerName = String(this.travelInformationStepD.get('passengerNameInputD')?.value);
     this.passengerLastName1 = String(this.travelInformationStepD.get('passengerLastName1InputD')?.value);
     this.passengerLastName2 = String(this.travelInformationStepD.get('passengerLastName2InputD')?.value);
-    this.passengerEmail = String(this.travelInformationStepD.get('passengerEmailInputD')?.value);
+
+    // Checks valid Email
+    this.clientesService.getClientes().subscribe({
+      next: (clientes) => {
+
+        for(let i = 0; i < clientes.length; i++){
+          if(clientes[i].correo == String(this.travelInformationStepD.get('passengerEmailInputD')?.value)){
+            this.passengerEmail = String(this.travelInformationStepD.get('passengerEmailInputD')?.value);
+          }else{
+            Swal.fire(
+              'Cliente no encontrado',
+              'Inicie sesión o digite un correo electrónico válido',
+              'question'
+            );
+            return;
+          }
+        }
+      },
+      error: (response) => {
+        console.log(response);
+      }
+    })
+    
     this.passengerTelephone = String(this.travelInformationStepD.get('passengerTelephoneInputD')?.value);
   }
 
@@ -445,7 +478,29 @@ export class BookFlightComponent{
     this.passengerName = String(this.travelInformationStepM.get('passengerNameInputM')?.value);
     this.passengerLastName1 = String(this.travelInformationStepM.get('passengerLastName1InputM')?.value);
     this.passengerLastName2 = String(this.travelInformationStepM.get('passengerLastName2InputM')?.value);
-    this.passengerEmail = String(this.travelInformationStepM.get('passengerEmailInputM')?.value);
+    
+    // Checks valid Email
+    this.clientesService.getClientes().subscribe({
+      next: (clientes) => {
+
+        for(let i = 0; i < clientes.length; i++){
+          if(clientes[i].correo == String(this.travelInformationStepM.get('passengerEmailInputD')?.value)){
+            this.passengerEmail = String(this.travelInformationStepM.get('passengerEmailInputD')?.value);
+          }else{
+            Swal.fire(
+              'Cliente no encontrado',
+              'Inicie sesión o digite un correo electrónico válido',
+              'question'
+            );
+            return;
+          }
+        }
+      },
+      error: (response) => {
+        console.log(response);
+      }
+    })
+
     this.passengerTelephone = String(this.travelInformationStepM.get('passengerTelephoneInputM')?.value);
   }
 
@@ -471,14 +526,7 @@ export class BookFlightComponent{
           console.log("Error");
         }
       this.leftTickets -= 1;
-    } else {
-      console.log("Ya se seleccionaron todos los asientos solicitados");
     }
-
-
-    console.log("Cantidad de asientos seleccionados: " + this.selectedseatsId.length);
-    console.log("Asientos seleccionados: " + this.selectedseatsId);
-    console.log("Asientos restantes: " + this.leftTickets);
   }
 
   reserveFlight(){
@@ -518,42 +566,82 @@ export class BookFlightComponent{
           }
         }
 
-        console.log("Pase de abordaje generado: ", this.paseAbordaje);
-
         // Posts flight pass        
         this.paseAbordajeService.postPaseAbordaje(this.paseAbordaje).subscribe({
           next: (response) => {
+
+            // Updates seat information on DB
+        
+            var vuelosTmp: Vuelo[] = [];
+            var viajes_vuelosTmp: ViajeVuelo[] = [];
+
+            this.asientos = [];
+
+            this.vuelosService.getVuelos().subscribe({
+              next: (vuelos) => {
+                vuelosTmp = vuelos;
+
+                this.viajesVuelosService.getViajesVuelos().subscribe({
+                  next: (viajesVuelos) => {
+                    viajes_vuelosTmp = viajesVuelos;
+
+                    viajes_vuelosTmp.sort((a, b) => a.escala - b.escala);
+
+                    var selectedTravelFirstFlight: number = -1;
+
+                    for(let i = 0; i < viajes_vuelosTmp.length; i++){
+                      if(viajes_vuelosTmp[i].viajeId == this.selectedTravelId){
+                        selectedTravelFirstFlight = viajes_vuelosTmp[i].nVuelo;
+                        break;
+                      }
+                    }
+
+                    var asientoTmp: Asiento;
+
+                    for(let i = 0; i < this.selectedseatsId.length; i++){
+                      asientoTmp = {id: this.selectedseatsId[i], nVuelo: selectedTravelFirstFlight, avionMatricula: this.selectedAircraftId, estadoId: 2}
+                      this.asientosService.putAsiento(asientoTmp.id, asientoTmp.nVuelo, asientoTmp.avionMatricula, asientoTmp).subscribe({
+                        next: (response) => {
+                        },
+                        error: (response) => {
+                          console.log(response);
+                          return;
+                        }
+                      });
+                    }
+
+                    if(this.paymentInformationStepD.valid || this.paymentInformationStepM.valid){
+                      Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'Viaje reservado!',
+                        showConfirmButton: false,
+                        timer: 2000,
+                      }).then(() => {
+                        this.router.navigate(["tecair"]);
+                      });
+                    }
+                  },
+                  error: (response) => {
+                    console.log(response);
+                  }
+                })
+              },
+              error: (response) => {
+                console.log(response);
+              }
+            })
           },
           error: (response) => {
             console.log(response);
+            Swal.fire({
+              icon: 'error',
+              title: 'Ups...',
+              text: 'Por favor, revise la información e intentelo de nuevo'
+            })
             return;
           }
         })
-
-        // Updates seat information on DB
-        /* Test
-        var asientoTmp: Asiento = {id: 'A1', nVuelo: 1, avionMatricula: 'C1728CR', estadoId: 2};
-        this.asientosService.putAsiento('A1', 1, 'C1728CR', asientoTmp).subscribe({
-          next: (response) => {
-          },
-          error: (response) => {
-            console.log(response);
-            return;
-          }
-        });
-        */
-
-        if(this.paymentInformationStepD.valid || this.paymentInformationStepM.valid){
-          Swal.fire({
-            position: 'center',
-            icon: 'success',
-            title: 'Vuelo reservado!',
-            showConfirmButton: false,
-            timer: 2000,
-          }).then(() => {
-            this.router.navigate(["tecair"]);
-          });
-        }
       },
       error: (response) => {
         console.log(response);
