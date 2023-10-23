@@ -127,10 +127,11 @@ export class DatabaseService {
       vueloNumero NUMBER,
       tipo TEXT);`; 
     const schemaAsiento = `CREATE TABLE IF NOT EXISTS Asiento (
-      id TEXT PRIMARY KEY NOT NULL, 
-      avionMatricula TEXT,
+      id TEXT NOT NULL, 
+      avionMatricula TEXT NOT NULL,
       estadoId NUMBER,
-      nVuelo NUMBER);`; 
+      nVuelo NUMBER NOT NULL,
+      PRIMARY KEY (id, avionMatricula, nVuelo));`; 
                                                            
 
     await this.db.execute(schemaCliente);
