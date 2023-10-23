@@ -59,32 +59,21 @@ namespace TECAir.Controllers
         // PUT: api/Clientes/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCliente(string id, Cliente cliente)
+        public async Task<IActionResult> PutCliente(string id, Cliente clienteActualizado)
         {
-            if (id != cliente.Correo)
+            if (id != clienteActualizado.Correo)
             {
                 return BadRequest();
             }
 
-            _context.Entry(cliente).State = EntityState.Modified;
+            var cliente = await _context.Clientes.FindAsync(id);
+            cliente.Telefono = clienteActualizado.Telefono;
+            cliente.Nombre = clienteActualizado.Nombre;
+            cliente.Apellido1 = clienteActualizado.Apellido1;
+            cliente.Apellido2 = clienteActualizado.Apellido2;
+            await _context.SaveChangesAsync();
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ClienteExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return Ok(1);
         }
 
         // POST: api/Clientes

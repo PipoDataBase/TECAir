@@ -3,7 +3,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Cliente } from 'src/app/models/cliente.module';
 import { Universidad } from 'src/app/models/universidad.module';
 import { ClientesService } from 'src/app/services/clientes.service';
+import { SharedService } from 'src/app/services/shared.service';
 import { UniversidadesService } from 'src/app/services/universidades.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-profile',
@@ -30,7 +32,7 @@ export class ProfileComponent {
     ubicacion: '',
   }
 
-  constructor(private route: ActivatedRoute, private router: Router, private clientesService: ClientesService, private universidadesService: UniversidadesService) {
+  constructor(private route: ActivatedRoute, private router: Router, private sharedService: SharedService, private clientesService: ClientesService, private universidadesService: UniversidadesService) {
     this.isMobile = window.innerWidth <= 767;
     window.addEventListener('resize', () => {
       this.isMobile = window.innerWidth <= 767;
@@ -81,5 +83,44 @@ export class ProfileComponent {
 
   close(): void {
     this.router.navigate(["tecair-admin", this.username]);
+  }
+
+  save(): void {
+    // validate phone
+    if (!this.sharedService.validatePhone(this.cliente.telefono)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Formato de teléfono incorrecto'
+      })
+      return;
+    }
+
+    // validate name and last name
+    if (!this.cliente.nombre || !this.cliente.apellido1) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Debe ingresar su nombre completo'
+      })
+      return;
+    }
+
+    // update client in database
+    this.clientesService.putCliente(this.cliente.correo, this.cliente).subscribe({
+      next: (response) => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Información guardada!',
+          showConfirmButton: false,
+          timer: 1500
+        }).then(() => {
+          this.router.navigate(["tecair-admin", this.username]);
+        });
+      },
+      error: (response) => {
+        console.log(response);
+      }
+    })
   }
 }

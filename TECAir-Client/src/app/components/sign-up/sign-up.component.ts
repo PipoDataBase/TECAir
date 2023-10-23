@@ -57,12 +57,12 @@ export class SignUpComponent {
     });
   }
 
-  async offlineUniversidades(){
+  async offlineUniversidades() {
     var universidadesTemp = await this.database.getUniversidades();
     this.universidades = universidadesTemp();
   }
 
-  onlineUniversidades(){
+  onlineUniversidades() {
     this.universidadesService.getUniversidades().subscribe({
       next: (universidades) => {
         this.universidades = universidades;
@@ -106,7 +106,7 @@ export class SignUpComponent {
   ngOnInit() {
     this.deviceProtocol();
     this.checkNetworkStatus();
-    
+
   }
 
   // go to login view
@@ -196,7 +196,7 @@ export class SignUpComponent {
   }
 
   // add a client to postgresql if isOnline, or to sqlite if it is android and offline
-  async addClient(){
+  async addClient() {
 
     if (this.isOnline) {
 
@@ -216,7 +216,7 @@ export class SignUpComponent {
           console.log(response);
         }
       })
-    } 
+    }
     else if (this.isAndroid() && !this.isOnline) {
       await this.database.addCliente(this.cliente);
       await this.database.addOfflineChange('Cliente', this.cliente.correo);
@@ -227,13 +227,8 @@ export class SignUpComponent {
     }
   }
 
-
- // verifies if the application is running on a mobile device
- isAndroid() {
-  return (Capacitor.getPlatform() === 'android');
-}
-
-
-
-
+  // verifies if the application is running on a mobile device
+  isAndroid() {
+    return (Capacitor.getPlatform() === 'android');
+  }
 }

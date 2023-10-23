@@ -23,4 +23,8 @@ export class ClientesService {
   postCliente(cliente: Cliente): Observable<number> {
     return this.http.post<number>(this.baseApiUrl + '/api/Clientes', cliente);
   }
+
+  putCliente(id: string, cliente: Cliente): Observable<number> {
+    return this.http.put<number>(this.baseApiUrl + '/api/Clientes/' + id, cliente);
+  }
 }
