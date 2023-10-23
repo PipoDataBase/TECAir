@@ -31,7 +31,7 @@ export class PDFComponent {
   malestas: string[] = ["maleta1", "maleta2", "maleta3"];
 
 
-  createPdf() {
+  createMaletaPDF() {
 
     const pdfDefinition: any = {
       content: [
@@ -40,54 +40,59 @@ export class PDFComponent {
           style: 'header', alignment: 'center'
         },
         {
-          text: "Pase de Abordaje", style: 'subheader'
+          text: "Maletas", style: 'subheader'
         },
         {
-          text: function(i,array){
-            for (let index = 0; index < array.length; index++) {
-              const element = array[index];
-              return element
-            }
-          }
+            text: "Correo del Cliente", style: 'subheader'
         },
         {
-          text: "Informacion del Cliente", style: 'subheader'
+            
+          ul: [
+               "sample"
+           
+          ], style: 'spacer'
         },
         {
-          text: "Nombre:", bold: 'true', style: 'spacer'
+            text: "Pase de Abordaje", style: 'subheader'
+        },
+         {
+            
+          ul: [
+               "sample"
+           
+          ], style: 'spacer'
+        },
+        {
+          text: "Informacion de las Maletas", style: 'subheader'
+        },
+        {
+          text: "\n"
         },
         {
           ul: [
-            this.clienteNombre,
-            this.clienteApellidos
+             "Maleta 1 \t piporan \n Maleta 2 \t piporin \n Maleta 3 \t piporon"
           ]
           , style: 'spacer'
 
         },
 
         {
-          text: "Contacto:", bold: 'true', style: 'spacer'
+          text: "Precio: \n", bold: 'true', style: 'subheader'
         },
         {
+            
           ul: [
-            this.clienteCorreo,
-            this.clienteTelefono
+               "$5746"
+
           ], style: 'spacer'
         },
-
         {
-          text: "Informacion del Pase", style: 'subheader'
-            
-          
-        },
-        {
-          alignment: 'center',
-          style: 'tableExample',
-          table: {
-            body: [['Puerta de Abordaje', 'Hora de Salida', 'Asiento', 'Numero de Vuelo'],
-            [this.puertaAbordaje, this.horaSalida, this.asiento, this.nVuelo]]
-          }
+            image: 'data:image/jpeg;base64,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',
+            margin: [500,0,500,0],
+            opacity: 0.1
         }
+       
+        
 
 
       ],
@@ -115,6 +120,7 @@ export class PDFComponent {
           margin: [0, 0, 0, 10]
         }
       }
+      
 
 
 
