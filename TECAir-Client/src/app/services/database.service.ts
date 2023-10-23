@@ -24,6 +24,8 @@ import { VueloAeropuerto } from '../models/vuelo-aeropuerto.module';
 import { VuelosAeropuertosService } from './vuelos-aeropuertos.service';
 import { Asiento } from '../models/asiento.module';
 import { AsientosService } from './asientos.service';
+import { PaseAbordaje } from '../models/pase-abordaje.module';
+import { PaseAbordajeService } from './pase-abordaje.service';
 
 
 const DB_TECAir = 'TECAirDB';
@@ -47,6 +49,7 @@ export class DatabaseService {
   private viajesVuelos: WritableSignal<ViajeVuelo[]> = signal<ViajeVuelo[]>([]);
   private vuelosAeropuertos: WritableSignal<VueloAeropuerto[]> = signal<VueloAeropuerto[]>([]);
   private asientos: WritableSignal<Asiento[]> = signal<Asiento[]>([]);
+  private pasesAbordajes: WritableSignal<PaseAbordaje[]> = signal<PaseAbordaje[]>([]);
 
   
   addClientRequest: Profile = {
@@ -57,7 +60,7 @@ export class DatabaseService {
     apellido2: ''
   };
 
-  constructor(private http: HttpClient, private profileService: ProfileService, private universidadesService: UniversidadesService, private aeropuertosService: AeropuertosService, private estudianteService: EstudiantesService, private viajesService: ViajesService, private vuelosServices: VuelosService, private viajeVueloServices: ViajesVuelosService, private vueloAeropuertoServices: VuelosAeropuertosService, private asientosServices: AsientosService) {}
+  constructor(private http: HttpClient, private profileService: ProfileService, private universidadesService: UniversidadesService, private aeropuertosService: AeropuertosService, private estudianteService: EstudiantesService, private viajesService: ViajesService, private vuelosServices: VuelosService, private viajeVueloServices: ViajesVuelosService, private vueloAeropuertoServices: VuelosAeropuertosService, private asientosServices: AsientosService, private pasesAbordajesServices: PaseAbordajeService) {}
 
   baseApiUrl: string = environment.baseApiUrl;
 
@@ -132,6 +135,12 @@ export class DatabaseService {
       estadoId NUMBER,
       nVuelo NUMBER NOT NULL,
       PRIMARY KEY (id, avionMatricula, nVuelo));`; 
+    const schemaPaseAbordaje = `CREATE TABLE IF NOT EXISTS PaseAbordaje (
+      id NUMBER PRIMARY KEY NOT NULL, 
+      correoCliente TEXT NOT NULL,
+      checkIn BOOLEAN,
+      puerta TEXT NOT NULL,
+      viajeId NUMBER);`; 
                                                            
 
     await this.db.execute(schemaCliente);
@@ -145,6 +154,7 @@ export class DatabaseService {
     await this.db.execute(schemaViajesVuelos);
     await this.db.execute(schemaVueloAeropuerto);
     await this.db.execute(schemaAsiento);
+    await this.db.execute(schemaPaseAbordaje);
 
     await this.loadClientsProfile();
     await this.loadAeropuertos();
@@ -157,6 +167,7 @@ export class DatabaseService {
     await this.loadViajesVuelos();
     await this.loadVuelosAeropuertos();
     await this.loadAsientos();
+    loadPasesAbordajes();
   }
 
   //CLIENT
@@ -593,6 +604,26 @@ async addAsientos(asientos: { id: string; avionMatricula: string; estadoId: numb
   await this.loadAsientos();
 
 }
+
+
+
+//   ****************      Asiento      *******************
+
+// Loads asientos from slqite
+async loadPasesAbordajes() {
+  const PasesAbordajes = await this.db.query('SELECT * FROM PaseAbordaje;');
+  this.pasesAbordajes.set(PasesAbordajes.values || [])
+  return true
+}
+
+// get all asientos from local
+getPasesAbordajes() {
+  return this.pasesAbordajes;
+}
+
+
+// add an array of pasesabordajes to slqlite
+
 
 
 

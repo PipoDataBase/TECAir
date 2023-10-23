@@ -717,7 +717,47 @@ export class BookFlightComponent{
     }
   }
 
-  reserveFlight(){
+  offlineReserveFlight(){
+    
+    this.paseAbordaje = {id: 0, correoCliente: '', checkIn: false, puerta: '', viajeId: 0};
+
+    // Requests for tickets list
+    var pasesAbordajeTmp: PaseAbordaje[] = [];
+
+    var pasesAbordajesTemp = this.databaseService.getPasesAbordajes();
+    pasesAbordajeTmp = pasesAbordajesTemp();
+
+    // Updates paseAbordaje attribute with given data
+    if(pasesAbordajeTmp.length > 0){
+      pasesAbordajeTmp.sort((a, b) => a.id - b.id);
+
+      this.paseAbordaje.id = (pasesAbordajeTmp[pasesAbordajeTmp.length-1].id)+1;
+    }else{
+      this.paseAbordaje.id = 1;
+    }
+
+    this.paseAbordaje.correoCliente = this.passengerEmail;
+    this.paseAbordaje.viajeId = this.selectedTravelId;
+    this.paseAbordaje.checkIn = false;
+
+    // Generates random gate
+    const letras = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const numeros = '0123456789';
+
+    for (let i = 0; i < 6; i++) {
+      if(i < 3){
+        const letraAleatoria = letras[Math.floor(Math.random() * letras.length)];
+        this.paseAbordaje.puerta += letraAleatoria;
+      }else{
+        const numeroAleatorio = numeros[Math.floor(Math.random() * numeros.length)];
+        this.paseAbordaje.puerta += numeroAleatorio;
+      }
+    }
+    
+  }
+
+  onlineReserveFlight(){
+
     this.paseAbordaje = {id: 0, correoCliente: '', checkIn: false, puerta: '', viajeId: 0};
 
     // Requests for tickets list
@@ -846,6 +886,16 @@ export class BookFlightComponent{
         console.log(response);
       }
     })
+  }
+
+  // It manages the reserve flight protocol depending on the connection and the device running the program 
+  reserveFlight(){
+
+    if (this.isOnline) {
+      this.onlineReserveFlight();
+    } else if (this.isAndroid() && !this.isOnline){
+      this.offlineReserveFlight();
+    }
   }
 
   
