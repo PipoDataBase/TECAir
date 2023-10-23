@@ -16,6 +16,14 @@ import { UniversidadesService } from './universidades.service';
 import { AeropuertosService } from './aeropuertos.service';
 import { Estudiante } from '../models/estudiante.module';
 import { EstudiantesService } from './estudiantes.service';
+import { ViajesService } from './viajes.service';
+import { VuelosService } from './vuelos.service';
+import { ViajeVuelo } from '../models/viaje-vuelo.module';
+import { ViajesVuelosService } from './viajes-vuelos.service';
+import { VueloAeropuerto } from '../models/vuelo-aeropuerto.module';
+import { VuelosAeropuertosService } from './vuelos-aeropuertos.service';
+import { Asiento } from '../models/asiento.module';
+import { AsientosService } from './asientos.service';
 
 
 const DB_TECAir = 'TECAirDB';
@@ -32,11 +40,15 @@ export class DatabaseService {
   private aeropuertos: WritableSignal<Aeropuerto[]> = signal<Aeropuerto[]>([]);
   private estudiantes: WritableSignal<Estudiante[]> = signal<Estudiante[]>([]);
   private offlineChanges: WritableSignal<OfflineChange[]> = signal<OfflineChange[]>([]);
-  private travels: WritableSignal<Viaje[]> = signal<Viaje[]>([]);
-  private flights: WritableSignal<Vuelo[]> = signal<Vuelo[]> ([]);
+  private viajes: WritableSignal<Viaje[]> = signal<Viaje[]>([]);
+  private vuelos: WritableSignal<Vuelo[]> = signal<Vuelo[]> ([]);
   private promotions: WritableSignal<Promocion[]> = signal<Promocion[]>([]);
   private universidades: WritableSignal<Universidad[]> = signal<Universidad[]>([]);
+  private viajesVuelos: WritableSignal<ViajeVuelo[]> = signal<ViajeVuelo[]>([]);
+  private vuelosAeropuertos: WritableSignal<VueloAeropuerto[]> = signal<VueloAeropuerto[]>([]);
+  private asientos: WritableSignal<Asiento[]> = signal<Asiento[]>([]);
 
+  
   addClientRequest: Profile = {
     correo: '',
     telefono: 0,
@@ -45,7 +57,7 @@ export class DatabaseService {
     apellido2: ''
   };
 
-  constructor(private http: HttpClient, private profileService: ProfileService, private universidadesService: UniversidadesService, private aeropuertosService: AeropuertosService, private estudianteService: EstudiantesService) {}
+  constructor(private http: HttpClient, private profileService: ProfileService, private universidadesService: UniversidadesService, private aeropuertosService: AeropuertosService, private estudianteService: EstudiantesService, private viajesService: ViajesService, private vuelosServices: VuelosService, private viajeVueloServices: ViajesVuelosService, private vueloAeropuertoServices: VuelosAeropuertosService, private asientosServices: AsientosService) {}
 
   baseApiUrl: string = environment.baseApiUrl;
 
@@ -86,10 +98,11 @@ export class DatabaseService {
                               precio NUMBER);`;
     const schemaVuelo = `CREATE TABLE IF NOT EXISTS Vuelo (
                               nVuelo NUMBER PRIMARY KEY NOT NULL, 
+                              empleadoUsuario TEXT, 
                               avionMatricula TEXT NOT NULL, 
                               fechaSalida TEXT NOT NULL, 
                               fechaLlegada TEXT NOT NULL, 
-                              estado TEXT NOT NULL, 
+                              estado BOOLEAN NOT NULL, 
                               precio NUMBER NOT NULL);`;
     const schemaOfflineChange = `CREATE TABLE IF NOT EXISTS OfflineChange (
                                       nChange NUMBER PRIMARY KEY NOT NULL, 
@@ -104,7 +117,21 @@ export class DatabaseService {
     const schemaUniversidades = `CREATE TABLE IF NOT EXISTS Universidad (
                               id NUMBER PRIMARY KEY NOT NULL, 
                               nombre TEXT NOT NULL,
-                              ubicacion TEXT);`;                              
+                              ubicacion TEXT);`; 
+    const schemaViajesVuelos = `CREATE TABLE IF NOT EXISTS ViajeVuelo (
+      viajeId NUMBER PRIMARY KEY NOT NULL, 
+      nVuelo NUMBER,
+      escala NUMBER);`; 
+    const schemaVueloAeropuerto = `CREATE TABLE IF NOT EXISTS VueloAeropuerto (
+      aeropuertoId TEXT PRIMARY KEY NOT NULL, 
+      vueloNumero NUMBER,
+      tipo TEXT);`; 
+    const schemaAsiento = `CREATE TABLE IF NOT EXISTS Asiento (
+      id TEXT PRIMARY KEY NOT NULL, 
+      avionMatricula TEXT,
+      estadoId NUMBER,
+      nVuelo NUMBER);`; 
+                                                           
 
     await this.db.execute(schemaCliente);
     await this.db.execute(schemaAeropuerto);
@@ -114,13 +141,21 @@ export class DatabaseService {
     await this.db.execute(schemaOfflineChange);
     await this.db.execute(schemaPromociones);
     await this.db.execute(schemaUniversidades);
+    await this.db.execute(schemaViajesVuelos);
+    await this.db.execute(schemaVueloAeropuerto);
+    await this.db.execute(schemaAsiento);
 
     await this.loadClientsProfile();
     await this.loadAeropuertos();
-    //await this.loadEstudiantes();
+    await this.loadEstudiantes();
     await this.loadOfflineChanges();
     this.loadPromotions();
     await this.loadUniversidades();
+    await this.loadViajes()
+    await this.loadVuelos()
+    await this.loadViajesVuelos();
+    await this.loadVuelosAeropuertos();
+    await this.loadAsientos();
   }
 
   //CLIENT
@@ -270,73 +305,6 @@ export class DatabaseService {
   }
 
 
-  //adds the Travels from the API to the SQLite DB
-
-  async addViaje(viajes:{id: number, fechaSalida: string, fechaLlegada: string, origen: string, destino: string, precio: number}[]) {
-
-
-    const insertPromises = viajes.map(Viaje =>
-      this.db.query(`INSERT INTO Viaje (id, fechaSalida, fechaLlegada, origen, destino, precio) 
-      VALUES ('${Viaje.id}','${Viaje.fechaSalida}','${Viaje.fechaLlegada}','${Viaje.origen}','${Viaje.destino}','${Viaje.precio}')`));
-
-    const insertResults = await Promise.all(insertPromises);
-
-
-    //const result = await this.db.query(query);
-
-    this.loadViaje();
-    console.log('Travel post done')
-    //return result;
-
-  }
-
-
-
-  async loadViaje(){
-    const Travels = await this.db.query('SELECT * FROM Viaje;');
-    this.travels.set(Travels.values || []);
-    return true;
-  }
-
-  getViajes(){
-    return this.travels
-  }
-  
-
-  //adds the flights from the API to the SQLite DB
-
-  async addVuelo(vuelos:{nVuelo: number,avionMatricula: string, fechaSalida: string, fechaLlegada: string,  estado: boolean, precio: number}[]) {
-
-
-    const insertPromises = vuelos.map(Vuelo =>
-      this.db.query(`INSERT INTO Vuelo (nVuelo, avionMatricula, fechaSalida, fechaLlegada, estado, precio) 
-      VALUES ('${Vuelo.nVuelo}','${Vuelo.avionMatricula}','${Vuelo.fechaSalida}','${Vuelo.fechaLlegada}','${Vuelo.estado}','${Vuelo.precio}')`));
-
-    const insertResults = await Promise.all(insertPromises);
-
-
-    //const result = await this.db.query(query);
-
-    this.loadvuelos();
-    console.log('Flight post done')
-    //return result;
-
-  }
-
-
-
-  async loadvuelos(){
-    const Flights = await this.db.query('SELECT * FROM Vuelo;');
-    this.travels.set(Flights.values || []);
-    return true;
-  }
-
-  getVuelos(){
-    return this.travels
-  }
-  
-  //adds the promotions from the API to the SQLite DB
-
 
   async addPromotions(promociones: {viajeId: number,precio: number, fechaInicio: string, fechaVencimiento: string,  imagenPath: string, viaje:Viaje }[]) {
 
@@ -469,6 +437,163 @@ async addEstudiante(estudiante: { carnet: number; correo: string; universidadId:
 }
 
 
+//   ****************      Viaje      *******************
+
+// Loads viajes from slqite
+async loadViajes() {
+  const Viajes = await this.db.query('SELECT * FROM Viaje;');
+  this.viajes.set(Viajes.values || [])
+  return true
+}
+
+// get all viajes from local
+getViajes() {
+  return this.viajes;
+}
+
+
+// add an array of viajes to slqlite
+async addViajes(viajes: { id: number; empleadoUsuario: string; origen: string; destino: string; fechaSalida: string; fechaLlegada: string; precio: number}[]) {
+
+  const insertPromises = viajes.map(viaje =>
+    this.db.query(`
+    INSERT INTO Viaje (Id, EmpleadoUsuario, Origen, Destino, FechaSalida, FechaLlegada, Precio) VALUES ('${viaje.id}', '${viaje.empleadoUsuario}', '${viaje.origen}', '${viaje.destino}', '${viaje.fechaSalida}', '${viaje.fechaLlegada}', '${viaje.precio}')
+  `));
+
+  const insertResults = await Promise.all(insertPromises);
+
+  console.log(`posts viajes created successfully!`);
+  await this.loadViajes();
+
+}
+
+
+//   ****************      Vuelo      *******************
+
+// Loads vuelos from slqite
+async loadVuelos() {
+  const Vuelos = await this.db.query('SELECT * FROM Vuelo;');
+  this.vuelos.set(Vuelos.values || [])
+  return true
+}
+
+// get all vuelos from local
+getVuelos() {
+  return this.vuelos;
+}
+
+
+// add an array of vuelos to slqlite
+async addVuelos(vuelos: { nVuelo: number; empleadoUsuario: string; avionMatricula: string; fechaSalida: string; fechaLlegada: string; estado: Boolean; precio: number}[]) {
+
+  const insertPromises = vuelos.map(vuelo =>
+    this.db.query(`
+    INSERT INTO Vuelo (Nvuelo, EmpleadoUsuario, AvionMatricula, FechaSalida, FechaLlegada, Estado, Precio) VALUES ('${vuelo.nVuelo}', '${vuelo.empleadoUsuario}', '${vuelo.avionMatricula}', '${vuelo.fechaSalida}', '${vuelo.fechaLlegada}', '${vuelo.estado}', '${vuelo.precio}')
+  `));
+
+  const insertResults = await Promise.all(insertPromises);
+
+  console.log(`posts vuelos created successfully!`);
+  await this.loadVuelos();
+
+}
+
+
+//   ****************      ViajeVuelo      *******************
+
+// Loads viajevuelos from slqite
+async loadViajesVuelos() {
+  const ViajesVuelos = await this.db.query('SELECT * FROM ViajeVuelo;');
+  this.viajesVuelos.set(ViajesVuelos.values || [])
+  return true
+}
+
+// get all viajesvuelos from local
+getViajesVuelos() {
+  return this.viajesVuelos;
+}
+
+
+// add an array of vuelos to slqlite
+async addViajesVuelos(viajesVuelos: { viajeId: number; nVuelo: number; escala: number}[]) {
+
+  const insertPromises = viajesVuelos.map(viajeVuelo =>
+    this.db.query(`
+    INSERT INTO ViajeVuelo (ViajeId, Nvuelo, Escala) VALUES ('${viajeVuelo.viajeId}', '${viajeVuelo.nVuelo}', '${viajeVuelo.escala}')
+  `));
+
+  const insertResults = await Promise.all(insertPromises);
+
+  console.log(`posts viajesVuelos created successfully!`);
+  await this.loadViajesVuelos();
+
+}
+
+
+//   ****************      VueloAeropuerto      *******************
+
+// Loads vuelosAeropuertos from slqite
+async loadVuelosAeropuertos() {
+  const VuelosAeropuertos = await this.db.query('SELECT * FROM VueloAeropuerto;');
+  this.vuelosAeropuertos.set(VuelosAeropuertos.values || [])
+  return true
+}
+
+// get all vuelosAeropuertos from local
+getVuelosAeropuertos() {
+  return this.vuelosAeropuertos;
+}
+
+
+// add an array of vuelosAeropuertos to slqlite
+async addVuelosAeropuertos(vuelosAeropuertos: { aeropuertoId: string; vueloNumero: number; tipo: string}[]) {
+
+  const insertPromises = vuelosAeropuertos.map(vueloAeropuerto =>
+    this.db.query(`
+    INSERT INTO VueloAeropuerto (AeropuertoId, VueloNumero, Tipo) VALUES ('${vueloAeropuerto.aeropuertoId}', '${vueloAeropuerto.vueloNumero}', '${vueloAeropuerto.tipo}')
+  `));
+
+  const insertResults = await Promise.all(insertPromises);
+
+  console.log(`posts vuelosAeropuertos created successfully!`);
+  await this.loadVuelosAeropuertos();
+
+}
+
+
+
+
+//   ****************      Asiento      *******************
+
+// Loads asientos from slqite
+async loadAsientos() {
+  const Asientos = await this.db.query('SELECT * FROM Asiento;');
+  this.asientos.set(Asientos.values || [])
+  return true
+}
+
+// get all asientos from local
+getAsientos() {
+  return this.asientos;
+}
+
+
+// add an array of asientos to slqlite
+async addAsientos(asientos: { id: string; avionMatricula: string; estadoId: number; nVuelo: number}[]) {
+
+  const insertPromises = asientos.map(asiento =>
+    this.db.query(`
+    INSERT INTO Asiento (Id, AvionMatricula, EstadoId, Nvuelo) VALUES ('${asiento.id}', '${asiento.avionMatricula}', '${asiento.estadoId}', '${asiento.nVuelo}')
+  `));
+
+  const insertResults = await Promise.all(insertPromises);
+
+  console.log(`posts asientos created successfully!`);
+  await this.loadAsientos();
+
+}
+
+
 
   // ***** Update ALL the offline database (SQLite) with the data from online database (postgresql)  *****
   async onlineUpdate(){
@@ -512,7 +637,60 @@ async addEstudiante(estudiante: { carnet: number; correo: string; universidadId:
         console.log(response);
       }
     });
+
+
+    // Update Viajes
+    this.viajesService.getViajes().subscribe({
+      next: (viajes) => {
+        this.addViajes(viajes);
+      },
+      error: (response) => {
+        console.log(response);
+      }
+    });
+
+    // Update Vuelos
+    this.vuelosServices.getVuelos().subscribe({
+      next: (vuelos) => {
+        this.addVuelos(vuelos);
+      },
+      error: (response) => {
+        console.log(response);
+      }
+    });
+
+    // Update ViajesVuelos
+    this.viajeVueloServices.getViajesVuelos().subscribe({
+      next: (viajesVuelos) => {
+        this.addViajesVuelos(viajesVuelos);
+      },
+      error: (response) => {
+        console.log(response);
+      }
+    });
+
+    // Update VuelosAeropuertos
+    this.vueloAeropuertoServices.getVuelosAeropuertos().subscribe({
+      next: (vuelosAeropuertos) => {
+        this.addVuelosAeropuertos(vuelosAeropuertos);
+      },
+      error: (response) => {
+        console.log("VueloAeropuerto fallo: ", response);
+      }
+    });
+
+    // Update Asientos
+    this.asientosServices.getAsientos().subscribe({
+      next: (asientos) => {
+        this.addAsientos(asientos);
+      },
+      error: (response) => {
+        console.log("Asientos fallo: ", response);
+      }
+    });
+
   }
+  
 
 
 }

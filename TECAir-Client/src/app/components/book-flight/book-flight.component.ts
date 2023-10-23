@@ -233,7 +233,7 @@ export class BookFlightComponent{
     this.viajesService.getViajes().subscribe({
       next: (viajes) => {
         this.viajes = viajes;
-        this.databaseService.addViaje(this.viajes);
+        //this.databaseService.addViaje(this.viajes);
         for(let i = 0; i < viajes.length ; i++){
           this.showStepovers.push(false);
         }
@@ -271,7 +271,7 @@ export class BookFlightComponent{
     this.vuelosService.getVuelos().subscribe({
       next: (vuelos) => {
         vuelosTmp = vuelos;
-        this.databaseService.addVuelo(vuelosTmp);
+        //this.databaseService.addVuelo(vuelosTmp);
         // Load TravelFlights from DB
         this.viajesVuelosService.getViajesVuelos().subscribe({
           next: (viajesVuelos) => {
