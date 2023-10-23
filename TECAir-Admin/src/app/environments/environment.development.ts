@@ -1,6 +1,6 @@
 export const environment = {
     production: false,
-    baseApiUrl: 'https://localhost:7016',
+    baseApiUrl: 'http://192.168.18.216:7016',
     firebaseConfig: {
         apiKey: "AIzaSyDLbnooOUBYCYE23sT-7E3Kw4Pybdm_48k",
         authDomain: "tecair-bd0cb.firebaseapp.com",

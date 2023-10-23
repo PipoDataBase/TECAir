@@ -34,6 +34,8 @@ import { ClientesService } from 'src/app/services/clientes.service';
 import { SharedService } from 'src/app/services/shared.service';
 import { DatabaseService } from 'src/app/services/database.service';
 import { Network } from '@capacitor/network';
+import { Capacitor } from '@capacitor/core';
+
 //import { PDFComponent } from '../pdf/pdf.component';
 
 @Component({
@@ -85,6 +87,7 @@ export class BookFlightComponent{
   private asientos: Asiento[];
   private paseAbordaje: PaseAbordaje;
   private pasesAbordaje: PaseAbordaje[];
+  private isOnline: boolean = false;
 
   // Getters and setters
   public getisMobile(): boolean {
@@ -227,7 +230,8 @@ export class BookFlightComponent{
     this.pasesAbordaje = [];
   }
 
-  loadTravels(): void {
+  loadOnlineTravels(){
+
     this.viajes = [];
 
     this.viajesService.getViajes().subscribe({
@@ -244,22 +248,69 @@ export class BookFlightComponent{
         console.log(response);
       }
     })
+  }
 
+  async loadOfflineTravels(){
+
+    this.viajes = [];
+    var viajesTemp = this.databaseService.getViajes();
+    this.viajes = viajesTemp();
+    this.viajes = this.sharedService._filterTravelsByOriginDestiny(this.viajes, this.sharedService.searchedOrigin, this.sharedService.searchedDestiny, this.sharedService.formatDate2(this.sharedService.selectedDate.toString()));
     
   }
 
+  loadTravels(): void {
+    
+    if (this.isOnline) {
+      this.loadOnlineTravels();
+    } else if (this.isAndroid() && !this.isOnline) {
+      this.loadOfflineTravels();
+    }
+    
+  }
 
+  // eliminar
   loadTravelsSQLite(): void {
     this.viajes = [];
     
     var viajestemp = this.databaseService.getViajes()
     this.viajes = viajestemp()
         this.viajes = this.sharedService._filterTravelsByOriginDestiny(this.viajes, this.sharedService.searchedOrigin, this.sharedService.searchedDestiny, this.sharedService.formatDate2(this.sharedService.selectedDate.toString()));
-     
-
   }
 
-  loadFlights(): void {
+  loadOfflineFlights(){
+    var vuelosTmp: Vuelo[] = [];
+    this.vuelos = [];
+    this.viajes_vuelos = [];
+    this.vuelos_aeropuertos = [];
+    var vuelos_aeropuertosTmp: VueloAeropuerto[] = [];
+
+    // load data from slqite
+    var vuelosTemp = this.databaseService.getVuelos();
+    vuelosTmp = vuelosTemp();
+    var viajesVuelosTemp = this.databaseService.getViajesVuelos();
+    this.viajes_vuelos = viajesVuelosTemp();
+
+    // Orders the array viajes_vuelos
+    this.viajes_vuelos.sort((a, b) => a.escala - b.escala);
+
+    var vuelosAeropuertosTemp = this.databaseService.getVuelosAeropuertos();
+    this.vuelos_aeropuertos = vuelosAeropuertosTemp();
+
+    // Filters flights by searched information
+    for(let i = 0; i < vuelosTmp.length; i++){
+      for(let j = 0; j < this.viajes_vuelos.length; j++){
+        var isSearchedTravelFlightMatch = this.viajes.some((travel) => travel.id === this.viajes_vuelos[j].viajeId && vuelosTmp[i].nVuelo === this.viajes_vuelos[j].nVuelo)
+        if(isSearchedTravelFlightMatch){
+          vuelosTmp[i].fechaSalida = this.sharedService.formatDate3(vuelosTmp[i].fechaSalida)
+          vuelosTmp[i].fechaLlegada = this.sharedService.formatDate3(vuelosTmp[i].fechaLlegada)
+          this.vuelos.push(vuelosTmp[i])
+        }
+      }
+    }
+  }
+
+  loadOnlineFlights(){
     var vuelosTmp: Vuelo[] = [];
     this.vuelos = [];
     this.viajes_vuelos = [];
@@ -315,17 +366,58 @@ export class BookFlightComponent{
     })
   }
 
+  loadFlights(): void {
+    //
+  }
+
   loadTravelFlights(): void {
     
   }
 
-  async ngOnInit(): Promise<void> {
-    const status = await Network.getStatus();
+    // Is called when the program is initialized and when the internet connection is connected or disconected
+  // If isOnline, loads api data
+  async checkNetworkStatus() {
+
+    if (this.isOnline) {
+      console.log('Connected to the internet');
+      this.loadOnlineTravels(); // Loads data from API
+      this.loadOnlineFlights();
+      this.loadTravelFlights();
+    }
+    else {
+      console.log('No internet connection');
+      if (this.isAndroid()) {
+        this.loadOfflineTravels(); 
+        this.loadOfflineFlights();
+      }
+    }
+
+  }
+
+  // Initializes an observer that checks if the internet connection have changed (connected or disconected)
+  // Calls for functions to act depending on the connection change and the device running (mobile or web)
+  initNetworkObserver() {
+
+    Network.addListener('networkStatusChange', status => {
+      console.log('Network status changed', status);
+      this.checkNetworkStatus();
+    });
+
+  }
+
+  ngOnInit() {
+
+    //const status = await Network.getStatus();
 
     this.viajes = [];
     this.vuelos = [];
     this.viajes_vuelos = [];
     this.vuelos_aeropuertos = [];
+    this.initNetworkObserver();
+    this.chekNetworkConnection();
+    this.checkNetworkStatus();
+/*
+
 
     if(status.connected){
       this.loadTravels();
@@ -334,6 +426,7 @@ export class BookFlightComponent{
     }else{
       this.loadTravelsSQLite;
     }
+*/
   }
   
   // Linear Mat-Stepper conditions
@@ -375,8 +468,60 @@ export class BookFlightComponent{
 
   emailFormControl = new FormControl('', [Validators.required, Validators.pattern(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)]);
 
-  // Function for select flight button (first step of stepper)
-  selectFlight(selectedTravelId: number){
+
+  offlineSelectFlight(selectedTravelId: number){
+
+    console.log("offlineSelectFlight");
+
+    this.selectedTravelId = selectedTravelId;
+    var vuelosTmp: Vuelo[] = [];
+    var viajes_vuelosTmp: ViajeVuelo[] = [];
+    this.asientos = [];
+
+    var vuelosTemp = this.databaseService.getVuelos();
+    vuelosTmp = vuelosTemp();
+
+    var viajesVuelosTemp = this.databaseService.getViajesVuelos();
+    viajes_vuelosTmp = viajesVuelosTemp();
+
+    viajes_vuelosTmp.sort((a, b) => a.escala - b.escala);
+
+    var selectedTravelFirstFlight: number = -1;
+
+    for(let i = 0; i < viajes_vuelosTmp.length; i++){
+      if(viajes_vuelosTmp[i].viajeId == this.selectedTravelId){
+        selectedTravelFirstFlight = viajes_vuelosTmp[i].nVuelo;
+        break;
+      }
+    }
+
+    for(let j = 0; j < vuelosTmp.length; j++){
+      if(vuelosTmp[j].nVuelo == selectedTravelFirstFlight){
+        this.selectedAircraftId = vuelosTmp[j].avionMatricula;
+      }
+    }
+
+    var asientosTmp: Asiento[] = [];
+
+    var asientosTemp = this.databaseService.getAsientos();
+    asientosTmp = asientosTemp();
+    console.log("cantidad asientos: ", asientosTemp.length);
+
+    for(let k = 0; k < asientosTmp.length; k++){
+      if(asientosTmp[k].avionMatricula == this.selectedAircraftId  && asientosTmp[k].nVuelo == selectedTravelFirstFlight){
+        console.log(asientosTmp[k]);
+        this.asientos.push(asientosTmp[k]);
+      }
+    }
+
+    this.asientos.sort((a, b) => a.id.localeCompare(b.id))
+
+  }
+
+  onlineSelectFlight(selectedTravelId: number){
+
+    console.log("onlineSelectFlight");
+
     this.selectedTravelId = selectedTravelId
 
     var vuelosTmp: Vuelo[] = [];
@@ -441,8 +586,43 @@ export class BookFlightComponent{
     })
   }
 
-  // Function for personal information update button on desktop (second step of desktop stepper)
-  updatePersonalInformationD(){
+
+  // Function for select flight button (first step of stepper)
+  selectFlight(selectedTravelId: number){
+    console.log("selectFlight");
+    if (this.isOnline) {
+      this.onlineSelectFlight(selectedTravelId);
+    } else if (this.isAndroid() && !this.isOnline){
+      this.offlineSelectFlight(selectedTravelId);
+    }
+  }
+
+  offlineUpdatePersonalInformationD(){
+
+    this.passengerName = String(this.travelInformationStepD.get('passengerNameInputD')?.value);
+    this.passengerLastName1 = String(this.travelInformationStepD.get('passengerLastName1InputD')?.value);
+    this.passengerLastName2 = String(this.travelInformationStepD.get('passengerLastName2InputD')?.value);
+
+    // Checks valid Email
+    var clientesTemp = this.databaseService.getClientes();
+    var clientes = clientesTemp();
+    for(let i = 0; i < clientes.length; i++){
+      if(clientes[i].correo == String(this.travelInformationStepD.get('passengerEmailInputD')?.value)){
+        this.passengerEmail = String(this.travelInformationStepD.get('passengerEmailInputD')?.value);
+      }else{
+        Swal.fire(
+          'Cliente no encontrado',
+          'Inicie sesión o digite un correo electrónico válido',
+          'question'
+        );
+        return;
+      }
+    }
+    this.passengerTelephone = String(this.travelInformationStepD.get('passengerTelephoneInputD')?.value);
+  }
+  
+  onlineUpdatePersonalInformationD(){
+
     this.passengerName = String(this.travelInformationStepD.get('passengerNameInputD')?.value);
     this.passengerLastName1 = String(this.travelInformationStepD.get('passengerLastName1InputD')?.value);
     this.passengerLastName2 = String(this.travelInformationStepD.get('passengerLastName2InputD')?.value);
@@ -470,6 +650,15 @@ export class BookFlightComponent{
     })
     
     this.passengerTelephone = String(this.travelInformationStepD.get('passengerTelephoneInputD')?.value);
+  }
+
+  // Function for personal information update button on desktop (second step of desktop stepper)
+  updatePersonalInformationD(){
+    if (this.isOnline) {
+      this.onlineUpdatePersonalInformationD();
+    } else {
+      this.offlineUpdatePersonalInformationD();
+    }
   }
 
   // Function for personal information update button on mobile (second step of mobile stepper)
@@ -662,6 +851,28 @@ export class BookFlightComponent{
   
   showHideStepOvers(travelIndex: number){
     this.showStepovers[travelIndex] = !this.showStepovers[travelIndex];
+  }
+
+
+  // verifies if the application is running on a mobile device
+  isAndroid() {
+    return (Capacitor.getPlatform() === 'android');
+  }
+
+  // returns true if is Online, false if is Offline  
+  async chekNetworkConnection() {
+
+    const status = await Network.getStatus();
+
+    if (status.connected) {
+      console.log('Connected to the internet');
+      this.isOnline = true;
+    }
+    else {
+      console.log('No internet connection');
+      this.isOnline = false;
+    }
+
   }
   
 }
