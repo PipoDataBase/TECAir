@@ -41,7 +41,7 @@ export class AddFlightComponent {
     avionMatricula: '',
     fechaSalida: '',
     fechaLlegada: '',
-    estado: true,
+    estado: false,
     precio: 0,
     vueloAeropuertos: []
   }
