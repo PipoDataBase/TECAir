@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Empleado } from 'src/app/models/empleado.module';
 import { EmpleadosService } from 'src/app/services/empleados.service';
-import { SharedService } from 'src/app/services/shared.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-login',
@@ -33,7 +33,11 @@ export class LoginComponent {
     if (employeeFound) {
       this.router.navigate(["tecair-admin", this.username]);
     } else {
-      alert("Invalid credentials");
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Credenciales inválidas',
+      })
     }
   }
 }
